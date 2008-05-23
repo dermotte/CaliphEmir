@@ -32,8 +32,8 @@ import org.apache.lucene.document.Document;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SimpleResult implements Comparable {
-    private float distance;
-    private Document document;
+    protected float distance;
+    protected Document document;
 
     public SimpleResult(float distance, Document document) {
         this.distance = distance;

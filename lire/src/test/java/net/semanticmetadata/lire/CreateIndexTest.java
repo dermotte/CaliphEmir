@@ -43,9 +43,9 @@ import java.util.ArrayList;
 public class CreateIndexTest extends TestCase {
     private String[] testFiles = new String[]{"img01.JPG", "img02.JPG", "img03.JPG", "img04.JPG", "img05.JPG",
             "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg", "Páginas de 060305_b_Página_1_Imagem_0004_Página_08_Imagem_0002.jpg"};
-    private String testFilesPath = "./src/test/resources/images/";
+    private String testFilesPath = "./lire/src/test/resources/images/";
     private String indexPath = "test-index";
-    private String testExtensive = "../Caliph/testdata";
+    private String testExtensive = "./caliphemir/testdaten/testdata";
 
     public void testCreateIndex() throws IOException {
         DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
@@ -61,10 +61,26 @@ public class CreateIndexTest extends TestCase {
 
     public void testCreateCorrelogramIndex() throws IOException {
         String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
-        String testFilesPath = "./src/test/resources/small/";
+        String testFilesPath = "./lire/src/test/resources/small/";
 
         DocumentBuilder builder = DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder();
         IndexWriter iw = new IndexWriter(indexPath + "-small", new SimpleAnalyzer(), true);
+        long ms = System.currentTimeMillis();
+        for (String identifier : testFiles) {
+            Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
+            iw.addDocument(doc);
+        }
+        System.out.println("Time taken: " + ((System.currentTimeMillis() - ms) / testFiles.length) + " ms");
+        iw.optimize();
+        iw.close();
+    }
+
+    public void testCreateCEDDIndex() throws IOException {
+        String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
+        String testFilesPath = "./lire/src/test/resources/small/";
+
+        DocumentBuilder builder = DocumentBuilderFactory.getCEDDDocumentBuilder();
+        IndexWriter iw = new IndexWriter(indexPath + "-cedd", new SimpleAnalyzer(), true);
         long ms = System.currentTimeMillis();
         for (String identifier : testFiles) {
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -88,8 +104,8 @@ public class CreateIndexTest extends TestCase {
 //        System.out.println(">> Default DocumentBuilder:");
 //        indexFiles(images, DocumentBuilderFactory.getDefaultDocumentBuilder(), indexPath + "-default");
 //        System.out.println(">> Extensive DocumentBuilder:");
-        indexFiles(images, DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder(), indexPath + "-extensive");
-//        indexFiles(images, DocumentBuilderFactory.getExtensiveDocumentBuilder(), indexPath + "-extensive");
+//        indexFiles(images, DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder(), indexPath + "-extensive");
+        indexFiles(images, DocumentBuilderFactory.getFullDocumentBuilder(), indexPath + "-extensive");
     }
 
     private void indexFiles(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
@@ -104,7 +120,7 @@ public class CreateIndexTest extends TestCase {
             iw.addDocument(doc);
             count++;
             if (count % 25 == 0) System.out.println(count + " files indexed.");
-            if (count == 100) break;
+            // if (count == 100) break;
         }
         long timeTaken = (System.currentTimeMillis() - time);
         float sec = ((float) timeTaken) / 1000f;

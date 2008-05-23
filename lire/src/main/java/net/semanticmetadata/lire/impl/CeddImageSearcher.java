@@ -4,7 +4,7 @@ import net.semanticmetadata.lire.AbstractImageSearcher;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
+import net.semanticmetadata.lire.imageanalysis.CEDD;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
@@ -25,41 +25,39 @@ import java.util.logging.Logger;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class CorrelogramImageSearcher extends AbstractImageSearcher {
+public class CeddImageSearcher extends AbstractImageSearcher {
     private Logger logger = Logger.getLogger(getClass().getName());
-    private AutoColorCorrelogram.Mode mode = AutoColorCorrelogram.Mode.FullNeighbourhood;
 
     private int maxHits = 10;
     private TreeSet<SimpleResult> docs;
 
-    public CorrelogramImageSearcher(int maxHits, AutoColorCorrelogram.Mode mode) {
+    public CeddImageSearcher(int maxHits) {
         this.maxHits = maxHits;
-        this.mode = mode;
         docs = new TreeSet<SimpleResult>();
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {
-        logger.finer("Starting extraction of AutoColorCorrelogram from image");
-        AutoColorCorrelogram acc = new AutoColorCorrelogram(CorrelogramDocumentBuilder.MAXIMUM_DISTANCE);
+        logger.finer("Starting extraction of CEDD from image");
+        CEDD cedd = new CEDD();
         // Scaling image is especially with the correlogram features very important!
         BufferedImage bimg = image;
-        if (Math.max(image.getHeight(), image.getWidth()) > 200) {
-            bimg = ImageUtils.scaleImage(image, 200);
+        if (Math.max(image.getHeight(), image.getWidth()) > CeddDocumentBuilder.MAX_IMAGE_DIMENSION) {
+            bimg = ImageUtils.scaleImage(image, CeddDocumentBuilder.MAX_IMAGE_DIMENSION);
         }
-        acc.extract(bimg);
+        cedd.extract(bimg);
         logger.fine("Extraction from image finished");
 
-        float maxDistance = findSimilar(reader, acc);
+        float maxDistance = findSimilar(reader, cedd);
         return new SimpleImageSearchHits(this.docs, maxDistance);
     }
 
     /**
      * @param reader
-     * @param acc
+     * @param cedd
      * @return the maximum distance found for normalizing.
      * @throws java.io.IOException
      */
-    private float findSimilar(IndexReader reader, AutoColorCorrelogram acc) throws IOException {
+    private float findSimilar(IndexReader reader, CEDD cedd) throws IOException {
         float maxDistance = -1f, overallMaxDistance = -1f;
         boolean hasDeletions = reader.hasDeletions();
 
@@ -74,7 +72,7 @@ public class CorrelogramImageSearcher extends AbstractImageSearcher {
             }
 
             Document d = reader.document(i);
-            float distance = getDistance(d, acc);
+            float distance = getDistance(d, cedd);
             // calculate the overall max distance to normalize score afterwards
             if (overallMaxDistance < distance) {
                 overallMaxDistance = distance;
@@ -85,14 +83,14 @@ public class CorrelogramImageSearcher extends AbstractImageSearcher {
             }
             // if the array is not full yet:
             if (this.docs.size() < maxHits) {
-                this.docs.add(new SimpleResult(distance, d));
+                this.docs.add(new DissimilarityResult(distance, d));
                 if (distance > maxDistance) maxDistance = distance;
             } else if (distance < maxDistance) {
                 // if it is nearer to the sample than at least on of the current set:
                 // remove the last one ...
                 this.docs.remove(this.docs.last());
                 // add the new one ...
-                this.docs.add(new SimpleResult(distance, d));
+                this.docs.add(new DissimilarityResult(distance, d));
                 // and set our new distance border ...
                 maxDistance = this.docs.last().getDistance();
             }
@@ -100,24 +98,27 @@ public class CorrelogramImageSearcher extends AbstractImageSearcher {
         return maxDistance;
     }
 
-    private float getDistance(Document d, AutoColorCorrelogram acc) {
+    private float getDistance(Document d, CEDD cedd) {
+        // TODO: We can do this for each filed ... if there is a region based approach.
         float distance = 0f;
-        AutoColorCorrelogram a = new AutoColorCorrelogram();
-        String[] cls = d.getValues(DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM);
+        CEDD a = new CEDD();
+        String[] cls = d.getValues(DocumentBuilder.FIELD_NAME_CEDD);
         if (cls != null && cls.length > 0) {
             a.setStringRepresentation(cls[0]);
-            distance += acc.getDistance(a);
+            distance += cedd.getDistance(a);
+        } else {
+            logger.warning("No feature stored in this document!");
         }
         return distance;
     }
 
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
-        AutoColorCorrelogram acc = new AutoColorCorrelogram();
+        CEDD cedd = new CEDD();
 
-        String[] cls = doc.getValues(DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM);
+        String[] cls = doc.getValues(DocumentBuilder.FIELD_NAME_CEDD);
         if (cls != null && cls.length > 0)
-            acc.setStringRepresentation(cls[0]);
-        float maxDistance = findSimilar(reader, acc);
+            cedd.setStringRepresentation(cls[0]);
+        float maxDistance = findSimilar(reader, cedd);
 
         return new SimpleImageSearchHits(this.docs, maxDistance);
     }
@@ -128,10 +129,10 @@ public class CorrelogramImageSearcher extends AbstractImageSearcher {
             throw new FileNotFoundException("No index found at this specific location.");
         Document doc = reader.document(0);
 
-        AutoColorCorrelogram acc = new AutoColorCorrelogram();
-        String[] cls = doc.getValues(DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM);
+        CEDD cedd = new CEDD();
+        String[] cls = doc.getValues(DocumentBuilder.FIELD_NAME_CEDD);
         if (cls != null && cls.length > 0)
-            acc.setStringRepresentation(cls[0]);
+            cedd.setStringRepresentation(cls[0]);
 
         HashMap<Float, List<String>> duplicates = new HashMap<Float, List<String>>();
 
@@ -145,7 +146,7 @@ public class CorrelogramImageSearcher extends AbstractImageSearcher {
                 continue;
             }
             Document d = reader.document(i);
-            float distance = getDistance(d, acc);
+            float distance = getDistance(d, cedd);
 
             if (!duplicates.containsKey(distance)) {
                 duplicates.put(distance, new LinkedList<String>());

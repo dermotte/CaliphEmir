@@ -43,8 +43,8 @@ import java.io.IOException;
 public class TestImageSearcher extends TestCase {
     private String[] testFiles = new String[]{"img01.JPG", "img02.JPG", "img03.JPG", "img04.JPG", "img05.JPG",
             "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG"};
-    private String testFilesPath = "../Lire/src/test/resources/images/";
-    private String indexPath = "test-index-small";
+    private String testFilesPath = "./lire/src/test/resources/images/";
+    private String indexPath = "test-index-extensive";
     private int numsearches = 5;
 
     public void testSearch() throws IOException {
@@ -147,6 +147,36 @@ public class TestImageSearcher extends TestCase {
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         ImageSearcher searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(10);
+        FileInputStream imageStream = new FileInputStream(testFilesPath + testFiles[0]);
+        BufferedImage bimg = ImageIO.read(imageStream);
+        ImageSearchHits hits = null;
+        long time = System.currentTimeMillis();
+//        for (int i = 0; i < numsearches; i++) {
+        hits = searcher.search(bimg, reader);
+//        }
+        time = System.currentTimeMillis() - time;
+        System.out.println(((float) time / (float) numsearches) + " ms per search with image, averaged on " + numsearches);
+        for (int i = 0; i < hits.length(); i++) {
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+        }
+        Document document = hits.doc(4);
+        time = System.currentTimeMillis();
+        for (int i = 0; i < numsearches; i++) {
+            hits = searcher.search(document, reader);
+        }
+        time = System.currentTimeMillis() - time;
+        System.out.println(((float) time / (float) numsearches) + " ms per search with document, averaged on " + numsearches);
+        for (int i = 0; i < hits.length(); i++) {
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+        }
+
+    }
+
+    public void testCEDDSearch() throws IOException {
+        IndexReader reader = IndexReader.open(indexPath);
+        int numDocs = reader.numDocs();
+        System.out.println("numDocs = " + numDocs);
+        ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(30);
         FileInputStream imageStream = new FileInputStream(testFilesPath + testFiles[0]);
         BufferedImage bimg = ImageIO.read(imageStream);
         ImageSearchHits hits = null;

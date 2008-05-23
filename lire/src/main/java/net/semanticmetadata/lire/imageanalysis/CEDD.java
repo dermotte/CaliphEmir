@@ -357,7 +357,7 @@ int offset = srcData.Stride - ((fmt == PixelFormat.Format8bppIndexed) ? width : 
 
     public float getDistance(VisualDescriptor vd) { // added by mlux
         // Check if instance of the right class ...
-        if (!(vd instanceof SimpleColorHistogram))
+        if (!(vd instanceof CEDD))
             throw new UnsupportedOperationException("Wrong descriptor.");
 
         // casting ...

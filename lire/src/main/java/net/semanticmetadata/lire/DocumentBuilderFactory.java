@@ -4,6 +4,7 @@ import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
 import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
 import net.semanticmetadata.lire.impl.CorrelogramDocumentBuilder;
 import net.semanticmetadata.lire.impl.SimpleDocumentBuilder;
+import net.semanticmetadata.lire.impl.CeddDocumentBuilder;
 
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
@@ -131,7 +132,7 @@ public class DocumentBuilderFactory {
 
     /**
      * Creates a DocumentBuilder for the AutoColorCorrelation feature. Note that the extraction of this feature
-     * is especially slow, but this is a more fast, but löess accurate settings version!
+     * is especially slow, but this is a more fast, but less accurate settings version!
      * Images that do not fit in a defined bounding box they are
      * resized by the document builder to ensure shorter processing time. See
      * {@link net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram} for more information on the image feature.
@@ -141,6 +142,17 @@ public class DocumentBuilderFactory {
      */
     public static DocumentBuilder getFastAutoColorCorrelationDocumentBuilder() {
         return new CorrelogramDocumentBuilder(AutoColorCorrelogram.Mode.SuperFast);
+    }
+
+    /**
+     * Creates a DocumentBuilder for the CEDD feature. See
+     * {@link net.semanticmetadata.lire.imageanalysis.CEDD} for more information on the image feature.
+     * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @return the created AutoCorrelation feature DocumentBuilder.
+     */
+    public static DocumentBuilder getCEDDDocumentBuilder() {
+        return new CeddDocumentBuilder();
     }
 
     /**
@@ -154,6 +166,7 @@ public class DocumentBuilderFactory {
         ChainedDocumentBuilder cdb = new ChainedDocumentBuilder();
         cdb.addBuilder(DocumentBuilderFactory.getExtensiveDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
+        cdb.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
         return cdb;
     }
 }

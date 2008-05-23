@@ -1,6 +1,11 @@
 CHANGES for Caliph & Emir
 =========================
 
+2008-05-23
+==========
+General:
+  - Switched to SVN
+  
 2008-05-13
 ==========
 Caliph:

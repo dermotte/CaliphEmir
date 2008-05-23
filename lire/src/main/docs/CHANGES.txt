@@ -1,6 +1,15 @@
 CHANGES for LIRE
 ================
 
+2008-05-23
+==========
+General:
+  - Switched to SVN
+
+CBIR:
+  - Added CEDD feature to indexing and search.
+  - Added CEDD feature to LireDemo
+  
 2008-05-22
 ==========
 CBIR:
