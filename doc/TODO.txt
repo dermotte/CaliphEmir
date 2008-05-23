@@ -1,7 +1,0 @@
-TODO for Caliph & Emir
-======================
-
-(*) Emir: Display semantic graphs in ResultList
-(*) Emir: Nearest neighbor index for graphs (B-tree, 
-    R*-tree, ...)
-   

@@ -1,8 +1,0 @@
-/AbstractRetrievalEngine.java/1.5/Thu Feb 16 23:41:56 2006//
-/DatabaseRetrievalEngine.java/1.11/Fri Jan 06 21:51:57 2006//
-/ElementEntry.java/1.1/Tue Nov 08 22:17:02 2005//
-/FileSystemRetrieval.java/1.8/Thu Feb 16 23:41:56 2006//
-/LucenePathIndexRetrievalEngine.java/1.10/Thu Mar 16 22:57:52 2006//
-/LuceneRetrievalEngine.java/1.14/Thu Mar 16 22:57:52 2006//
-/RetrievalEngine.java/1.4/Wed Nov 02 15:28:34 2005//
-/RetrievalEngineFactory.java/1.4/Thu Feb 16 23:41:56 2006//
