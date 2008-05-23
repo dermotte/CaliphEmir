@@ -1,0 +1,841 @@
+CHANGES for Caliph & Emir
+=========================
+
+2008-05-13
+==========
+Caliph:
+  - Fixed a bug in ImageLoader introduced in Feb.
+  
+2008-03-26
+==========
+Emir:
+  - Added max zoom out in fdp panel (bugfix)
+  - Changed MdsVisPanel.ImageLoader.MaxImageSideLength default to 50
+  
+2008-02-27
+==========
+Caliph:
+  - Added gloabl properties of current file and stored time and place there
+    Used for recommendations of time and place in creation of semantic objects (event, time, place)
+
+2007-07-06
+==========
+Descriptors
+  - Updated Scalable Color Descriptor. Now it matches the XM impl.
+    THX to Fabrizio Falchi & Bastian Hoesch.
+    
+2007-03-26
+==========
+Descriptors:
+  - Updated EdgeHistogramImpl according to bug noticed by
+    Bastian Hoesch
+
+2006-12-13
+==========
+General:
+  - Updated to Lucene 2.1.0
+   
+2006-12-13
+==========
+General:
+  - Included changes in the DominantColor descriptor proposed
+    by Janine Lachner
+  - Added ColorStructur descriptor (not working yet ...)
+  - Added tests for ColorStructure
+
+2006-11-03
+==========
+General:
+  - Added Reader classes for .ppm and .bmp images
+
+Caliph:
+  - Added support for ppm and bmp images
+  
+Emir:
+  - Added preliminary support for CBIR for ppm and bmp images
+
+2006-07-31
+==========
+General:
+  - Release 0.9.23
+  
+2006-07-18
+==========
+Emir:
+  - Implemented demo mode for Emir Visualization
+
+2006-07-14
+==========
+Emir:
+  - Fixed Bug in MDS vis (move with mouse left button pressed)
+  - Two new options in EmirConfiguration for showing the "Please Wait"
+    sign in Viz and the max sifde length of thumbnails in viz
+  - Alt + Mouse Wheel now changes size of thumbnails in viz
+
+General
+  - Updated Derby to 10.1.3
+  - Updated Looks to 2.0.4
+  - Updated Lucene to 2.0.0
+  - Updated Windows Exe Launchers
+
+2006-05-15
+==========
+General
+  - Updated and moved About Screen Images
+  - Updated to looks 2.0.2
+  - Updated to metadata-extractor 2.3.1
+
+Emir:
+  - Removed local help from menu
+
+2006-03-22
+==========
+Emir:
+  - Made Suffix Tree Metric much better (inversion of paths,
+    IDF weigthing)
+  - Added new Tests
+  
+2006-03-16
+==========
+General:
+  - Updated to Lucene 1.9.1
+
+Emir:
+  - Added Vector Space Retrieval based on the node texts
+  - Removed warnings for Lucene 1.9.1
+  - Integrated Suffix Tree Model TF*IDF variant into repository
+    visualization
+  - Integrated Vector Space Model TF*IDF variant into repository
+    visualization (with nodes and triples)
+  - Centered config dialogue
+
+2006-03-15
+==========
+Emir:
+  - Bugfix in Vector Space Model
+  - Bugfix in SuffixTree Model
+  - Bugfix in BooleanNodeDistanceFunction
+  - Added BM25 weighting in Vector Space Model
+  - Some cleaning in FastSubgraphIsomorphism
+
+2006-03-09
+==========
+General:
+  - Started Evaluation.
+
+Emir:
+  - VectorSpace Model implementation for graph similarity
+    based on paths.
+  - Code style and inline docs.
+  
+2006-02-28
+==========
+General:
+  - Identified 31 warnings for moving to Lucene 1.9
+
+Caliph:
+  - Fixed bug in MPEG-7 file: width and heigt of the image
+    were interchanged (THX to Josef Hammer)
+  - Reset button for image preview.
+  - Removed local help from menu.
+  - Prepared code for editing agents in semantics creator
+
+2006-02-20
+==========
+General:
+  - Documentation updated
+
+Emir:
+  - Changed dialog title for configuration
+
+2006-02-19
+==========
+General:
+  - Documentation updated
+  
+Emir:
+  - Added icon for configuration
+  - Added option to visualize results based on Berretti's
+    algorithm (painfully slow!)
+  - Added option to visualize repository based on
+    STC & Berretti
+  - Added TF and TF*IDF weighting to ST Model
+  - Added HTML export of results
+
+2006-02-18
+==========
+Caliph:
+  - fixed nasty bug that showed error when starting Caliph.
+
+Emir:
+  - Implemented Berrettis Error Correcting Subgraph Isomorphism
+    Metric another step faster.
+  - Added option to use Berrettis metric and the ST Model for
+    repository visualization.
+  - Disabled unavailable options in Emir
+
+2006-02-17
+==========
+Emir:
+  - Implemented Berrettis Error Correcting Subgraph Isomorphism
+    Metric much faster.
+
+2006-02-16
+==========
+General:
+  - Created and optimized FastDominantColorImpl for performance
+    optimizing
+  - Created Performance tests.
+  - Updated to Looks 2.0 Beta
+
+Caliph:
+  - Experiments with gradients in titles
+  
+Emir:
+  - Implemented max search results from configuration in
+    retrievalengines (now it reduces results if there are)
+    too much.
+  - Indexing into Derby is switched off by default. Can be
+    switched on using the configuration.
+  - Implemented Berrettis Error Correcting Subgraph Isomorphism
+    Metric (too much memory, too slow!)
+
+2006-02-15
+==========
+General:
+  - Added constructor in ScalableColor for extraction from non
+    rectangular regions
+  - Similarity based on Suffix Tree Model implemented
+
+Caliph:
+  - Added online help menu item and "visit homepage" menu item
+
+Emir:
+  - Added online help menu item and "visit homepage" menu item
+  - Added configuration dialog and re-organized menu
+  - Put "Use Derby" Option into configuration dialog
+  - Added actions panel with quick start buttons 
+
+2006-02-06
+==========
+General:
+  - Removed some System.out.println() calls
+
+Caliph:
+  - Fixed DominantColor Descriptor (now it validates against
+    http://m7itb.nist.gov/M7Validation.html) THX to Daniel Pötzinger
+
+2006-02-06
+==========
+General:
+  - Re-Implemented EdgeHistogram in a fast and efficient way
+  - Moved DominantColor to at.lux.imageanalysis
+  - Removed org.vizir packages as they were no longer needed
+
+Caliph:
+  - Added try/catch for startup to give error message and close
+    VM in case of errors.
+   
+2006-02-04
+==========
+General:
+  - Removed JDOM dependencies from org.vizir package for LIRE.
+  - broke down descriptors into JDOM and non JDOM Versions for LIRE. 
+
+2006-01-31
+==========
+General:
+  - Created and upped Java Web Start versions of Caliph & Emir
+
+2006-01-26
+==========
+General:
+  - Updated metadata-extractor library
+  - Updated swing-layout library to 1.0 from Netbeans RC 2
+  - Updated test data to new thumbnail and added DominantColor
+  - Updated build.xml for automatic release
+  - Updated windows launchers to new libraries
+
+Caliph:
+  - Stripped some unneccessary System.out output
+  - Removed log4j library, changed to java.util.logging
+
+2006-01-20
+==========
+Emir:
+  - Added a general config panel (not shown yet)
+  - Made configuration look more appealing (not shown yet)
+
+2006-01-11
+==========
+Emir:
+  - Added some configuration dialogs, not shown yet.
+
+2006-01-10
+==========
+Emir:
+  - Added some configuration dialogs, not shown yet.
+  - Implemented option to visualize search results.
+  - Made EmirConfiguration Java 1.5 (autoboxing, for each).
+
+2006-01-09
+==========
+Emir:
+  - Added new menu for clustering, saving and visualizing results
+  - Added tooltip for result entries
+  - Added new startup exceoption wrapper.
+
+General:
+  - Added three new icons to IconCache
+  - Fixed error in Sufffix Tree
+
+2006-01-07
+==========
+Caliph:
+  - Close preview dialog on ESC
+  - Added option to copy the structured text anntation
+    to the free text annotation field with F8
+  - Fixed the bug that file was not saved on <ctrl>-s
+    within text fields.
+  - Removed button from structured text description panel
+
+2006-01-06
+==========
+General:
+  - Added ColorStructureDescriptor (Unusable, too slow.)
+  - Updated help.
+
+Caliph:
+  - Fixed bug in ImageLoader (Loading of images was too slow,
+    had to be scaled down)
+  - Changed Icon for help, now with transparency.
+  - Changed parts of the icon handling.
+  - Added option to export semantic descriptions as JPG and PNG images
+  - Added SVG export (only if libraries are present)
+
+Emir:
+  - Fixed bug in DatabaseRetrievalEngine (too big images could not
+    be loaded)
+
+2005-11-22
+==========
+Emir:
+  - Search for combination of VisualDescriptors added.
+
+2005-11-20
+==========
+Caliph:
+  - Bugfix in TextDescriptionPanel (Word wrap in free text
+    description TextArea)
+  - Help in BeePanel removed. Help icon added instead. 
+
+2005-11-20
+==========
+Caliph:
+  - Introduced Icon cache
+  - Added Mnemonics to OK button in new.. dialogs
+  - Added Icon for semantic object
+  - Bugfixes (EmbedderThread stops now on mouse action)
+    and drawing relations now works better.
+
+Emir:
+  - Moving of nodes in graphsearchpanel now supported
+  - Boost value of fields tuned (label of sem. objects
+    is now boosted)
+  - right click menu in graphsearchpanel reworked
+  - help in graphsearchpanel added
+  - Made handling in graphsearchpanel consistent
+  - database retrieval shows some EXIF information if no
+    MPEG-7 file is available.
+
+2005-11-19
+==========
+Emir:
+  - some minor bugfixes
+
+2005-11-17
+==========
+Emir:
+  - Added new constructor to ResultListentry
+  - Added basic support for searching via Derby for images
+    having no MPEG-7 file.
+
+2005-11-17
+==========
+Caliph:
+  - Changed Embedding behaviour of BeePanel
+  - Changed Titles of New ... dialogs
+  - Hid some textfields and added an autoincrement for the
+    document version.
+  - Edited some labels for more understanding
+  - Removed import buttons from the semantic objects tables
+  - Added tooltips on some places
+  - Added security check at the copy-function for semantics
+    to structured text
+  - Changed behaviour of imageThumbPanel on resize.
+  - Added splash screen
+  - Added help in context menu for BeePanel
+  - Fixed new place dialog
+  - Fixed new object dialog
+  - Fixed new time dialog
+  - "When" field is taken from EXIF data
+
+2005-11-16
+==========
+Caliph:
+  - Changed cursor to wait while loading
+  - Fixed new Agent dialog
+  - Fixed new Event dialog
+  - Added "new" option to semantic drawing panel
+  - Added lib from netbeans for new layout for dialogs
+
+2005-11-14
+==========
+Caliph:
+  - Added new "About" dialog
+  - Edited and updated help
+
+Emir:
+  - Added new "About" dialog
+
+2005-11-10
+==========
+Caliph:
+  - Added new constructor for startup within Emir
+
+Emir:
+  - Added white border to result images
+  - Now Caliph can be opened from result list with
+    right mouse button
+      
+2005-11-08
+==========
+Caliph:
+  - Fixed bug in autopilot
+  - Status bar init text set to program name
+
+Emir:
+  - Removed border from garbage tracker
+
+2005-11-07
+==========
+Caliph:
+  - Changed behaviour of thumbnail generator
+  - Changed behaviour of textfields in use with autopilot
+  
+Emir:
+  - Fixed bug in Indexer, searcher and so on with SAXBuilder
+    URLs and Umlauts
+  - Changed Look & Feel of result image preview
+  - Changed Look & Feel and added icons to menu
+  - refactored "please not" text area on lucene search panel
+
+2005-11-06
+==========
+General:
+  - Minor update for the installer file:
+     * made main section hidden
+     * Added the "/SOLID" switch to compression
+     * Added new libraries
+
+Caliph:
+  - New icon for the main JFrame
+  - Polished UI of VisualDescriptorPanel
+  - Image preview now more smooth and with grey background
+
+2005-11-04
+==========
+General:
+  - Optimized Descriptor extraction somewhat, gained 5-10%
+    performance
+
+Caliph:
+  - Made the Swing UI look more nice
+  - Using JGoodies Look & Feel from now on.
+  - Removed grids from tables
+  - made dividers of splitpanes smaller
+  - removed titled borders and created a new kind of title
+
+Emir:
+  - Indexing happens from MPEG-7 file if the descriptor is
+    available
+  - Changed to java.util.logging. DatabaseRetrievalEngine
+  
+2005-11-01
+==========
+General
+  - Renamed VisualDescriptor to JDomVisualDescriptor
+  - Introduced Interface VisualDesciptor (without JDOM specific
+    methods) and put all not regarding JDOM from the old interface
+    here. JDomVisualDescriptor extends now VisualDescriptor
+  - introduced methods get/setStringRepresentation to allow storage
+    of descriptor without XML (just using Strings)
+  - implemented the new methods in ScaleableColor and EdgeHistogram
+
+2005-10-28
+==========
+Emir:
+  - Added method to index CBIR DB from description (not working yet!) 
+
+2005-10-27
+==========
+General:
+  - Added Derby DB to libs
+  - Added SQLGenerator Interface & Factory for storing and searching
+    VisualDescriptors in Databases
+  - Added Derby SQLGenerator Implementation
+
+Emir:
+  - Added DatabaseRetrievalEngine based on Derby for CBIR
+  - Added option for DB based CBIR
+  - Set DB based CBIR to default
+
+2005-10-04
+==========
+General:
+  - Added DominantColor Descriptor Wrapper for internal VisualDescriptor
+    interface
+  - Created and tested distance function for DominantColor
+  - Created and tested DominantColor Extraction from non
+    rectangular pixel arrays
+  - added test classes to source release in build.xml
+  - creating now default.mf in ant build file to integrate build date
+    and number
+    
+Caliph:
+  - Added Extraction, Saving and Loading of DominantColor descriptor
+    and a panel, where the result can be proved.
+  - changed the build number property entry name
+  - adapted the AboutDialog to the new build number property
+
+Emir:
+  - adapted the AboutDialog to the new build number property
+
+2005-10-03
+==========
+General:
+  - Added DominantColor Descriptor from Vizir project
+  
+2005-06-21
+==========
+Caliph:
+  - Added new feature: Shape annotation panel
+
+2005-05-16
+==========
+Emir:
+  - Fixed bug with graph layout vis panel
+
+Caliph
+  - Removed all sources of deprecation warnings
+  - Fixed Saving of Shapes.
+
+General
+  - Updated copyright statements
+  - Optimized imports
+  - manifest.mf updated to new libraries
+
+2005-05-16
+==========
+Emir:
+  - Identified bug and disabled it
+
+General:
+  - library updates
+  - build file updates
+  - installer file updated to new libraries
+  - launcher updated to new library
+
+2005-05-07
+==========
+Emir:
+  - 2-path query construction (visual, ..)
+  - integration of path index as default
+  - indexing process switched to 2-path index
+  - Minor bugfix for resultlistpanel
+  
+General:
+  - installer file updated for Java check
+
+2005-05-05
+==========
+Emir:
+  - working 2-path extractor
+  - working path indexing method
+  - In GraphConstructionPanel:
+     * added popup menu for selecting specific nodes.
+     * added option for anonymous nodes
+
+2005-04-21
+==========
+Emir:
+  - Added preview option on result list
+  
+2005-03-16
+==========
+Caliph:
+  - AnnotationPanel interface introduced
+  - Started work on shape annotation panel
+Emir:
+  - Added the optional key for deleting nodes and relations from the graph
+    query editor to alt + right mouse 
+
+2005-03-07
+==========
+Emir:
+  - Added zoom using mouse wheel in Visualization2DPanelWithFDP
+  - Refactored configuration file, parameters names
+  
+2005-03-06
+==========
+General:
+  - Changed HowTo file format to OpenOffice 2.0
+Emir:
+  - Fixed nasty bug in ArraySimilarityMatrix (row #0 was not retrieved)
+  - Fixed String in Visualization2DPanelWithFDP (wrong mousebutton :) 
+
+2005-02-21
+==========
+Emir:
+  - Edge Offset in GraphConstructionPanel parametrized
+  - Bugfix in parametrizing of FDP
+  - Default parameters for FDP and more tuned
+  - Added FDP to CBIR Layouts on click
+  - Added stop option to FDP
+  - Enabled parametrizing voa config file for FDP
+   
+2005-02-21
+==========
+Caliph:
+  - Bug fixed with icons (AboutBox & Help)
+General:
+  - Updated build.xml (CVS & descriptions)
+Emir:
+  - Parametrizing of MDS in Visualization
+
+2005-02-19
+==========
+General:
+  - Added sources to CVS
+  
+2005-02-17
+==========
+General:
+  - Changed Installer UI to orange
+  - Refactoring of packages
+Emir:
+  - parametrizing of FDP
+  - Refactoring of FDPParameters
+Caliph:
+  - fixed bug with too big images for EdgeHistogram
+  - Made descriptor extraction faster (inaccurate by scaling first)
+  - changed icon
+
+2005-02-15
+==========
+Emir:
+  - Added HAC Clustering + Tests
+
+2005-02-13
+==========
+Emir:
+  - parametrizing of Spring Embedder
+  - minor bugfixes (strings)
+Caliph:
+  - Bugfix fileTree
+General:
+  - added annotated test data set
+  - reorganized instaler script
+  - bugfix buildfile
+
+2005-02-13
+==========
+Emir:
+  - added FDP to graph based repository visualization
+  - added indexing wizard dialog
+
+2005-01-16
+==========
+Emir:
+ - Added repository visualization based on semantic graphs & FastMap
+ - Fixed bug in retrieval, made it slower to O(n*(v+e))
+   with n is the number of documents, v is the number of
+   Vertices of the query graph and e the number of edges
+   of the query graph.  
+Caliph:
+ - Bugfix fileTree
+ 
+2005-01-15
+==========
+Emir:
+ - Added repository visualizations (FastMap based on CL, SC & EH)
+ 
+2005-01-14
+==========
+Emir:
+ - Added FastMap algorithm package
+ - Added FastMap tests
+ - Added minimum common subgraph distance calculation for index graphs
+
+2005-01-12
+==========
+Emir:
+ - Repository path comes now from the menu
+ - Version numbers merged & build numbers merged
+ - Some UI polishing
+ - Minor bugfixes in indexing (NullPointerExceptions)
+Caliph:
+ - Version numbers and build numbers merged
+ - Tree instead of table for file navigation
+
+2005-01-11
+==========
+Emir:
+ - ResultsPanel Redesign & Speedup
+ - Untyped relation now fully supported (with inverts)
+ - GraphConstructionPanel shows now how many nodes match
+   (in brackets next to the label)
+
+2005-01-10
+==========
+Emir:
+ - Redesign and speed up ResultListEntry (now without XSLT)
+ - Added optional untyped relation to graph search (NOTE:
+   this relation is not yet normalized, we have to invert
+   the relation in future release as expansion!)
+
+2005-01-06
+==========
+Emir 0.9b:
+ - Redesign Search UI (some tabs are now invisible and can be 
+   set visible in "View" menu)
+ - Added visual graph search editor
+ - Redesign of the index format (in preparation to move to 
+   lucene from flat file)
+ - Bugfixes in indexing of nodes
+ - Result list bugfixes (more content is shown in less space)
+ 
+2004-11-11
+==========
+Caliph 0.9.13:
+ - Changed highlighting behaviour for relations in semantic
+   descriptions
+ - changed title bar, removed my name ;-)
+
+2004-11-05
+==========
+Emir 0.8.5
+ - Added semantic indexing to indexing in UI
+ - Added UI option for semantic search in Lucene Panel
+ - Updated Help in Lucene Panel
+ - Created Semantic index in gzipped file
+ - changed title bar, removed my name ;-)
+
+2004-11-02
+==========
+Emir 0.8.4
+ - Added Lucene based semantic index search prototype
+   which allows the fast search for semantic annotations
+    
+2004-10-28
+==========
+Emir 0.8.4
+ - added Help dialog for index search panel
+
+2004-10-25
+==========
+Caliph 0.9.12:
+ - changed layout to JRE 1.5 default
+ - turned confirmation for overwriting off
+ - added button for extraction of agent names from semantic
+   descriptions to structured description
+ - disabled splash screen after first "agree"
+Emir 0.8.4:
+ - changed layout to JRE 1.5 default
+ - added progress information for indexing in statusbar
+ - introduced interface for statusbars
+ - disabled splash screen after first "agree"
+ - changed name of RetrievalEngineFacotry to RetrievalEngineFactory :) 
+
+2004-10-13
+==========
+Caliph 0.9.11:
+ - fixed some bugs
+ - turned on spring embedding for default
+ - fixed the thumbnail quality issues
+Emir 0.8.3:
+ - redesigned the RetrievalEngine architecture
+ - introduced a RetrievalEngineFactory (experimental)
+ - created LuceneRetrievalEngine (experimental)
+ - implemented an index generator (experimental)
+ - fixed bug with thumbnail searching
+ 
+2004-09-17
+==========
+Caliph 0.9.10:
+ - integrated modified spring embedding algorithm for visualization of semantic graphs
+ - updated to JDom 1.0 library
+ - made graph visualization more funky (anti-aliasing, transparent labels)
+ - removed bug: JMF for EdgeHistogram needed - Now you don't need it anymore
+
+2004-09-13
+==========
+Caliph 0.9.9 build #166:
+ - added EdgeHistogram Descriptor
+Emir 0.8.2 beta build #125:
+ - added EdgeHistogram Descriptor
+
+2004-07-20
+==========
+Caliph 0.9.8 build #164:
+ - fixed bug in StructuredAnnotation in TextAnnotationPanel
+
+2004-05-21
+==========
+Caliph 0.9.7 build #161:
+ - added StructuredAnnotation in TextAnnotationPanel
+ - added StructuredAnnotation Support in ImageLoader Thread
+
+2004-04-01
+==========
+Changed to license GPL!
+
+2004-03-24
+==========
+Caliph 0.9.6 build #156:
+ - changed address, copyright and updated some email-addresses
+ - updated exifExtractor to metadataextractor 2.2.2
+ - added support for IPTC reading from photos while initial loading
+
+Emir 0.8.1 alpha build #115:
+ - changed address, copyright and updated some email-addresses
+ - minor vis updates (resultpanel image rendering)
+
+2003-10-22
+==========
+Caliph 0.9.5 beta build #153:
+ - changed copyright to 2002-2003
+ - directories displayed before files in filepanel and they are bold now
+
+2002-12-06
+==========
+Caliph 0.9.4 alpha build #151:
+ - added changeListener and question if file should
+   be saved on change or exit
+ - changed app title
+Emir 0.8.1 alpha build #109:
+ - changed app title
+
+2002-12-03
+==========
+Caliph 0.9.4 alpha build #150:
+ - added support for adobe photoshop exported RDF
+   descriptions [filename].jpg.xmp
+Emir 0.8.1 alpha build #108:
+ - made keyword search non case sensitive
+ - took '.' as base search dir in keyword search panel
+
+Emir 0.8.1 alpha:
+ - added improved preview for semantic search
+ - check if search is valid in semantic search panel
+ - updated help

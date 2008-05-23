@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Mathias Lux (.) -->
+<Mpeg7 xmlns="urn:mpeg:mpeg7:schema:2001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Description xsi:type="SemanticDescriptionType">
+        <Semantics>
+            <Label>
+                <Name>Semanitscher Katalog</Name>
+            </Label>
+            <SemanticBase xsi:type="AgentObjectType">
+                <Label>
+                    <Name>John Doe</Name>
+                </Label>
+                <Agent xsi:type="PersonType">
+                    <Name>
+                        <GivenName>John</GivenName>
+                        <FamilyName>Doe</FamilyName>
+                    </Name>
+                </Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="AgentObjectType">
+                <Label>
+                    <Name>Mathias Lux</Name>
+                </Label>
+                <Agent xsi:type="PersonType">
+                    <Name>
+                        <GivenName>Mathias</GivenName>
+                        <FamilyName>Lux</FamilyName>
+                    </Name>
+                    <Affiliation>
+                        <Organization>
+                            <Name>Know-Center</Name>
+                        </Organization>
+                    </Affiliation>
+                    <Address>
+                        <PostalAddress>
+                            <AddressLine>Inffeldgasse 21a</AddressLine>
+                            <AddressLine>8010 Graz</AddressLine>
+                            <AddressLine>AUSTRIA</AddressLine>
+                        </PostalAddress>
+                    </Address>
+                    <ElectronicAddress>
+                        <Telephone>+43 (316) 873 9274</Telephone>
+                        <Email>mlux@know-center.at</Email>
+                        <Url>http://www.know-center.at</Url>
+                    </ElectronicAddress>
+                </Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType">
+                <Label>
+                    <Name>I-Know 04</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>4th International Conference on Knowledge Management</FreeTextAnnotation>
+                </Definition>
+                <Event>
+                    <Label>
+                        <Name>I-Know 04</Name>
+                    </Label>
+                    <SemanticPlace>
+                        <Label>
+                            <Name>Stadthalle Graz</Name>
+                        </Label>
+                        <Place>
+                            <PostalAddress>
+                                <AddressLine>Conrad v. Hoerzendorf Strasse</AddressLine>
+                                <AddressLine>8010 Graz</AddressLine>
+                                <AddressLine>AUSTRIA</AddressLine>
+                            </PostalAddress>
+                        </Place>
+                    </SemanticPlace>
+                    <SemanticTime>
+                        <Label>
+                            <Name>Time of I-Know 04</Name>
+                        </Label>
+                        <Time>
+                            <TimePoint>2004-07-01T12:00</TimePoint>
+                        </Time>
+                    </SemanticTime>
+                </Event>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType">
+                <Label>
+                    <Name>Presentation</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>This event symbolizes a presentation</FreeTextAnnotation>
+                </Definition>
+                <Event>
+                    <Label>
+                        <Name>Presentation</Name>
+                    </Label>
+                    <SemanticPlace>
+                        <Label>
+                            <Name/>
+                        </Label>
+                    </SemanticPlace>
+                    <SemanticTime>
+                        <Label>
+                            <Name>Time of Presentation</Name>
+                        </Label>
+                        <Time>
+                            <TimePoint>2004-11-05T10:50</TimePoint>
+                        </Time>
+                    </SemanticTime>
+                </Event>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType">
+                <Label>
+                    <Name>Talking</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>This event symbolizes general talking</FreeTextAnnotation>
+                </Definition>
+                <Event>
+                    <Label>
+                        <Name>Talking</Name>
+                    </Label>
+                    <SemanticPlace>
+                        <Label>
+                            <Name>Somewhere</Name>
+                        </Label>
+                        <Place>
+                            <PostalAddress>
+                                <AddressLine/>
+                            </PostalAddress>
+                        </Place>
+                    </SemanticPlace>
+                    <SemanticTime>
+                        <Label>
+                            <Name>Time of Talking</Name>
+                        </Label>
+                        <Time>
+                            <TimePoint>2004-11-05T10:50</TimePoint>
+                        </Time>
+                    </SemanticTime>
+                </Event>
+            </SemanticBase>
+            <SemanticBase xsi:type="SemanticTimeType">
+                <Label>
+                    <Name>Summer 2004</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>This semantic time defines the summer in the year 2004</FreeTextAnnotation>
+                </Definition>
+                <Time>
+                    <TimePoint>2004-07-01T12:00</TimePoint>
+                </Time>
+            </SemanticBase>
+        </Semantics>
+    </Description>
+</Mpeg7>
+

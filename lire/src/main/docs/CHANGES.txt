@@ -1,0 +1,137 @@
+CHANGES for LIRE
+================
+
+2008-05-22
+==========
+CBIR:
+  - Added CEDD descriptor (thanks to Savvas Chatzichristofis) in
+    imageanalysis package. Integration in Lire indexing yet to come.
+
+2008-05-14
+==========
+CBIR:
+  - Added histogram stub to implement color histograms (HSV, RGB
+    and Luminance)
+
+2008-04-21
+==========
+General:
+  - Added FastMap Implementation (copy from Caliph)
+  - Changed Implementation to work on "double" instead of float.
+
+2007-07-06
+==========
+CBIR:
+  - New library from Caliph with updated Scalable Color Descriptor Impl
+    based on input of Fabrizio Falchi and Bastian Hoesch
+    
+2007-03-26
+==========
+CBIR:
+  - Updated EdgeHistogramImpl according to bug noticed by
+    Bastian Hoesch
+
+2007-03-23
+==========
+General:
+  - ColorOnly search did not work -> bugfix (changed to ColorLayout descriptor)
+
+2007-02-26
+==========
+  - Release 0.5.2
+
+2006-12-20
+==========
+General:
+  - Updated MAX_DISTANCE in DocumentBuilder to 16 (better subjective results,
+    but slower extraction.
+    
+2006-12-20
+==========
+General:
+  - Bugfix in AutoColorCorrelation (THX to Markus Fauster)
+  - Added ChainedDocumentBuilder
+  - Added DocumentBuilderFactory.getFullDocumentBuilder()
+
+2006-12-19
+==========
+General:
+  - General Speedup in AutoColorCorrelation
+  - Bugfix in AutoColorCorrelation
+  - Updated version number in build.xml to 0.5.2
+  - Updated Lucene to 2.1.0
+  
+2006-12-14
+==========
+General:
+  - Added image retrieval feature color correlogram
+		- Use DocumentBuilderFactory.getAutoColorCorrelationDocumentBuilder()
+		  to create documents with this feature
+		- Use ImageSearcherFactory.createCorrelogramImageSearcher(int)
+		  to search the index for them.
+		- Note that this feature is quite slow and pictures are resized to 
+		  200x200 for analysis (originals won't be touched, just in RAM)!
+
+2006-12-14
+==========
+General:
+  - Added "Search for Color" features by adding:
+        - ImageSearcherFactory.createColorOnlySearcher(...)
+        - DocumentBuilderFactory.getColorOnlyDocumentBuilder()
+        - DocumentFactory.createColorOnlyDocument(Color.red)
+  
+2006-08-04
+==========
+General:
+  - Updated Lucene to 2.0.0
+  - Bugfix in SimpleResult based on hint of Kai Jauslin: different
+    images with equal similarity were not included in results.
+  - Added new function for identifying duplicate images
+
+2006-05-19
+==========
+General:
+  - Added support for weighting of different aspects
+    of image matching.
+  - Made default number of maximum hits in ImageSearcherFactory
+    a field
+
+2006-02-28
+==========
+General:
+  - Bugfix for SimpleImageSearcher (multiple usage of the same
+    instance did not clear the result set.)
+  - normalized score
+  - updated Caliph & Emir lib to Lucene 1.9.1
+  - updated Lucene to 1.9.1
+  - updated Lire to Lucene 1.9.1
+
+2006-02-27
+==========
+General:
+  - Tests updated for testing Lucene 1.9 RC1
+  - Applied patch from Roman Kern (deleted documents)
+  - Docs updated
+
+2006-02-17
+==========
+General:
+  - Tests and Stats updated
+  - Docs updated
+  
+2006-02-17
+==========
+General:
+  - Updated Caliph & Emir CBIR Library - smaller now
+  - Stats updated
+
+2006-02-04
+==========
+General:
+  - New and faster EdgeHistogram descriptor
+  - Added "release" task to build.xml
+
+2006-02-04
+==========
+General:
+  - First alpha release version.

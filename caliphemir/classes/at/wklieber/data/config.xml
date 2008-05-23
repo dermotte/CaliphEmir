@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Author: Werner Klieber
+Date   : 27.11.2001
+-->
+<imbConfig>
+    <!-- url of the mpeg7 - schema -->
+    <schema>
+        <mpeg7Schema>http://www.know-center.at/schemas/Mpeg7-2001.xsd</mpeg7Schema>
+    </schema>
+
+    <!-- thresholds for the values when sending images -->
+    <settings>
+        <defaultColorWeight>0.5</defaultColorWeight>
+        <defaultThreshold>0.5</defaultThreshold>
+    </settings>
+    <!-- here all available database plus their connection data is stored -->
+    <userInterface>
+        <shapes>
+            <star3>
+                <point>290 439</point>
+                <point>312 308</point>
+                <point>425 238</point>
+                <point>300 285</point>
+                <point>183 222</point>
+                <point>286 306</point>
+            </star3>
+            <box>
+                <point>30 30</point>
+                <point>200 30</point>
+                <point>200 100</point>
+                <point>30 100</point>
+            </box>
+        </shapes>
+        <menu>
+            <xul>
+                <!--  The Draw Sketch  -->
+                <menubar id="shapeBar">
+                    <!--menu id="File" accesskey="F" label="File">
+                        <menupopup id="file-menu">
+                            <menuitem accesskey="O" label="Open a MPEG 7 file" image="open_file.gif" command="commandOpenMpeg7" statustext="Open a MPEG 7 scene from a file"/>
+                            <menuitem accesskey="S" label="Save a MPEG 7 file" image="save_file.gif" command="commandSaveMpeg7" statustext="Save the Scene as MPEG 7 to a file"/>
+                        </menupopup>
+                    </menu-->
+                    <menu id="Tools" accesskey="T" label="Tools">
+                        <menupopup id="tools-menu">
+                            <menuitem accesskey="S" label="Shape" image="shape.gif" command="commandDrawShape" statustext="Draw a shape"/>
+                            <menuitem accesskey="D" label="Dominant Color" image="dominant_color.gif" command="commandDominantColor" statustext="Extract the dominant color of the picture"/>
+                        </menupopup>
+                    </menu>
+                    <menu id="Misc" accesskey="M" label="Misc">
+                        <menupopup id="misc-menu">
+                            <menuitem accesskey="C" label="Clear Draw area" image="clear.gif" command="commandClear" statustext="Remove all components from the draw area"/>
+                            <!--menuitem accesskey="V" label="View MPEG-7 data" image="view_mpeg7.gif" command="commandViewMpeg7" statustext="View the MPEG-7 XML data of the scene"/-->
+                            <menuitem accesskey="l" label="Color layout" image="component_palette.gif" command="commandViewMetadataImage" statustext="View the Color Layout meta data of the image"/>
+                        </menupopup>
+                    </menu>
+                </menubar>
+
+
+                <Command id="commandSketchColorShape" oncommand="actionSketchColorShape"/>
+                <Command id="commandExitProgram" oncommand="actionExitProgram"/>
+                <Command id="commandColorPalette" oncommand="actionColorPalette"/>
+                <Command id="commandDescription" oncommand="actionDescription"/>
+                <Command id="commandClear" oncommand="actionClear"/>
+                <Command id="commandOpenScene" oncommand="actionOpenScene"/>
+                <Command id="commandSaveScene" oncommand="actionSaveScene"/>
+                <Command id="commandViewScene" oncommand="actionViewScene"/>
+                <Command id="commandSearchScene" oncommand="actionSearchScene"/>
+                <Command id="commandOptions" oncommand="actionOptions"/>
+                <Command id="commandLookAndFeelOs" oncommand="actionLookAndFeelOs"/>
+                <Command id="commandLookAndFeelWindows" oncommand="actionLookAndFeelWindows"/>
+                <Command id="commandLookAndFeelMotif" oncommand="actionLookAndFeelMotif"/>
+                <Command id="commandLookAndFeelMac" oncommand="actionLookAndFeelMac"/>
+                <Command id="commandLookAndFeelKunststoff" oncommand="actionLookAndFeelKunststoff"/>
+                <Command id="commandLookAndFeelJava" oncommand="actionLookAndFeelJava"/>
+                <Command id="commandChoseRepresentant" oncommand="actionChooseRepresentant"/>
+                <Command id="commandChooseColor" oncommand="actionChooseColor"/>
+                <Command id="commandChooseShape" oncommand="actionChooseShape"/>
+                <Command id="commandChooseImage" oncommand="actionChooseImage"/>
+                <Command id="commandImportImages" oncommand="actionImportImages"/>
+                <Command id="commandOpenMpeg7" oncommand="actionOpenMpeg7"/>
+                <Command id="commandSaveMpeg7" oncommand="actionSaveMpeg7"/>
+                <Command id="commandCloseDialog" oncommand="actionCloseDialog"/>
+                <Command id="commandDrawShape" oncommand="actionDrawShape"/>
+                <Command id="commandDominantColor" oncommand="actionDominantColor"/>
+                <Command id="commandViewMpeg7" oncommand="actionViewMpeg7"/>
+                <Command id="commandColorLayout" oncommand="actionColorLayout"/>
+                <Command id="commandViewMetadataImage" oncommand="actionViewMetadataImage"/>
+            </xul>
+        </menu>
+    </userInterface>
+</imbConfig>

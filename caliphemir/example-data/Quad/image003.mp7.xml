@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Mpeg7 xmlns="urn:mpeg:mpeg7:schema:2001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <DescriptionMetadata>
+    <Version>2.0</Version>
+    <Comment>
+      <FreeTextAnnotation />
+    </Comment>
+    <Creator>
+      <Role href="creatorCS">
+        <Name>Creator</Name>
+      </Role>
+      <Agent xsi:type="PersonType">
+        <Name>
+          <GivenName>Mathias</GivenName>
+          <FamilyName>Lux</FamilyName>
+          <GivenName>Motte</GivenName>
+        </Name>
+        <Affiliation>
+          <Organization>
+            <Name>Know-Center</Name>
+          </Organization>
+        </Affiliation>
+        <ElectronicAddress>
+          <Email>mlux@know-center.at</Email>
+          <Url>http://www.know-center.at</Url>
+        </ElectronicAddress>
+      </Agent>
+    </Creator>
+    <CreationTime>2005-02-03T22:14</CreationTime>
+    <Instrument>
+      <Tool>
+        <Name>Caliph v0.9.14</Name>
+      </Tool>
+    </Instrument>
+  </DescriptionMetadata>
+  <Description xsi:type="ContentEntityType">
+    <MultimediaContent xsi:type="ImageType">
+      <Image>
+        <MediaInformation>
+          <MediaProfile master="true">
+            <MediaFormat>
+              <Content href="image" />
+              <FileFormat href="urn:mpeg:MPEG7FileFormatCS:1">
+                <Name>JPEG</Name>
+              </FileFormat>
+              <VisualCoding>
+                <Format href="urn:mpeg:MPEG7FileFormatCS:1" colorDomain="color">
+                  <Name>JPEG</Name>
+                </Format>
+                <Pixel bitsPer="24" />
+                <Frame width="480" height="640" />
+              </VisualCoding>
+            </MediaFormat>
+            <MediaQuality>
+              <QualityRating type="subjective">
+                <RatingValue>4</RatingValue>
+                <RatingScheme style="higherBetter" worst="1" best="5" />
+              </QualityRating>
+              <RatingSource xsi:type="PersonType">
+                <Name>
+                  <GivenName>Mathias</GivenName>
+                  <FamilyName>Lux</FamilyName>
+                  <GivenName>Motte</GivenName>
+                </Name>
+                <Affiliation>
+                  <Organization>
+                    <Name>Know-Center</Name>
+                  </Organization>
+                </Affiliation>
+                <ElectronicAddress>
+                  <Email>mlux@know-center.at</Email>
+                  <Url>http://www.know-center.at</Url>
+                </ElectronicAddress>
+              </RatingSource>
+            </MediaQuality>
+            <MediaInstance>
+              <InstanceIdentifier />
+              <MediaLocator>
+                <MediaUri>file:/C:/Dokumente%20und%20Einstellungen/Mathias/Eigene%20Dateien/JavaProjects/Caliph/example-data/Quad/image003.jpg</MediaUri>
+              </MediaLocator>
+            </MediaInstance>
+          </MediaProfile>
+          <MediaProfile>
+            <MediaFormat>
+              <Content href="image" />
+              <FileFormat href="urn:mpeg:MPEG7FileFormatCS:1">
+                <Name>JPEG</Name>
+              </FileFormat>
+              <VisualCoding>
+                <Format href="urn:mpeg:MPEG7FileFormatCS:1" colorDomain="color">
+                  <Name>JPEG</Name>
+                </Format>
+                <Pixel bitsPer="24" />
+                <Frame width="120" height="120" />
+              </VisualCoding>
+            </MediaFormat>
+            <MediaInstance>
+              <InstanceIdentifier />
+              <MediaLocator>
+                <MediaUri>file:/C:/Dokumente%20und%20Einstellungen/Mathias/Eigene%20Dateien/JavaProjects/Caliph/example-data/Quad/tn_image003.jpg</MediaUri>
+              </MediaLocator>
+            </MediaInstance>
+          </MediaProfile>
+        </MediaInformation>
+        <CreationInformation>
+          <Creation>
+            <Title>Creation information</Title>
+            <Creator>
+              <Role href="creatorCS">
+                <Name>Creator</Name>
+              </Role>
+              <Agent xsi:type="PersonType">
+                <Name>
+                  <GivenName>Mathias</GivenName>
+                  <FamilyName>Lux</FamilyName>
+                  <GivenName>Motte</GivenName>
+                </Name>
+                <Affiliation>
+                  <Organization>
+                    <Name>Know-Center</Name>
+                  </Organization>
+                </Affiliation>
+                <ElectronicAddress>
+                  <Email>mlux@know-center.at</Email>
+                  <Url>http://www.know-center.at</Url>
+                </ElectronicAddress>
+              </Agent>
+            </Creator>
+            <CreationCoordinates>
+              <Date>
+                <TimePoint>2004-04-23T17:51:38</TimePoint>
+              </Date>
+            </CreationCoordinates>
+            <CreationTool>
+              <Tool>
+                <Name>Canon Canon DIGITAL IXUS 400</Name>
+              </Tool>
+              <Setting name="Make" value="Canon" />
+              <Setting name="Model" value="Canon DIGITAL IXUS 400" />
+              <Setting name="Orientation" value="Top, left side (Horizontal / normal)" />
+              <Setting name="X Resolution" value="180 dots per inch" />
+              <Setting name="Y Resolution" value="180 dots per inch" />
+              <Setting name="Resolution Unit" value="Inch" />
+              <Setting name="Date/Time" value="2004:04:23 17:51:38" />
+              <Setting name="YCbCr Positioning" value="Center of pixel array" />
+              <Setting name="Exposure Time" value="1/60 sec" />
+              <Setting name="F-Number" value="F3,5" />
+              <Setting name="Date/Time Original" value="2004:04:23 17:51:38" />
+              <Setting name="Date/Time Digitized" value="2004:04:23 17:51:38" />
+              <Setting name="Compressed Bits Per Pixel" value="3 bits/pixel" />
+              <Setting name="Shutter Speed Value" value="1/59 sec" />
+              <Setting name="Aperture Value" value="F3,5" />
+              <Setting name="Exposure Bias Value" value="0 EV" />
+              <Setting name="Max Aperture Value" value="F3,5" />
+              <Setting name="Metering Mode" value="Multi-segment" />
+              <Setting name="Flash" value="Flash did not fire, auto" />
+              <Setting name="Focal Length" value="12,875 mm" />
+              <Setting name="Color Space" value="sRGB" />
+              <Setting name="Exif Image Width" value="640 pixels" />
+              <Setting name="Exif Image Height" value="480 pixels" />
+              <Setting name="Focal Plane X Resolution" value="140/800000 inches" />
+              <Setting name="Focal Plane Y Resolution" value="105/600000 inches" />
+              <Setting name="Focal Plane Resolution Unit" value="Inches" />
+              <Setting name="Sensing Method" value="One-chip color area sensor" />
+              <Setting name="File Source" value="Digital Still Camera (DSC)" />
+              <Setting name="Custom Rendered" value="Normal process" />
+              <Setting name="Exposure Mode" value="Auto exposure" />
+              <Setting name="White Balance" value="Auto white balance" />
+              <Setting name="Digital Zoom Ratio" value="1" />
+              <Setting name="Scene Capture Type" value="Standard" />
+              <Setting name="Compression" value="JPEG (old-style)" />
+              <Setting name="Thumbnail Offset" value="2036 bytes" />
+              <Setting name="Thumbnail Length" value="5445 bytes" />
+            </CreationTool>
+          </Creation>
+        </CreationInformation>
+        <TextAnnotation>
+          <FreeTextAnnotation>Mathias drives his Quad</FreeTextAnnotation>
+          <StructuredAnnotation>
+            <Who>
+              <Name>Mathias Lux</Name>
+            </Who>
+            <WhatObject>
+              <Name>Quad</Name>
+            </WhatObject>
+            <WhatAction>
+              <Name>Driving</Name>
+            </WhatAction>
+            <Where>
+              <Name>Villach</Name>
+            </Where>
+            <When>
+              <Name>April 2004</Name>
+            </When>
+          </StructuredAnnotation>
+        </TextAnnotation>
+        <Semantic>
+          <Label>
+            <Name />
+          </Label>
+          <SemanticBase xsi:type="AgentObjectType" id="id_1">
+            <Label>
+              <Name>Mathias Lux</Name>
+            </Label>
+            <Agent xsi:type="PersonType">
+              <Name>
+                <GivenName>Mathias</GivenName>
+                <FamilyName>Lux</FamilyName>
+              </Name>
+            </Agent>
+          </SemanticBase>
+          <SemanticBase xsi:type="ObjectType" id="id_2">
+            <Label>
+              <Name>Quad</Name>
+            </Label>
+          </SemanticBase>
+          <SemanticBase xsi:type="EventType" id="id_3">
+            <Label>
+              <Name>Driving</Name>
+            </Label>
+            <Event>
+              <Label>
+                <Name>Driving</Name>
+              </Label>
+              <SemanticPlace>
+                <Label>
+                  <Name>Graz</Name>
+                </Label>
+              </SemanticPlace>
+              <SemanticTime>
+                <Label>
+                  <Name>Time of Driving</Name>
+                </Label>
+                <Time>
+                  <TimePoint>2005-02-03T22:13</TimePoint>
+                </Time>
+              </SemanticTime>
+            </Event>
+          </SemanticBase>
+          <SemanticBase xsi:type="SemanticPlaceType" id="id_4">
+            <Label>
+              <Name>Villach</Name>
+            </Label>
+            <Place>
+              <PostalAddress>
+                <AddressLine>9500 Villach</AddressLine>
+                <AddressLine>Austria</AddressLine>
+              </PostalAddress>
+            </Place>
+          </SemanticBase>
+          <Graph>
+            <Relation type="urn:mpeg:mpeg7:cs:SemanticRelationCS:2001:agentOf" source="#id_1" target="#id_3" />
+            <Relation type="urn:mpeg:mpeg7:cs:SemanticRelationCS:2001:instrumentOf" source="#id_2" target="#id_3" />
+            <Relation type="urn:mpeg:mpeg7:cs:SemanticRelationCS:2001:location" source="#id_1" target="#id_4" />
+          </Graph>
+        </Semantic>
+        <VisualDescriptor xsi:type="ColorLayoutType">
+          <YDCCoeff>30</YDCCoeff>
+          <CbDCCoeff>24</CbDCCoeff>
+          <CrDCCoeff>34</CrDCCoeff>
+          <YACCoeff63>9 20 19 7 25 15 15 15 14 20 19 16 16 15 19 11 20 16 16 14 16 14 14 16 14 18 16 13 15 14 18 16 15 15 16 17 17 16 14 15 16 15 15 18 15 18 17 16 16 15 16 16 14 15 14 14 15 15 16 16 17 16 14</YACCoeff63>
+          <CbACCoeff63>13 13 20 13 18 16 15 17 17 15 18 14 17 16 14 15 17 17 17 17 17 16 17 16 15 15 15 18 16 16 16 16 14 16 15 16 15 16 16 15 17 17 14 15 15 15 15 16 15 16 16 15 15 17 17 16 17 16 16 15 15 14 16</CbACCoeff63>
+          <CrACCoeff63>16 17 13 16 15 17 16 13 14 15 14 16 16 15 16 16 15 15 16 15 15 16 16 15 16 16 16 14 16 15 15 15 17 16 15 15 16 15 15 16 15 15 16 16 16 16 15 15 15 16 15 15 16 16 14 15 15 15 15 16 16 16 15</CrACCoeff63>
+        </VisualDescriptor>
+        <VisualDescriptor xsi:type="ScalableColorType" numOfBitplanesDiscarded="0" numOfCoeff="64">
+          <Coeff>-202 63 25 52 3 7 9 14 6 13 11 22 15 17 20 22 0 1 0 2 -1 5 0 0 2 6 3 0 -5 5 -2 -4 0 0 0 1 0 0 1 2 1 1 1 3 1 2 4 5 -14 -3 -12 -8 -13 -11 -12 -15 -3 -5 -7 -9 -9 -13 -18 -15</Coeff>
+        </VisualDescriptor>
+        <VisualDescriptor xsi:type="EdgeHistogramType">
+          <BinCounts>2 5 6 5 5 3 6 4 6 4 6 2 4 5 5 6 4 3 2 4 5 1 6 5 7 4 2 6 6 6 5 2 7 1 5 5 3 4 4 6 2 5 4 3 7 3 2 6 3 7 4 2 6 4 6 3 4 5 6 6 2 4 6 5 6 3 4 6 7 5 1 6 5 1 6 1 5 6 5 5</BinCounts>
+        </VisualDescriptor>
+        <VisualDescriptor xsi:type="DominantColorType">
+          <SpatialCoherency>0</SpatialCoherency>
+          <Values>
+            <Percentage>7</Percentage>
+            <ColorValueIndex>5 5 5</ColorValueIndex>
+          </Values>
+          <Values>
+            <Percentage>3</Percentage>
+            <ColorValueIndex>13 14 13</ColorValueIndex>
+          </Values>
+          <Values>
+            <Percentage>2</Percentage>
+            <ColorValueIndex>13 15 9</ColorValueIndex>
+          </Values>
+          <Values>
+            <Percentage>1</Percentage>
+            <ColorValueIndex>28 25 8</ColorValueIndex>
+          </Values>
+          <Values>
+            <Percentage>3</Percentage>
+            <ColorValueIndex>14 10 5</ColorValueIndex>
+          </Values>
+          <Values>
+            <Percentage>5</Percentage>
+            <ColorValueIndex>27 27 27</ColorValueIndex>
+          </Values>
+          <Values>
+            <Percentage>0</Percentage>
+            <ColorValueIndex>23 6 8</ColorValueIndex>
+          </Values>
+          <Values>
+            <Percentage>7</Percentage>
+            <ColorValueIndex>20 20 20</ColorValueIndex>
+          </Values>
+        </VisualDescriptor>
+      </Image>
+    </MultimediaContent>
+  </Description>
+</Mpeg7>
+

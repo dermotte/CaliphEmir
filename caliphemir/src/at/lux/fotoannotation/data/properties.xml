@@ -1,0 +1,63 @@
+<properties>
+    <frame>
+        <size>
+            <width>800</width>
+            <height>600</height>
+        </size>
+        <location>
+            <x>0</x>
+            <y>0</y>
+        </location>
+        <split>
+            <lr>164</lr>
+            <tb>455</tb>
+        </split>
+    </frame>
+    <textpreview>
+        <size>
+            <width>640</width>
+            <height>480</height>
+        </size>
+    </textpreview>
+    <browser>
+        <windows>cmd.exe /c start "" "{url}"</windows>
+        <linux>firefox {url}</linux>
+    </browser>
+    <help>
+        <online>http://www.semanticmetadata.net/wiki/</online>
+        <homepage>http://www.semanticmetadata.net/</homepage>
+        <donate>http://www.semanticmetadata.net/</donate>
+    </help>
+    <menu>
+        <menu name="File">
+            <!--menuitem name="Open ..." command="openFile" key="control O" /-->
+            <menuitem name="Save" command="saveFile" key="control S" icon="data/save_edit.gif" />
+            <menuitem name="Save as ..." command="saveFileAs" key="F12" icon="data/saveas_edit.gif" />
+            <separator/>
+            <menuitem name="Garbage Collector" command="gc" key="alt C"  icon="data/refresh_nav.gif" />
+            <separator/>
+            <menuitem name="Autopilot" command="autoPilot" key="control F12" icon="data/filter_ps.gif" />
+            <separator/>
+            <menuitem name="Exit" command="exitApplication" key="alt F4" icon="data/delete_obj.gif" />
+        </menu>
+        <menu name="View">
+            <menuitem name="XML Text" command="viewXML" key="control T" icon="data/file_obj.gif" />
+            <separator/>
+            <menuitem name="Delete agent" command="delAgent" key="control A" icon="data/error_tsk.gif" />
+            <separator/>
+            <menuitem name="external Viewer" command="viewExternal" key="control E" icon="data/redo_edit.gif" />
+            <menuitem name="set Viewer" command="setExternal" icon="data/elements_obj.gif" />
+        </menu>
+        <menu name="Help">
+            <!--menuitem name="Local Help" command="showHelp" key="F1"/-->
+            <menuitem name="Online Help" command="showHelpOnline" key="F1" icon="data/linkto_help.png"/>
+            <separator/>
+            <menuitem name="About" command="showAbout" icon="data/showwarn_tsk.gif" />
+            <menuitem name="Visit homepage" command="visitHomepage" icon="data/redo_edit.gif" />
+        </menu>
+    </menu>
+    <files>
+        <lastdirectory>.</lastdirectory>
+        <externalviewer></externalviewer>
+    </files>
+</properties>

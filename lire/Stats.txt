@@ -1,0 +1,60 @@
+New implementation:
+
+Test set: 100 mixed size digital photos (1-2 MP):
+
+Indexing (VM parameters: -server -Xms256M -Xmx512M):
+>> Fast DocumentBuilder:
+22.219 seconds taken, 222 ms per image.
+>> Default DocumentBuilder:
+30.86 seconds taken, 308 ms per image.
+>> Extensive DocumentBuilder:
+42.328 seconds taken, 423 ms per image.
+
+Test set: 3890 mixed size digital photos (1-2 MP):
+
+Indexing (VM parameters: -server -Xms256M -Xmx512M):
+>> Fast DocumentBuilder:
+1199.688 seconds taken, 308 ms per image.
+>> Default DocumentBuilder:
+1612.64 seconds taken, 414 ms per image.
+>> Extensive DocumentBuilder:
+2813.407 seconds taken, 723 ms per image.
+
+Searching (VM parameters: -server -Xms256M -Xmx512M)
+
+On extensive index ....
+With image + extensive DocumentBuilder:
+589.36 ms per search with image, averaged on 50
+With document + extensive DocumentBuilder:
+295.94 ms per search with document, averaged on 50
+With document + fast DocumentBuilder:
+100.0 ms per search with document, averaged on 50
+
+On fast index ...
+With image + extensive DocumentBuilder:
+340.94 ms per search with image, averaged on 50
+With document + extensive DocumentBuilder:
+65.94 ms per search with document, averaged on 50
+With document + fast DocumentBuilder:
+64.06 ms per search with document, averaged on 50
+
+Process finished with exit code 0
+
+
+--------
+
+Old implementation:
+
+3890 mixed size digital photos (1-2 MP), Fast (ColorLayout only)
+>> Indexing 3890 files.
+1630.344 seconds taken, 419 ms per image.
+Search in this index with default Searcher and BufferedImage: 807.8 ms per search with image, averaged on 10
+Search in this index with default Searcher and Document: 98.5 ms per search with document, averaged on 10
+
+3890 mixed size digital photos (1-2 MP), Extensive (all descriptors)
+>> Indexing 3890 files.
+4331.531 seconds taken, 1113 ms per image.
+Search in this index with default Searcher and BufferedImage: 1070.94 ms per search, averaged on 50
+Search in this index with default Searcher and Document: 423.4 ms per search with document, averaged on 10
+
+

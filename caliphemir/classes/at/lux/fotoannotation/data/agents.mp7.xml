@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Mpeg7 xmlns="urn:mpeg:mpeg7:schema:2001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Description xsi:type="SemanticDescriptionType">
+        <Semantics>
+            <Label>
+                <Name>Agents of Annotation</Name>
+            </Label>
+            <SemanticBase xsi:type="AgentObjectType">
+                <Label>
+                    <Name>John Doe</Name>
+                </Label>
+                <Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Doe</FamilyName>
+                        <GivenName>John</GivenName>
+                    </Name>
+                </Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="AgentObjectType">
+                <Label>
+                    <Name>Lux, Mathias</Name>
+                </Label>
+                <Agent xsi:type="PersonType">
+                    <Name>
+                        <GivenName>Mathias</GivenName>
+                        <FamilyName>Lux</FamilyName>
+                    </Name>
+                    <Affiliation>
+                        <Organization>
+                            <Name>Know-Center</Name>
+                        </Organization>
+                    </Affiliation>
+                    <Address>
+                        <PostalAddress>
+                            <AddressLine>Inffeldgasse 21a</AddressLine>
+                            <AddressLine>8010 Graz</AddressLine>
+                            <AddressLine>AUSTRIA</AddressLine>
+                        </PostalAddress>
+                    </Address>
+                    <ElectronicAddress>
+                        <Email>mlux@know-center.at</Email>
+                    </ElectronicAddress>
+                </Agent>
+            </SemanticBase>
+        </Semantics>
+    </Description>
+</Mpeg7>
+

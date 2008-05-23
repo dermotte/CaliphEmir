@@ -1,0 +1,389 @@
+<project name="Caliph and Emir" default="compile" basedir=".">
+    <!--
+/*
+ * This file is part of Caliph & Emir.
+ *
+ * Caliph & Emir is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Caliph & Emir is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Caliph & Emir; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * Copyright statement:
+ * ********************
+ * (c) 2002-2005 by Mathias Lux (mathias@juggle.at)
+ * Inffeldgasse 21a, 8010 Graz, Austria
+ * http://www.know-center.at
+ */
+
+    -->
+    <description>
+        This buildfile is used to build and package
+        the foto annotation and retrieval tool Caliph, Emir
+        Mathias Lux, 2002-09-14
+    </description>
+    <property name="src" value="src"/>
+    <property name="build" value="classes"/>
+    <property name="dist" value="dist"/>
+    <property name="versionstring" value="0.9.25"/>
+    <!-- path to test files -->
+    <property name="test" value="test"/>
+    <!-- path to documentation like README or CHANGES -->
+    <property name="doc" value="doc"/>
+    <!-- path to additional files like installer scripts, icons and batch files -->
+    <property name="add.files" value="add.files"/>
+
+    <!-- define the classpath  -->
+    <path id="classpath.path">
+        <pathelement location="classes"/>
+        <fileset dir="lib">
+            <include name="jdom.jar"/>
+            <include name="jaxen-full.jar"/>
+            <include name="saxpath.jar"/>
+            <include name="metadata-extractor-2.3.1.jar"/>
+            <include name="lucene-core-2.1.0.jar"/>
+            <include name="derby.jar"/>
+            <include name="looks-2.0.4.jar"/>
+            <include name="swing-layout-1.0.jar"/>
+        </fileset>
+        <fileset dir="lib/batik">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <tstamp/>
+        <tstamp>
+            <format property="touch.time" pattern="dd.MM.yyyy hh:mm aa"/>
+        </tstamp>
+        <mkdir dir="${build}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <!-- Build nummer vergeben: -->
+        <propertyfile file="${src}/at/lux/fotoannotation/dialogs/build.properties"
+                      comment="Properties of this specific CALIPH build">
+            <entry key="build-date" type="date" value="now"/>
+            <entry key="build-number" type="int" value="1" operation="+"/>
+        </propertyfile>
+        <property file="${src}/at/lux/fotoannotation/dialogs/build.properties"/>
+        <echo file="default.mf" append="false">Main-Class: at.lux.fotoannotation.AnnotationFrame
+Class-Path: lib/lucene-core-2.1.0.jar lib/jdom.jar lib/jaxen-full.jar lib/saxpath.jar lib/metadata-extractor-2.3.1.jar lib/derby.jar lib/looks-2.0.4.jar
+Build-Date: ${touch.time}
+Build-Number: ${build-number}
+        </echo>
+        <!--        <propertyfile file="${src}/at/lux/fotoretrieval/dialogs/build.properties" comment="Properties of this specific EMIR build">
+                    <entry key="build-date" type="date" value="now"/>
+                    <entry key="build" type="int" value="1" operation="+"/>
+                </propertyfile> -->
+        <!-- copy files to compiled classes (icons, ressources) -->
+        <copy todir="${build}/at">
+            <fileset dir="${src}/at">
+                <exclude name="**/*.java"/>
+                <exclude name="**/CVS/*"/>
+            </fileset>
+        </copy>
+        <copy todir="${build}/resources">
+            <fileset dir="${src}/resources">
+                <exclude name="**/*.java"/>
+                <exclude name="**/CVS/*"/>
+            </fileset>
+        </copy>
+        <!-- actual compile -->
+        <javac srcdir="${src}" destdir="${build}" optimize="on" verbose="true" listfiles="true">
+            <classpath refid="classpath.path"/>
+        </javac>
+    </target>
+
+    <target name="dist" depends="clean,compile">
+        <description>
+            Creates a distributable jar, copies all docs and libraries,
+            zips the source and presents all this in the dist directory.
+            For the Windows installer use the NSI script - do not forget
+            to update the build number (see about in the applications
+            or the attribute "build" in file at/lux/fotoannotation/dialogs/build.properties
+            inside the jar.
+        </description>
+
+        <mkdir dir="${dist}"/>
+        <mkdir dir="${dist}/lib"/>
+        <mkdir dir="${dist}/doc"/>
+        <mkdir dir="${dist}/testdata"/>
+        <!-- JDOM, JAXEN, EXIF + Licenses -->
+        <copy todir="${dist}/lib">
+            <fileset dir="lib">
+                <patternset>
+                    <include name="*.jar"/>
+                    <include name="*.LICENSE"/>
+                    <exclude name="*src*"/>
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+        <!-- INSTALL, CHANGES, README, ... -->
+        <copy todir="${dist}/doc">
+            <fileset dir="doc">
+                <patternset>
+                    <include name="*.txt"/>
+                    <include name="*.pdf"/>
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+        <!-- batch and shell scripts -->
+        <copy todir="${dist}">
+            <fileset dir="add.files">
+                <patternset>
+                    <!-- Icons -->
+                    <include name="*.ico"/>
+                    <!-- Windows startup -->
+                    <include name="*.bat"/>
+                    <!-- bash startup -->
+                    <include name="*.sh"/>
+                    <!-- Windows launcher -->
+                    <include name="*.exe"/>
+                    <!-- Windows launcher generation project file (see jsmooth @ sf.net) -->
+                    <include name="*.jsmooth"/>
+                    <!-- Installer script f. Windows (see NSIS @ sf.net or nullsoft) -->
+                    <include name="*.nsi"/>
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+        <!-- testdata -->
+        <copy todir="${dist}/testdata">
+            <fileset dir="example-data">
+                <patternset>
+                    <include name="**/*.JPG"/>
+                    <include name="**/*.jpg"/>
+                    <include name="**/*.xml"/>
+                    <include name="LICENSE.txt"/>
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+
+        <!--javadoc packagenames="at.know.center.caliph.objectcatalog.*" sourcepath="${src}" destdir="${dist}/docs/api" author="true">
+            <classpath refid="classpath.path"/>
+        </javadoc-->
+        <jar jarfile="${dist}/Caliph.jar" basedir="${build}" manifest="default.mf"/>
+        <!--jar jarfile="${dist}/Caliph-src-${DSTAMP}.jar" basedir="${src}"/-->
+        <zip destfile="${dist}/Caliph+Emir-src.zip">
+            <fileset dir=".">
+                <patternset>
+                    <include name="${src}/**"/>
+                    <include name="${test}/**"/>
+                    <include name="${doc}/**"/>
+                    <include name="${add.files}/**"/>
+                    <include name="build.xml"/>
+                    <include name="license.txt"/>
+                    <include name="default.mf"/>
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </zip>
+    </target>
+
+    <target name="release" depends="dist">
+        <!-- create source package for release -->
+        <!-- preparing a temp directory for the package -->
+        <mkdir dir="CaliphEmir_v${versionstring}"/>
+        <!-- Copy all ressources to the directory -->
+        <copy todir="${dist}/CaliphEmir_v${versionstring}">
+            <fileset dir=".">
+                <patternset>
+                    <include name="${src}/**"/>
+                    <include name="${test}/**"/>
+                    <include name="${doc}/**"/>
+                    <include name="${add.files}/**"/>
+                    <include name="build.xml"/>
+                    <include name="license.txt"/>
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+        <!-- Make a temp tar file -->
+        <tar tarfile="${dist}/CaliphEmir_v${versionstring}-src.tar">
+            <tarfileset dir="${dist}">
+                <patternset>
+                    <include name="CaliphEmir_v${versionstring}/**"/>
+                </patternset>
+            </tarfileset>
+        </tar>
+        <!-- Make a bz2 file -->
+        <bzip2 src="${dist}/CaliphEmir_v${versionstring}-src.tar"
+               destfile="${dist}/CaliphEmir_v${versionstring}-src.tar.bz2"/>
+        <!-- Make a zip file -->
+        <zip destfile="${dist}/CaliphEmir_v${versionstring}-src.zip">
+            <fileset dir="${dist}">
+                <patternset>
+                    <include name="CaliphEmir_v${versionstring}/**"/>
+                </patternset>
+            </fileset>
+        </zip>
+        <!-- Delete temp tar file -->
+        <delete file="${dist}/CaliphEmir_v${versionstring}-src.tar"/>
+        <!-- Make a temp directory -->
+        <delete dir="${dist}/CaliphEmir_v${versionstring}"/>
+
+        <!-- create binary package for release -->
+        <!-- preparing a temp directory for the package -->
+        <mkdir dir="CaliphEmir_v${versionstring}"/>
+        <!-- Copy all ressources to the directory -->
+        <copy todir="${dist}/CaliphEmir_v${versionstring}">
+            <fileset dir="${dist}">
+                <patternset>
+                    <include name="doc/**"/>
+                    <include name="lib/**"/>
+                    <include name="Caliph.jar"/>
+                    <include name="run*.*"/>
+                </patternset>
+            </fileset>
+        </copy>
+        <!-- Make a temp tar file -->
+        <tar tarfile="${dist}/CaliphEmir_v${versionstring}-bin.tar">
+            <tarfileset dir="${dist}">
+                <patternset>
+                    <include name="CaliphEmir_v${versionstring}/**"/>
+                </patternset>
+            </tarfileset>
+        </tar>
+        <!-- Make a bz2 file -->
+        <bzip2 src="${dist}/CaliphEmir_v${versionstring}-bin.tar"
+               destfile="${dist}/CaliphEmir_v${versionstring}-bin.tar.bz2"/>
+        <!-- Make a zip file -->
+        <zip destfile="${dist}/CaliphEmir_v${versionstring}-bin.zip">
+            <fileset dir="${dist}">
+                <patternset>
+                    <include name="CaliphEmir_v${versionstring}/**"/>
+                </patternset>
+            </fileset>
+        </zip>
+        <!-- Delete temp tar file -->
+        <delete file="${dist}/CaliphEmir_v${versionstring}-bin.tar"/>
+        <!-- Delete temp directory -->
+        <delete dir="${dist}/CaliphEmir_v${versionstring}"/>
+
+        <!-- package test data -->
+        <tar tarfile="${dist}/CaliphEmir_testdata_v${versionstring}.tar">
+            <tarfileset dir="dist">
+                <patternset>
+                    <include name="testdata/**"/>
+                </patternset>
+            </tarfileset>
+        </tar>
+        <!-- Make a bz2 file -->
+        <bzip2 src="${dist}/CaliphEmir_testdata_v${versionstring}.tar"
+               destfile="${dist}/CaliphEmir_testdata_v${versionstring}.tar.bz2"/>
+        <!-- Make a zip file -->
+        <zip destfile="${dist}/CaliphEmir_testdata_v${versionstring}.zip">
+            <fileset dir="${dist}">
+                <patternset>
+                    <include name="testdata/**"/>
+                </patternset>
+            </fileset>
+        </zip>
+        <!-- Delete temp tar file -->
+        <delete file="${dist}/CaliphEmir_testdata_v${versionstring}.tar"/>
+    </target>
+
+    <target name="clean">
+        <description>
+            Cleans away all compiled and copied files
+        </description>
+        <delete dir="${build}"/>
+        <delete>
+            <fileset dir="${dist}" excludes="releases/*"/>
+        </delete>
+    </target>
+
+    <target name="build-source-package" depends="clean,init">
+        <description>
+            Creates a pack and go version of the source for backup and
+            mobile development :) includes the test source!
+        </description>
+        <mkdir dir="${dist}"/>
+        <zip zipfile="${dist}/Caliph+Emir-src-${DSTAMP}-${TSTAMP}.zip">
+            <fileset dir=".">
+                <patternset>
+                    <include name="${src}/**"/>
+                    <include name="${test}/**"/>
+                    <include name="${doc}/**"/>
+                    <include name="${add.files}/**"/>
+                    <include name="build.xml"/>
+                    <include name="license.txt"/>
+                    <include name="default.mf"/>
+                    <exclude name="**/CVS/*"/>
+                </patternset>
+            </fileset>
+            <fileset dir="${dist}">
+                <patternset>
+                    <include name="lib/**"/>
+                </patternset>
+            </fileset>
+        </zip>
+    </target>
+
+    <target name="createCaliphWebstart" depends="dist">
+        <mkdir dir="${dist}/webstart"/>
+        <mkdir dir="${dist}/webstart/lib"/>
+
+        <copy todir="${dist}">
+            <fileset dir="add.files">
+                <include name="webstart/**"/>
+                <exclude name="**/CVS/*"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${dist}/webstart/lib" file="${dist}/Caliph.jar"/>
+
+        <copy todir="${dist}/webstart/lib">
+            <fileset dir="${dist}/lib">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <!--
+        - a keystore has to generated first, visit
+        - http://java.sun.com/j2se/1.5.0/docs/guide/javaws/developersguide/development.html#signing
+        - for more information
+
+        do following with keytool in your path:
+        $> keytool -genkey -keystore myKeystore -alias myself
+        $> keytool -selfcert -alias myself -keystore myKeystore
+        -->
+        <signjar alias="myself" storepass="keines" keystore="myKeystore">
+            <fileset dir="${dist}/webstart/lib">
+                <include name="*.jar"/>
+            </fileset>
+        </signjar>
+
+    </target>
+
+    <target name="createCbirLibrary" depends="dist">
+        <mkdir dir="${dist}"/>
+        <mkdir dir="${dist}/lire"/>
+        <echo file="default-cbir.mf" append="false">Build-Date: ${touch.time}
+            Build-Number: ${build-number}
+        </echo>
+        <!-- TODO: checkout which org.vizir files are needed -->
+        <jar jarfile="${dist}/lire/caliph-emir-cbir.jar" manifest="default-cbir.mf">
+            <fileset dir="${build}">
+                <include name="at/lux/imageanalysis/*Impl.*"/>
+                <include name="at/lux/imageanalysis/*Implementation.*"/>
+                <include name="at/lux/imageanalysis/VisualDescriptor.*"/>
+                <include name="at/lux/imageanalysis/VisualDescriptorException.*"/>
+                <include name="org/vizir/**/*.*"/>
+            </fileset>
+        </jar>
+
+    </target>
+</project>
+

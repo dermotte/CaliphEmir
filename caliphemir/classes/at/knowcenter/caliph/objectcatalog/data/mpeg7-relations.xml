@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Mathias Lux (.) -->
+<relations>
+    <relation>
+        <name>key</name>
+        <inverse>keyFor</inverse>
+        <description>Video segment A key image B, which means that the image is a key for accessing the video segment.</description>
+    </relation>
+    <relation>
+        <name>annotates</name>
+        <inverse>annotatedBy</inverse>
+        <description>Audio segment B annotates image A, which means that the audio segment provides an annotation or description of the image.</description>
+    </relation>
+    <relation>
+        <name>shows</name>
+        <inverse>appearsIn</inverse>
+        <description>"Image B shows object "car", which means that the car appears in the image."</description>
+    </relation>
+    <relation>
+        <name>references</name>
+        <inverse>referencedBy</inverse>
+        <description>"Video B references object "car's engine", which means that the video refers to the car's engine."</description>
+    </relation>
+    <relation>
+        <name>quality</name>
+        <inverse>qualityOf</inverse>
+        <description>"Object "fire engine" quality red color, which means that the color red is a quality of fire engines."</description>
+    </relation>
+    <relation>
+        <name>symbolizes</name>
+        <inverse>symbolizedBy</inverse>
+        <description>"An image showing zeros and ones symbolizes object "computers", which means that the image is a symbol of computers."</description>
+    </relation>
+    <relation>
+        <name>location</name>
+        <inverse>locationOf</inverse>
+        <description>"In the description, "Mary receives a flower in the street", the event "receive" location semantic place "street", which means that the street is the location of the receiving event."</description>
+    </relation>
+    <relation>
+        <name>source</name>
+        <inverse>sourceOf</inverse>
+        <description>"In the example "John moved the box from the floor to table", the event "move" source semantic place "floor", which means that the floor is the source location of the moving event."</description>
+    </relation>
+    <relation>
+        <name>destination</name>
+        <inverse>destinationOf</inverse>
+        <description>"In the description, "Mary moved from California to Toronto", the event "move" destination semantic place "Toronto", which means that Toronto is the destination location of the event move."</description>
+    </relation>
+    <relation>
+        <name>path</name>
+        <inverse>pathOf</inverse>
+        <description>"In the description "The train travelled along the track", event "travel_ pathOf semantic place "track", which means that the track is the path of the event travel."</description>
+    </relation>
+    <relation>
+        <name>time</name>
+        <inverse>timeOf</inverse>
+        <description>"In the description "Mary was born on Christmas", event "born" time semantic time "Christmas", which means that Christmas is the time of the birth event."</description>
+    </relation>
+    <relation>
+        <name>depicts</name>
+        <inverse>depictedBy</inverse>
+        <description>"Object _painting_ depicts narrative world "glass with water", which means that the painting is a depiction of the glass with water."</description>
+    </relation>
+    <relation>
+        <name>represents</name>
+        <inverse>representedBy</inverse>
+        <description>"Object "Statue of Liberty" represents concept "liberty", which means that the Statue of Liberty represents the concept of liberty."</description>
+    </relation>
+    <relation>
+        <name>context</name>
+        <inverse>contextFor</inverse>
+        <description>"Event "Rosa Parks' bus ride" context concept "civil rights struggle", which means that the civil rights struggle is the context for Rosa Parks' bus ride."</description>
+    </relation>
+    <relation>
+        <name>interprets</name>
+        <inverse>interpretedBy</inverse>
+        <description>"Concept "law enforcement" interprets event "policeman arresting a suspected killer", which means that law enforcement is an interpretation of the arrest event."</description>
+    </relation>
+    <relation>
+        <name>agent</name>
+        <inverse>agentOf</inverse>
+        <description>"In the description "Peter gives the book to Mary", the event "give" agent object "Peter", which means that Peter is the agent of the giving."</description>
+    </relation>
+    <relation>
+        <name>patient</name>
+        <inverse>patientOf</inverse>
+        <description>"In the description "Peter gives the book to Mary", the event "give" patient object "book", which means that the book is the patient of the giving."</description>
+    </relation>
+    <relation>
+        <name>experiencer</name>
+        <inverse>experiencerOf</inverse>
+        <description>"In the description "John hates pizza", the event "hate" experiencer object "John", which means that John is the experiencer of the hate."</description>
+    </relation>
+    <relation>
+        <name>stimulus</name>
+        <inverse>stimulusOf</inverse>
+        <description>"In the description, "The boy sees the barking dog", the event "see" stimulus object "dog", which means that the barking dog is the stimulus of the seeing."</description>
+    </relation>
+    <relation>
+        <name>causer</name>
+        <inverse>causerOf</inverse>
+        <description>"In the description "Lightening strikes the tree", the event "strike" causer object "lightening" means that lightening is the causer of the strike."</description>
+    </relation>
+    <relation>
+        <name>goal</name>
+        <inverse>goalOf</inverse>
+        <description>"In the description "Mary receives a flower", the event "receive" goal object "Mary", which means that Mary is the goal of the receiving."</description>
+    </relation>
+    <relation>
+        <name>beneficiary</name>
+        <inverse>beneficiaryOf</inverse>
+        <description>"In the description "John bakes a cake for Mary", the event "bake" beneficiary object "Mary", which means that Mary is the beneficiary of the baking."</description>
+    </relation>
+    <relation>
+        <name>theme</name>
+        <inverse>themeOf</inverse>
+        <description>"In the description "the boy talks about the dog", the event "talk" theme object "dog", which means that the dog is the theme of the boy's talking."</description>
+    </relation>
+    <relation>
+        <name>result</name>
+        <inverse>resultOf</inverse>
+        <description>"In the description "John bakes a cake",  the event "bake" result object "cake", which means that the cake is the result of the baking."</description>
+    </relation>
+    <relation>
+        <name>instrument</name>
+        <inverse>instrumentOf</inverse>
+        <description>"In the description, "Mary cut the salami with a knife" the event "cut" instrument object "knife", which means that that the knife is the instrument of the cutting."</description>
+    </relation>
+    <relation>
+        <name>accompanier</name>
+        <inverse>accompanierOf</inverse>
+        <description>"In the description, "John travelled to France with Mary", the event "travel" accompanier  object "Mary", which means that Mary is the accompanier of the travelling."</description>
+    </relation>
+    <relation>
+        <name>combination</name>
+        <description>"Object "amphibious vehicle" combination objects "car", "boat", and "plane"."</description>
+    </relation>
+    <relation>
+        <name>summarizes</name>
+        <inverse>summarizedBt</inverse>
+        <description>"In the description "Jim got hurt, he broke his leg and arm", the event "hurt" summarizes event "broke his leg and arm", which means that getting hurt is the summary of the breaking of a leg and an arm."</description>
+    </relation>
+    <relation>
+        <name>specializes</name>
+        <inverse>generalizes</inverse>
+        <description>"Object "dog" specializes object "mammal", which means that dog is a specialization of a mammal."</description>
+    </relation>
+    <relation>
+        <name>similar</name>
+        <inverse>similar</inverse>
+        <description>"Object "car" similar object "automobile"."</description>
+    </relation>
+    <relation>
+        <name>opposite</name>
+        <inverse>opposite</inverse>
+        <description>"Color "white" opposite color "black"."</description>
+    </relation>
+    <relation>
+        <name>exemplifies</name>
+        <inverse>exemplifiedBy</inverse>
+        <description>"object "Bill Clinton" exemplifies concept "former world leader", which means that Bill Clinton is an example of a former world leader."</description>
+    </relation>
+    <relation>
+        <name>interchangeable</name>
+        <inverse>interchangeable</inverse>
+        <description>"Object "car" interchangeable object "Cadillac", which means that the car and Cadillac are synonymous in the context of the description. "</description>
+    </relation>
+    <relation>
+        <name>identifier</name>
+        <inverse>identifier</inverse>
+        <description>"Agent object "Maria, 25 years old" identifier Agent object "Maria, 1 year old."</description>
+    </relation>
+    <relation>
+        <name>part</name>
+        <inverse>partOf</inverse>
+        <description>"Semantic place "New York City" part semantic place "Manhattan", which means that Manhattan is part of New York City."</description>
+    </relation>
+    <relation>
+        <name>contrasts</name>
+        <inverse>contrasts</inverse>
+        <description>"The color segments in "The Wizard of Oz" contrasts the sepia segments."</description>
+    </relation>
+    <relation>
+        <name>property</name>
+        <inverse>propertyOf</inverse>
+        <description>"Object "banana" property concept "ripeness"."</description>
+    </relation>
+    <relation>
+        <name>user</name>
+        <inverse>userOf</inverse>
+        <description>"The concept metaphor "blossoming" user concept "maturing"."</description>
+    </relation>
+    <relation>
+        <name>component</name>
+        <inverse>componentOf</inverse>
+        <description>"Object "car" component object "wheel", which means that the wheel is a functional component of the car."</description>
+    </relation>
+    <relation>
+        <name>substance</name>
+        <inverse>substanceOf</inverse>
+        <description>"object "martini" substance object "gin", which means that gin is a substance of a martini."</description>
+    </relation>
+    <relation>
+        <name>entails</name>
+        <inverse>entailedBy</inverse>
+        <description>"Event "marriage" entails event "divorce", which means that marriage is a necessary condition for divorce."</description>
+    </relation>
+    <relation>
+        <name>manner</name>
+        <inverse>mannerOf</inverse>
+        <description>"Event "talk" manner concept "whisper", which means that whispering is a manner of talking."</description>
+    </relation>
+    <relation>
+        <name>state</name>
+        <inverse>stateOf</inverse>
+        <description>"In the description "The sunset is 90% orange", the semantic state event "sunset" state "90% orange"."</description>
+    </relation>
+    <relation>
+        <name>influences</name>
+        <inverse>dependsOn</inverse>
+        <description>Color B influences color A by the formula A=0.2*B, which means that color A has a dependency on color B.</description>
+    </relation>
+    <relation>
+        <name>membershipFunction</name>
+        <description>"The relation property between object "banana" and concept "ripeness" membershipFunction semantic state "cognitive color", which means that the cognitive color governs the strength of the ripeness of the banana."</description>
+    </relation>
+</relations>
