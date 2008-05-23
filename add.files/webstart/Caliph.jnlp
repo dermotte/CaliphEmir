@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- JNLP File for Caliph -->
+<jnlp spec="1.5+" codebase="http://www.semantic-metadata.net/webstart/" href="Caliph.jnlp">
+  <information>
+    <title>Caliph - Common And LIght weight PHoto annotation</title>
+    <vendor>Mathias Lux</vendor>
+    <homepage href="../docs/"/>
+    <description>Annotation tool for digital photos and images based on MPEG-7</description>
+    <description kind="short">
+        Caliph and Emir are MPEG-7 based Java prototypes for digital photo and image annotation and retrieval supporting graph like annotation for semantic metadata and content based image retrieval using MPEG-7 descriptors.
+    </description>
+    <icon href="images/caliph-icon.gif"/>
+    <offline-allowed/>
+  </information>
+  <security>
+      <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.5.0+"/>
+    <jar href="lib/Caliph.jar"/>
+    <jar href="lib/jaxen-full.jar"/>
+    <jar href="lib/looks-2.0.4.jar"/>
+    <jar href="lib/metadata-extractor-2.3.1.jar"/>
+    <jar href="lib/saxpath.jar"/>
+    <jar href="lib/swing-layout-1.0.jar"/>
+    <jar href="lib/jdom.jar"/>
+  </resources>
+  <application-desc main-class="at.lux.fotoannotation.AnnotationFrame"/>
+</jnlp>

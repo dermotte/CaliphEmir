@@ -1,0 +1,34 @@
+Caliph & Emir
+=============
+
+Caliph & Emir are Java & MPEG-7 based tools for semantic annotation and
+retrieval of digital photos and images supporting structured, unstructured
+and semantic, graph like annotation and content based, metadata based and
+semantic image retrieval.
+
+Installing Caliph & Emir
+========================
+
+Requirements:
+    + Windows ME, 2000 or XP or Linux with X
+    + Java 1.5 (Tiger), now named J2SE 5.0 :)
+
+If you obtained the binary package just use the bash or dos batch files to
+start either Caliph or Emir. Please note that you will need Java 1.5 (Tiger)
+to run these applications. If you don't hava the java executeable in your path
+you will have to add your java path to the batch file.
+
+To start the applications manually without help of scripts please run for
+Caliph:
+
+$> java -jar Caliph.jar
+
+for Emir:
+
+$> java -cp Caliph.jar at.lux.fotoretrieval.RetrievalFrame
+
+Make sure that the lib directory is in the same directory as the Caliph.jar
+file because the libraries are referenced from inside the Caliph.jar file.
+
+---
+Mathias Lux, mathias@juggle.at, 6th March 2005

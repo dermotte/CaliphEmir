@@ -1,0 +1,1901 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Mathias Lux (.) -->
+<Mpeg7 xmlns="urn:mpeg:mpeg7:schema:2001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fsw="http://www.know-center.at/fsw" xsi:schemaLocation="urn:mpeg:mpeg7:schema:2001 C:\mpeg7\Mpeg7-2001.xsd http://www.know-center.at/fsw C:\mpeg7\Know-soccer.xsd">
+    <Description xsi:type="SemanticDescriptionType">
+        <Semantics>
+            <Label>
+                <Name>some Agents ...</Name>
+            </Label>
+            <!-- ============================= Referee ============================= -->
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ae-Bujsaim">
+                <Label>
+                    <Name>Ali Bujsaim</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Bujsaim</FamilyName>
+                        <GivenName>Ali</GivenName>
+                    </Name>
+                    <Citizenship>ae</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-jp-Kamikawa">
+                <Label>
+                    <Name>Toru Kamikawa</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Kamikawa</FamilyName>
+                        <GivenName>Toru</GivenName>
+                    </Name>
+                    <Citizenship>jp</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-kr-Kim">
+                <Label>
+                    <Name>Young Joo Kim</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Kim</FamilyName>
+                        <GivenName>Young Joo</GivenName>
+                    </Name>
+                    <Citizenship>kr</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-cn-Lu">
+                <Label>
+                    <Name>Jun Lu</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Lu</FamilyName>
+                        <GivenName>Jun</GivenName>
+                    </Name>
+                    <Citizenship>cn</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-kw-Mane">
+                <Label>
+                    <Name>Saad Mane</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Mane</FamilyName>
+                        <GivenName>Saad</GivenName>
+                    </Name>
+                    <Citizenship>kw</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-bj-Codjia">
+                <Label>
+                    <Name>Coffi Codjia</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Codjia</FamilyName>
+                        <GivenName>Coffi</GivenName>
+                    </Name>
+                    <Citizenship>bj</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-tn-Daami">
+                <Label>
+                    <Name>Mourad Daami</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Daami</FamilyName>
+                        <GivenName>Mourad</GivenName>
+                    </Name>
+                    <Citizenship>tn</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-eg-Ghandour">
+                <Label>
+                    <Name>Gamal Ghandour</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Ghandour</FamilyName>
+                        <GivenName>Gamal</GivenName>
+                    </Name>
+                    <Citizenship>eg</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ma-Guezzaz">
+                <Label>
+                    <Name>Mohamed Guezzaz</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Guezzaz</FamilyName>
+                        <GivenName>Mohamed</GivenName>
+                    </Name>
+                    <Citizenship>ma</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-sn-Ndoye">
+                <Label>
+                    <Name>Falla Ndoye</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Ndoye</FamilyName>
+                        <GivenName>Falla</GivenName>
+                    </Name>
+                    <Citizenship>sn</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-gt-Batres">
+                <Label>
+                    <Name>Carlos Batres</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Batres</FamilyName>
+                        <GivenName>Carlos</GivenName>
+                    </Name>
+                    <Citizenship>gt</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-us-Hall">
+                <Label>
+                    <Name>Brian Hall</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Hall</FamilyName>
+                        <GivenName>Brian</GivenName>
+                    </Name>
+                    <Citizenship>us</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-hr-Mattus">
+                <Label>
+                    <Name>William Mattus</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Mattus</FamilyName>
+                        <GivenName>William</GivenName>
+                    </Name>
+                    <Citizenship>hr</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-jm-Prendergast">
+                <Label>
+                    <Name>Peter Prendergast</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Prendergast</FamilyName>
+                        <GivenName>Peter</GivenName>
+                    </Name>
+                    <Citizenship>jm</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-mx-Ramos_Rizo">
+                <Label>
+                    <Name>Felipe Ramos Rizo</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Ramos Rizo</FamilyName>
+                        <GivenName>Felipe</GivenName>
+                    </Name>
+                    <Citizenship>mx</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-py-Aquino">
+                <Label>
+                    <Name>Ubaldo Aquino</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Aquino</FamilyName>
+                        <GivenName>Ubaldo</GivenName>
+                    </Name>
+                    <Citizenship>py</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ec-Moreno">
+                <Label>
+                    <Name>Byron Moreno</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Moreno</FamilyName>
+                        <GivenName>Byron</GivenName>
+                    </Name>
+                    <Citizenship>ec</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-bo-Ortube">
+                <Label>
+                    <Name>RenÃº Ortube</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Ortube</FamilyName>
+                        <GivenName>RenÃº</GivenName>
+                    </Name>
+                    <Citizenship>bo</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-co-Ruiz">
+                <Label>
+                    <Name>Oscar Ruiz</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Ruiz</FamilyName>
+                        <GivenName>Oscar</GivenName>
+                    </Name>
+                    <Citizenship>co</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ar-Sanchez">
+                <Label>
+                    <Name>Angel Sanchez</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Sanchez</FamilyName>
+                        <GivenName>Angel</GivenName>
+                    </Name>
+                    <Citizenship>ar</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-br-Simon">
+                <Label>
+                    <Name>Carlos Simon</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Simon</FamilyName>
+                        <GivenName>Carlos</GivenName>
+                    </Name>
+                    <Citizenship>br</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-au-Shield">
+                <Label>
+                    <Name>Mark Shield</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Shield</FamilyName>
+                        <GivenName>Mark</GivenName>
+                    </Name>
+                    <Citizenship>au</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-it-Collina">
+                <Label>
+                    <Name>Pierluigi Collina</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Collina</FamilyName>
+                        <GivenName>Pierluigi</GivenName>
+                    </Name>
+                    <Citizenship>it</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-en-Dallas">
+                <Label>
+                    <Name>Hugh Dallas</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Dallas</FamilyName>
+                        <GivenName>Hugh</GivenName>
+                    </Name>
+                    <Citizenship>en</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-se-Frisk">
+                <Label>
+                    <Name>Anders Frisk</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Frisk</FamilyName>
+                        <GivenName>Anders</GivenName>
+                    </Name>
+                    <Citizenship>se</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-no-Hauge">
+                <Label>
+                    <Name>Terje Hauge</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Hauge</FamilyName>
+                        <GivenName>Terje</GivenName>
+                    </Name>
+                    <Citizenship>no</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-es-Lopez_Nieto">
+                <Label>
+                    <Name>Antonio Lopez Nieto</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Lopez Nieto</FamilyName>
+                        <GivenName>Antonio</GivenName>
+                    </Name>
+                    <Citizenship>es</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ch-Meier">
+                <Label>
+                    <Name>Urs Meier</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Meier</FamilyName>
+                        <GivenName>Urs</GivenName>
+                    </Name>
+                    <Citizenship>ch</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-pt-Melo_Pereira">
+                <Label>
+                    <Name>Vitor Melo Pereira</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Melo Pereira</FamilyName>
+                        <GivenName>Vitor</GivenName>
+                    </Name>
+                    <Citizenship>pt</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-de-Merk_Markus">
+                <Label>
+                    <Name>Markus Merk</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Merk</FamilyName>
+                        <GivenName>Markus</GivenName>
+                    </Name>
+                    <Citizenship>de</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-sk-Michel">
+                <Label>
+                    <Name>Lubos Michel</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Michel</FamilyName>
+                        <GivenName>Lubos</GivenName>
+                    </Name>
+                    <Citizenship>sk</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-dk-Nielsen">
+                <Label>
+                    <Name>Kim Milton Nielsen</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Nielsen</FamilyName>
+                        <GivenName>Kim Milton</GivenName>
+                    </Name>
+                    <Citizenship>dk</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-en-Poll">
+                <Label>
+                    <Name>Graham Poll</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Poll</FamilyName>
+                        <GivenName>Graham</GivenName>
+                    </Name>
+                    <Citizenship>en</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-gr-Vassaras">
+                <Label>
+                    <Name>Kyros Vassaras</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Vassaras</FamilyName>
+                        <GivenName>Kyros</GivenName>
+                    </Name>
+                    <Citizenship>gr</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-fr-Veissiere">
+                <Label>
+                    <Name>Gilles Veissiere</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Veissiere</FamilyName>
+                        <GivenName>Gilles</GivenName>
+                    </Name>
+                    <Citizenship>fr</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-nl-Wegereef">
+                <Label>
+                    <Name>Jan Wegereef</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Wegereef</FamilyName>
+                        <GivenName>Jan</GivenName>
+                    </Name>
+                    <Citizenship>nl</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-sa-Al_Traifi">
+                <Label>
+                    <Name>Ali Al Traifi</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Al Traifi</FamilyName>
+                        <GivenName>Ali</GivenName>
+                    </Name>
+                    <Citizenship>sa</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-my-Awang_Hamat">
+                <Label>
+                    <Name>Mat Lazim Awang Hamat</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Awang Hamat</FamilyName>
+                        <GivenName>Mat Lazim</GivenName>
+                    </Name>
+                    <Citizenship>my</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-jo-Hassouneh">
+                <Label>
+                    <Name>Awni Hassouneh</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Hassouneh</FamilyName>
+                        <GivenName>Awni</GivenName>
+                    </Name>
+                    <Citizenship>jo</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-lb-Koleit">
+                <Label>
+                    <Name>Haidar Koleit</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Koleit</FamilyName>
+                        <GivenName>Haidar</GivenName>
+                    </Name>
+                    <Citizenship>lb</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-sg-Krishnan">
+                <Label>
+                    <Name>Visva Krishnan</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Krishnan</FamilyName>
+                        <GivenName>Visva</GivenName>
+                    </Name>
+                    <Citizenship>sg</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-mv-Saeed">
+                <Label>
+                    <Name>Mohamed Saeed</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Saeed</FamilyName>
+                        <GivenName>Mohamed</GivenName>
+                    </Name>
+                    <Citizenship>mv</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-in-Sankar">
+                <Label>
+                    <Name>Komaleeswaran Sankar</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Sankar</FamilyName>
+                        <GivenName>Komaleeswaran</GivenName>
+                    </Name>
+                    <Citizenship>in</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-tn-Adjengui">
+                <Label>
+                    <Name>Taoufik Adjengui</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Adjengui</FamilyName>
+                        <GivenName>Taoufik</GivenName>
+                    </Name>
+                    <Citizenship>tn</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ml-Dante">
+                <Label>
+                    <Name>Dramane Dante</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Dante</FamilyName>
+                        <GivenName>Dramane</GivenName>
+                    </Name>
+                    <Citizenship>ml</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-eg-Farag">
+                <Label>
+                    <Name>Wagih Farag</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Farag</FamilyName>
+                        <GivenName>Wagih</GivenName>
+                    </Name>
+                    <Citizenship>eg</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-zw-Mudzamiri">
+                <Label>
+                    <Name>Brighton Mudzamiri</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Mudzamiri</FamilyName>
+                        <GivenName>Brighton</GivenName>
+                    </Name>
+                    <Citizenship>zw</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ug-Tomusange">
+                <Label>
+                    <Name>Ali Tomusange</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Tomusange</FamilyName>
+                        <GivenName>Ali</GivenName>
+                    </Name>
+                    <Citizenship>ug</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ag-Charles">
+                <Label>
+                    <Name>Curtis Charles</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Charles</FamilyName>
+                        <GivenName>Curtis</GivenName>
+                    </Name>
+                    <Citizenship>ag</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-sv-Fernandez">
+                <Label>
+                    <Name>Vladimir Fernandez</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Fernandez</FamilyName>
+                        <GivenName>Vladimir</GivenName>
+                    </Name>
+                    <Citizenship>sv</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-tt-Ragoonath">
+                <Label>
+                    <Name>Michael Ragoonath</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Ragoonath</FamilyName>
+                        <GivenName>Michael</GivenName>
+                    </Name>
+                    <Citizenship>tt</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ca-Vergara">
+                <Label>
+                    <Name>Hector Vergara</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Vergara</FamilyName>
+                        <GivenName>Hector</GivenName>
+                    </Name>
+                    <Citizenship>ca</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ec-Fierro">
+                <Label>
+                    <Name>Bomer Fierro</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Fierro</FamilyName>
+                        <GivenName>Bomer</GivenName>
+                    </Name>
+                    <Citizenship>ec</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-py-Giacomuzzi">
+                <Label>
+                    <Name>Miguel Giacomuzzi</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Giacomuzzi</FamilyName>
+                        <GivenName>Miguel</GivenName>
+                    </Name>
+                    <Citizenship>py</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-br-Oliveira">
+                <Label>
+                    <Name>Jorge Oliveira</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Oliveira</FamilyName>
+                        <GivenName>Jorge</GivenName>
+                    </Name>
+                    <Citizenship>br</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-ar-Rattalino">
+                <Label>
+                    <Name>Jorge Rattalino</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Rattalino</FamilyName>
+                        <GivenName>Jorge</GivenName>
+                    </Name>
+                    <Citizenship>ar</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-vu-Doriri">
+                <Label>
+                    <Name>Elise Doriri</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Doriri</FamilyName>
+                        <GivenName>Elise</GivenName>
+                    </Name>
+                    <Citizenship>vu</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-nz-Smith">
+                <Label>
+                    <Name>Paul Smith</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Smith</FamilyName>
+                        <GivenName>Paul</GivenName>
+                    </Name>
+                    <Citizenship>nz</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-cz-Amler">
+                <Label>
+                    <Name>Evzen Amler</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Amler</FamilyName>
+                        <GivenName>Evzen</GivenName>
+                    </Name>
+                    <Citizenship>cz</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-fr-Arnault">
+                <Label>
+                    <Name>Frederic Arnault</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Arnault</FamilyName>
+                        <GivenName>Frederic</GivenName>
+                    </Name>
+                    <Citizenship>fr</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-at-Bereuter">
+                <Label>
+                    <Name>Egon Bereuter</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Bereuter</FamilyName>
+                        <GivenName>Egon</GivenName>
+                    </Name>
+                    <Citizenship>at</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-by-Dupanov">
+                <Label>
+                    <Name>Yuri Dupanov</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Dupanov</FamilyName>
+                        <GivenName>Yuri</GivenName>
+                    </Name>
+                    <Citizenship>by</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-dk-Larsen">
+                <Label>
+                    <Name>Jens Larsen</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Larsen</FamilyName>
+                        <GivenName>Jens</GivenName>
+                    </Name>
+                    <Citizenship>dk</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-se-Lindberg">
+                <Label>
+                    <Name>Leif Lindberg</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Lindberg</FamilyName>
+                        <GivenName>Leif</GivenName>
+                    </Name>
+                    <Citizenship>se</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-pt-Matos">
+                <Label>
+                    <Name>Carlos Matos</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Matos</FamilyName>
+                        <GivenName>Carlos</GivenName>
+                    </Name>
+                    <Citizenship>pt</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-de-Muller">
+                <Label>
+                    <Name>Heiner Muller</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Muller</FamilyName>
+                        <GivenName>Heiner</GivenName>
+                    </Name>
+                    <Citizenship>de</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-nl-Pool">
+                <Label>
+                    <Name>Jaap Pool</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Pool</FamilyName>
+                        <GivenName>Jaap</GivenName>
+                    </Name>
+                    <Citizenship>nl</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-en-Sharp">
+                <Label>
+                    <Name>Philip Sharp</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Sharp</FamilyName>
+                        <GivenName>Philip</GivenName>
+                    </Name>
+                    <Citizenship>en</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-sk-Sramka">
+                <Label>
+                    <Name>Igor Sramka</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Sramka</FamilyName>
+                        <GivenName>Igor</GivenName>
+                    </Name>
+                    <Citizenship>sk</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-hu-Szekely">
+                <Label>
+                    <Name>Ferenc Szekely</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Szekely</FamilyName>
+                        <GivenName>Ferenc</GivenName>
+                    </Name>
+                    <Citizenship>hu</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-be-Van_Nylen">
+                <Label>
+                    <Name>Roland Van Nylen</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Van Nylen</FamilyName>
+                        <GivenName>Roland</GivenName>
+                    </Name>
+                    <Citizenship>be</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWRefereeType" id="referee-object-pl-Wierzbowski">
+                <Label>
+                    <Name>Maciej Wierzbowski</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation/>
+                </Definition>
+                <fsw:Agent xsi:type="PersonType">
+                    <Name>
+                        <FamilyName>Wierzbowski</FamilyName>
+                        <GivenName>Maciej</GivenName>
+                    </Name>
+                    <Citizenship>pl</Citizenship>
+                </fsw:Agent>
+            </SemanticBase>
+            <!-- ============================= Events ============================= -->
+            <!-- ========================= Events neu ====================== -->
+            <SemanticBase xsi:type="EventType" id="event-object-applause">
+                <Label>
+                    <Name xml:lang="de">Applaus</Name>
+                    <Name xml:lang="en">Applause</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>applaudieren, klatschen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-shout">
+                <Label>
+                    <Name xml:lang="de">Geschrei</Name>
+                    <Name xml:lang="en">Shout</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>schreien, rufen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-boo">
+                <Label>
+                    <Name xml:lang="de">Auspfeifen</Name>
+                    <Name xml:lang="en">Boo</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>ausbuhn</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-encourage">
+                <Label>
+                    <Name xml:lang="de">Anfeuern</Name>
+                    <Name xml:lang="en">Encourage</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Anfeuern, ermutigen zur Sprechges„nge usw.</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-rise_the_flag">
+                <Label>
+                    <Name xml:lang="de">Flagge heben</Name>
+                    <Name xml:lang="en">Rise the Flag</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Das heben der Flagge durch den Linienschiedsrichter um ein out oder abseits anzuzeigen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-give_sanction">
+                <Label>
+                    <Name xml:lang="de">Strafe aussprechen</Name>
+                    <Name xml:lang="en">Give sanction</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Das Ausprechen einer Strafe durch den Schiedsrichter</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-whistle">
+                <Label>
+                    <Name xml:lang="de">Pfeifen</Name>
+                    <Name xml:lang="en">Whistle</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Das Pfeifen durch den Schiedsrichter</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-drop_ball">
+                <Label>
+                    <Name xml:lang="de">Aufwurf</Name>
+                    <Name xml:lang="en">Drop ball</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Aufwurf des Balls durch den Schiedsrichter</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-match_begin">
+                <Label>
+                    <Name xml:lang="de">Matchanfang</Name>
+                    <Name xml:lang="en">Match begin</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Anfang des Fussballmatch</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-match_end">
+                <Label>
+                    <Name xml:lang="de">Matchende</Name>
+                    <Name xml:lang="en">Match end</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ende des Fussballmatch</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-save">
+                <Label>
+                    <Name xml:lang="de">Ball halten</Name>
+                    <Name xml:lang="en">Save</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Halten des Balls oder Schusses durch den Tormann</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-block">
+                <Label>
+                    <Name xml:lang="de">Ball abblocken</Name>
+                    <Name xml:lang="en">Block</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Abwehren eines Schusses durch abblocken des Balls durch den Tormann</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-punch_out">
+                <Label>
+                    <Name xml:lang="de">Auswurf</Name>
+                    <Name xml:lang="en">Punch out</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Auswurf des Balls durch den Tormann</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-cut_down_the_angle">
+                <Label>
+                    <Name xml:lang="de">Winkel verk�rzen</Name>
+                    <Name xml:lang="en">Cut down the angle</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Der Tormann l„uft aus dem Tor dem Angreifer entgegen um einen gr�?áeren Bereich des Tors abdecken zu k�?nnen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-drop_kick">
+                <Label>
+                    <Name xml:lang="de">Ausschuss</Name>
+                    <Name xml:lang="en">Drop kick</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ausschuss durch den Tormann, der sich den Ball selbst auflegt und ihn dann mit dem Fuá m�?glichst weit ins Spielfeld bef�?rdert</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-corner_kick">
+                <Label>
+                    <Name xml:lang="de">Eckball</Name>
+                    <Name xml:lang="en">Corner kick</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Schuss des Balls durch einen Spieler von einer Ecke aus vors Tor</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-banana_kick">
+                <Label>
+                    <Name xml:lang="de">Bananenschuss</Name>
+                    <Name xml:lang="en">Banana kick</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Schuss, der w„hrend dem Flug die Bahn „ndert</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-free_kicking">
+                <Label>
+                    <Name xml:lang="de">Freistoss</Name>
+                    <Name xml:lang="en">Free kicking</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Freistoss</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-direct_free_kicking">
+                <Label>
+                    <Name xml:lang="de">Direkter Freistoss</Name>
+                    <Name xml:lang="en">Direct_free_kicking</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Freistoss, der direkt aufs Tor geschossen wird</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-indirect_free_kicking">
+                <Label>
+                    <Name xml:lang="de">Indirekter Freistoss</Name>
+                    <Name xml:lang="en">Indirect_free_kicking</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Freistoss, der nicht direkt aufs Tor geschossen wird</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-bicycle_kick">
+                <Label>
+                    <Name xml:lang="de">Fallr�ckzieher</Name>
+                    <Name xml:lang="en">Bicycle_kick</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Spieler l„sst sich nach hinten fallen und kickt den Ball gleich in der Luft �ber dem Kopf weiter</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-penalty_kick">
+                <Label>
+                    <Name xml:lang="de">Elfmeter</Name>
+                    <Name xml:lang="en">Penalty kick</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Elfmeter</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-throw_in">
+                <Label>
+                    <Name xml:lang="de">Einwurf</Name>
+                    <Name xml:lang="en">Throw in</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Einwurf des Balls nach einem Seitenout</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-sliding_tackle">
+                <Label>
+                    <Name xml:lang="de">Hineinrutschen</Name>
+                    <Name xml:lang="en">Sliding tackle</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Gegner den Ball durch in den Ball rutschen angreifen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-kickoff">
+                <Label>
+                    <Name xml:lang="de">Anstoss</Name>
+                    <Name xml:lang="en">Kickoff</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Erste Ballber�hrung bei Beginn des Spiels oder der zweiten Halbzeit </FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-hook">
+                <Label>
+                    <Name xml:lang="de">Haken</Name>
+                    <Name xml:lang="en">Hook</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Gegner durch Schlagen eines Haken austricksen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-pass">
+                <Label>
+                    <Name xml:lang="de">Pass</Name>
+                    <Name xml:lang="en">Pass</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ball gezielt zu einem anderen Spieler der gleichen Mannschaft weiterspielen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-chip_pass">
+                <Label>
+                    <Name xml:lang="de">Hoher Pass</Name>
+                    <Name xml:lang="en">Chip pass</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Pass, der in hohen Bogen zu einem anderen fliegt</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-long_pass">
+                <Label>
+                    <Name xml:lang="de">Langer Pass</Name>
+                    <Name xml:lang="en">Long pass</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Langer beziehungsweise weiter Pass</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-dribble">
+                <Label>
+                    <Name xml:lang="de">Dribbeln</Name>
+                    <Name xml:lang="en">Dribble</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Mit dem Ball Laufen und ihn dabei vor sich her spielen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-do_foul">
+                <Label>
+                    <Name xml:lang="de">Foulen</Name>
+                    <Name xml:lang="en">Do foul</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>einen anderen Spieler mutwillig und regelwidrig angreifen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-do_professional_foul">
+                <Label>
+                    <Name xml:lang="de">Professionell foulen</Name>
+                    <Name xml:lang="en">Do professional foul</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation> einen anderen Spieler auf besonders geschickte Art und Weise foulen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-do_handball">
+                <Label>
+                    <Name xml:lang="de">Hand</Name>
+                    <Name xml:lang="en">Do handball</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>den Ball mit der Hand ber�hren</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-hold_an_opponent">
+                <Label>
+                    <Name xml:lang="de">Halten</Name>
+                    <Name xml:lang="en">Hold an opponent</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>den Gegener mit der Hand durch Halten behindern</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-header">
+                <Label>
+                    <Name xml:lang="de">Kopfball</Name>
+                    <Name xml:lang="en">Header</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>den Ball mit dem Kopf weiterspielen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-marking">
+                <Label>
+                    <Name xml:lang="de">Manndeckung</Name>
+                    <Name xml:lang="en">Marking</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>ein Spieler deckt in der Offensive immer nur einen einzigen Gegenspieler</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-be_replaced">
+                <Label>
+                    <Name xml:lang="de">Austausch</Name>
+                    <Name xml:lang="en">Be replaced</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ein Spieler wird durch einen Ersatzspieler ausgetauscht</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-counter_attack">
+                <Label>
+                    <Name xml:lang="de">Counter</Name>
+                    <Name xml:lang="en">Counter attack</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>schneller Gegenangriff</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-volley">
+                <Label>
+                    <Name xml:lang="de">Volley</Name>
+                    <Name xml:lang="en">Volley</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ball im Flug weiterkicken ohne dass er vorher den Boden ber�hrt hat</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-half_volley_shot">
+                <Label>
+                    <Name xml:lang="de">Halbvolley</Name>
+                    <Name xml:lang="en">Half volley shot</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ball im Flug weiterkicken nachdem er vorher nur einmal den Boden ber�hrt hat</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-feint">
+                <Label>
+                    <Name xml:lang="de">Vort„uschen</Name>
+                    <Name xml:lang="en">Feint</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Eine T„uschuingsman�?ver durchf�hren</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-steal">
+                <Label>
+                    <Name xml:lang="de">Ballabnahme</Name>
+                    <Name xml:lang="en">Steal</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Einen Gegenspieler den Ball abnehmen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-score">
+                <Label>
+                    <Name xml:lang="de">Torschuss</Name>
+                    <Name xml:lang="en">Score</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ein Tor schiessen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-juggling">
+                <Label>
+                    <Name xml:lang="de">Gaberln</Name>
+                    <Name xml:lang="en">Juggling</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>den Ball mit Kopf, Brust und F�áen in der Luft halten, ohne dass er den Boden ber�hrt</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-nutmeg">
+                <Label>
+                    <Name xml:lang="de">Gurke</Name>
+                    <Name xml:lang="en">Nutmeg</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>den Ball durch die Beine eines Gegners durchspielen, auch Tunneln genannt</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-be_offside">
+                <Label>
+                    <Name xml:lang="de">Abseits</Name>
+                    <Name xml:lang="en">Be Offside</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>die Abseitsregel verletzen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-offside_trap">
+                <Label>
+                    <Name xml:lang="de">Abseitsfalle</Name>
+                    <Name xml:lang="en">Offside Trap</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>bekannter Spielzug, bei dem ein Spieler absichtlich ins Abseits gelockt wird</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-penalty">
+                <Label>
+                    <Name xml:lang="de">Strafe</Name>
+                    <Name xml:lang="en">Penalty</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Eine Strafe wird ausgesprochen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-fault">
+                <Label>
+                    <Name xml:lang="de">Regelverletzung</Name>
+                    <Name xml:lang="en">Fault</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Eine Fussballregel wird verletzt</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-out_of_bounds">
+                <Label>
+                    <Name xml:lang="de">Out</Name>
+                    <Name xml:lang="en">Out of bounds</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ball f„llt ausserhalb des Spielfelds zu Boden</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-advantage_rule">
+                <Label>
+                    <Name xml:lang="de">Vorteil</Name>
+                    <Name xml:lang="en">Advantage rule</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Nach einem Foul erh„lt eine Mannschaft einen Vorteil</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-sending_off">
+                <Label>
+                    <Name xml:lang="de">Vom Platz verweisen</Name>
+                    <Name xml:lang="en">Sending off</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ein Spieler muss auf Anweisung des Schiedsrichters den Platz verlassen</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-red_card">
+                <Label>
+                    <Name xml:lang="de">Rote Karte</Name>
+                    <Name xml:lang="en">red card</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ein Spieler bekommt die rote Karte gezeigt</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <SemanticBase xsi:type="EventType" id="event-object-yellow_card">
+                <Label>
+                    <Name xml:lang="de">Gelbe Karte</Name>
+                    <Name xml:lang="en">yellow card</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>Ein Spieler bekommt die gelbe Karte gezeigt</FreeTextAnnotation>
+                </Definition>
+            </SemanticBase>
+            <!-- ========================= Venues ========================= -->
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_seoul_world_cup_stadium">
+                <Label>
+                    <Name>Seoul World Cup Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Seoul, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Seoul World Cup Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine> 515 Seongsan-dong, Mapo-gu, Seoul</AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>63961</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_busan_asiad_main_stadium">
+                <Label>
+                    <Name>Busan Asiad Main Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Busan, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Busan Asiad Main Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine> 1300 Geoje-dong, Yeonje-gu, Busan</AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>55982</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_daegu_world_cup_stadium">
+                <Label>
+                    <Name>Daegu World Cup Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Daegu, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Daegu World Cup Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine> 504 Naehwan-dong, Suseong-gu, Daegu </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>68014</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_daejeon_world_cup_stadium">
+                <Label>
+                    <Name>Daejeon World Cup Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Daejeon, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Daejeon World Cup Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine>270 Noeun-dong, Yuseong-gu, Daejeon</AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>40407</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_gwangju_world_cup_stadium">
+                <Label>
+                    <Name>Gwangju World Cup Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Gwangju, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Gwangju World Cup Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine> 423-2, Pungam-dong, Seo-gu, Gwangju </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>42880</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_incheon_munhak_stadium">
+                <Label>
+                    <Name>Incheon Munhak Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Incheon, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Incheon Munhak Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine> San 8 Munhak-dong, Nam-gu, Incheon </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>52179</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_jeonju_world_cup_stadium">
+                <Label>
+                    <Name>Jeonju World Cup Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Jeonju, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Jeonju World Cup Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine> 763-1 Banwol-dong, Deokjin-gu, Jeonju-si, Jeollabuk-do </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>42391</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_jeju_world_cup_stadium">
+                <Label>
+                    <Name>Jeju World Cup Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Seogwipo, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Jeju World Cup Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine> 914 Beophwan-dong, Seogwipo-si, Jeju-do </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>42256</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_suwon_world_cup_stadium">
+                <Label>
+                    <Name>Suwon World Cup Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Suwon, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Suwon World Cup Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine> 228 Uman-dong, Paldal-gu, Suwon-si, Gyeonggi-do </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>43188</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_ulsan_munsu_football_stadium">
+                <Label>
+                    <Name>Ulsan Munsu Football Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Ulsan, Republic Korea</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Ulsan Munsu Football Stadium</Name>
+                    <Region>kr</Region>
+                    <PostalAddress>
+                        <AddressLine> San 5, Ok-dong, Nam-gu, Ulsan</AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>43550</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_ibaraki_kashima_stadium">
+                <Label>
+                    <Name>Ibaraki Kashima Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Ibaraki, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Ibaraki Kashima Stadium</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> 26-2 Ushiroyama, Jinkoji, Kashima City, Ibaraki </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>42000</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_kobe_wing_stadium">
+                <Label>
+                    <Name>Kobe Wing Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Kobe, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Kobe Wing Stadium</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> 1 Misaki-cho, Hyogo-ku, Kobe City </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>42000</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_miyagi_stadium">
+                <Label>
+                    <Name>Miyagi Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Miyagi, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Miyagi Stadium</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> 40-1 Aza-Tate, Sugaya, Rifu-cho, Miyagi</AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>49000</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_niigata_stadium_big_swan">
+                <Label>
+                    <Name>Niigata Stadium Big Swan</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Niigata, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Niigata Stadium Big Swan</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> 68, Seigoro, Niigata-city, Niigata </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>42300</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_oita_stadium_big_eye">
+                <Label>
+                    <Name>Oita Stadium Big Eye</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Oita, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Oita Stadium Big Eye</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> Yokoo, Matsuoka, Oita City, Oita</AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>43000</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_nagai_stadium">
+                <Label>
+                    <Name>Nagai Stadium</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Osaka, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Nagai Stadium</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> 1-1 Nagai Koen, Higashisumiyoshi-ku, Osaka City </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>50000</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_saitama_stadium_2002">
+                <Label>
+                    <Name>Saitama Stadium 2002</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Saitama, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Saitama Stadium 2002</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> Oazamnakanoda-Chinai, Urawa-shi / Saitama-Ken </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>63000</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_sapporo_dome">
+                <Label>
+                    <Name>Sapporo Dome</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Sapporo, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Sapporo Dome</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> 1-3 Hitsujigaoka, Toyohira-ku, Sapporo City </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>42000</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_shizuoka_stadium_ecopa">
+                <Label>
+                    <Name>Shizuoka Stadium Ecopa</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Shizuoka, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>Shizuoka Stadium Ecopa</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> Ogasayama Sports Park, Aino, Fukuroi city </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>50600</fsw:Capacity>
+            </SemanticBase>
+            <SemanticBase xsi:type="fsw:FSWVenueType" id="vp_international_stadium_yokohama">
+                <Label>
+                    <Name>International Stadium Yokohama</Name>
+                </Label>
+                <Definition>
+                    <FreeTextAnnotation>FIFA World Cup 2002 soccer stadium in Yokohama, Japan</FreeTextAnnotation>
+                </Definition>
+                <fsw:Place>
+                    <Name>International Stadium Yokohama</Name>
+                    <Region>jp</Region>
+                    <PostalAddress>
+                        <AddressLine> 3302-5 Kozukue, Kohoku-ku, Yokohama city </AddressLine>
+                    </PostalAddress>
+                </fsw:Place>
+                <fsw:Capacity>70000</fsw:Capacity>
+            </SemanticBase>
+        </Semantics>
+    </Description>
+</Mpeg7>

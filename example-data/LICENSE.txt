@@ -1,0 +1,38 @@
+The testdata photos, thumbnails  and annotations as well  as all other files  in
+this directory and in  its sub directories are  licensed under a licensed  under
+the Creative Commons Attribution-NonCommercial-ShareAlike 2.5 License.
+
+---------------------------------------------------------------------------------
+
+Attribution-NonCommercial-ShareAlike 2.5
+
+You are free:
+
+* to copy, distribute, display, and perform the work
+* to make derivative works
+
+Under the following conditions:
+Attribution.
+  You must give the original author credit.
+Non-Commercial.
+  You may not use this work for commercial purposes.
+Share Alike.
+  If you  alter, transform,  or build  upon this  work, you  may distribute  the
+  resulting work only under a licence identical to this one.
+
+* For any reuse or distribution, you must make clear to others the licence terms
+  of this work.
+* Any of these conditions can be waived if you get permission from the copyright
+  holder.
+
+Your fair use and other rights are in no way affected by the above.
+
+This  is  a  human-readable summary  of  the  Legal Code.  The  full  license is
+available at http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+
+---------------------------------------------------------------------------------
+
+For more information on the license visit:
+http://creativecommons.org/licenses/by-nc-sa/2.5/
+
+- Mathias Lux, 30.01.2006
