@@ -30,8 +30,9 @@ import java.awt.image.WritableRaster;
 import java.util.StringTokenizer;
 
 /**
- * This class provides a simple RGB color histogram for content based image retrieval.
- * Number of bins is configurable, histogram is normalized to 8 bit per bin (0-255).
+ * This class provides a simple color histogram for content based image retrieval.
+ * Number of bins is configurable, histogram is normalized to 8 bit per bin (0-255). <br>
+ * Defaults are given in the final fields. Available options are given by the enums.
  * <p/>
  * <br/>Date: 14.05.2008
  * <br/>Time: 09:47:10
@@ -40,7 +41,7 @@ import java.util.StringTokenizer;
  */
 public class SimpleColorHistogram implements VisualDescriptor {
     public static final int DEFAULT_NUMBER_OF_BINS = 64;
-    public static final HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.HSV;
+    public static final HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.RGB;
     public static final DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.JSD;
 
     /**

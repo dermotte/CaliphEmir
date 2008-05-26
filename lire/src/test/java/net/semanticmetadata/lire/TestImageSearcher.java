@@ -201,4 +201,34 @@ public class TestImageSearcher extends TestCase {
         }
 
     }
+
+    public void testSimpleColorHistogramSearch() throws IOException {
+        IndexReader reader = IndexReader.open(indexPath);
+        int numDocs = reader.numDocs();
+        System.out.println("numDocs = " + numDocs);
+        ImageSearcher searcher = ImageSearcherFactory.createColorHistogramImageSearcher(30);
+        FileInputStream imageStream = new FileInputStream(testFilesPath + testFiles[0]);
+        BufferedImage bimg = ImageIO.read(imageStream);
+        ImageSearchHits hits = null;
+        long time = System.currentTimeMillis();
+//        for (int i = 0; i < numsearches; i++) {
+        hits = searcher.search(bimg, reader);
+//        }
+        time = System.currentTimeMillis() - time;
+        System.out.println(((float) time / (float) numsearches) + " ms per search with image, averaged on " + numsearches);
+        for (int i = 0; i < hits.length(); i++) {
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+        }
+        Document document = hits.doc(4);
+        time = System.currentTimeMillis();
+        for (int i = 0; i < numsearches; i++) {
+            hits = searcher.search(document, reader);
+        }
+        time = System.currentTimeMillis() - time;
+        System.out.println(((float) time / (float) numsearches) + " ms per search with document, averaged on " + numsearches);
+        for (int i = 0; i < hits.length(); i++) {
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+        }
+
+    }
 }

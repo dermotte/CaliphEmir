@@ -4,7 +4,7 @@ import net.semanticmetadata.lire.AbstractImageSearcher;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.imageanalysis.CEDD;
+import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
@@ -25,39 +25,39 @@ import java.util.logging.Logger;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class CeddImageSearcher extends AbstractImageSearcher {
+public class SimpleColorHistogramImageSearcher extends AbstractImageSearcher {
     private Logger logger = Logger.getLogger(getClass().getName());
 
     private int maxHits = 10;
     private TreeSet<SimpleResult> docs;
 
-    public CeddImageSearcher(int maxHits) {
+    public SimpleColorHistogramImageSearcher(int maxHits) {
         this.maxHits = maxHits;
         docs = new TreeSet<SimpleResult>();
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {
-        logger.finer("Starting extraction of CEDD from image");
-        CEDD cedd = new CEDD();
+        logger.finer("Starting extraction of ColorHistogram from image");
+        SimpleColorHistogram colorHistogram = new SimpleColorHistogram();
         // Scaling image is especially with the correlogram features very important!
         BufferedImage bimg = image;
-        if (Math.max(image.getHeight(), image.getWidth()) > CeddDocumentBuilder.MAX_IMAGE_DIMENSION) {
-            bimg = ImageUtils.scaleImage(image, CeddDocumentBuilder.MAX_IMAGE_DIMENSION);
+        if (Math.max(image.getHeight(), image.getWidth()) > SimpleColorHistogramDocumentBuilder.MAX_IMAGE_DIMENSION) {
+            bimg = ImageUtils.scaleImage(image, SimpleColorHistogramDocumentBuilder.MAX_IMAGE_DIMENSION);
         }
-        cedd.extract(bimg);
+        colorHistogram.extract(bimg);
         logger.fine("Extraction from image finished");
 
-        float maxDistance = findSimilar(reader, cedd);
+        float maxDistance = findSimilar(reader, colorHistogram);
         return new SimpleImageSearchHits(this.docs, maxDistance);
     }
 
     /**
      * @param reader
-     * @param cedd
+     * @param colorHistogram
      * @return the maximum distance found for normalizing.
      * @throws java.io.IOException
      */
-    private float findSimilar(IndexReader reader, CEDD cedd) throws IOException {
+    private float findSimilar(IndexReader reader, SimpleColorHistogram colorHistogram) throws IOException {
         float maxDistance = -1f, overallMaxDistance = -1f;
         boolean hasDeletions = reader.hasDeletions();
 
@@ -72,7 +72,7 @@ public class CeddImageSearcher extends AbstractImageSearcher {
             }
 
             Document d = reader.document(i);
-            float distance = getDistance(d, cedd);
+            float distance = getDistance(d, colorHistogram);
             assert(distance >=0);
             // calculate the overall max distance to normalize score afterwards
             if (overallMaxDistance < distance) {
@@ -99,14 +99,14 @@ public class CeddImageSearcher extends AbstractImageSearcher {
         return maxDistance;
     }
 
-    private float getDistance(Document d, CEDD cedd) {
-        // TODO: We can do this for each filed ... if there is a region based approach.
+    private float getDistance(Document d, SimpleColorHistogram colorHistogram) {
+        // TODO: We can do this for each field ... if there is a region based approach.
         float distance = 0f;
-        CEDD a = new CEDD();
-        String[] cls = d.getValues(DocumentBuilder.FIELD_NAME_CEDD);
-        if (cls != null && cls.length > 0) {
-            a.setStringRepresentation(cls[0]);
-            distance = cedd.getDistance(a);
+        SimpleColorHistogram sch = new SimpleColorHistogram();
+        String[] schString = d.getValues(DocumentBuilder.FIELD_NAME_COLORHISTOGRAM);
+        if (schString != null && schString.length > 0) {
+            sch.setStringRepresentation(schString[0]);
+            distance = colorHistogram.getDistance(sch);
         } else {
             logger.warning("No feature stored in this document!");
         }
@@ -114,12 +114,12 @@ public class CeddImageSearcher extends AbstractImageSearcher {
     }
 
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
-        CEDD cedd = new CEDD();
+        SimpleColorHistogram sch = new SimpleColorHistogram();
 
-        String[] cls = doc.getValues(DocumentBuilder.FIELD_NAME_CEDD);
-        if (cls != null && cls.length > 0)
-            cedd.setStringRepresentation(cls[0]);
-        float maxDistance = findSimilar(reader, cedd);
+        String[] schString = doc.getValues(DocumentBuilder.FIELD_NAME_COLORHISTOGRAM);
+        if (schString != null && schString.length > 0)
+            sch.setStringRepresentation(schString[0]);
+        float maxDistance = findSimilar(reader, sch);
 
         return new SimpleImageSearchHits(this.docs, maxDistance);
     }
@@ -130,10 +130,10 @@ public class CeddImageSearcher extends AbstractImageSearcher {
             throw new FileNotFoundException("No index found at this specific location.");
         Document doc = reader.document(0);
 
-        CEDD cedd = new CEDD();
-        String[] cls = doc.getValues(DocumentBuilder.FIELD_NAME_CEDD);
-        if (cls != null && cls.length > 0)
-            cedd.setStringRepresentation(cls[0]);
+        SimpleColorHistogram sch = new SimpleColorHistogram();
+        String[] schString = doc.getValues(DocumentBuilder.FIELD_NAME_COLORHISTOGRAM);
+        if (schString != null && schString.length > 0)
+            sch.setStringRepresentation(schString[0]);
 
         HashMap<Float, List<String>> duplicates = new HashMap<Float, List<String>>();
 
@@ -147,7 +147,7 @@ public class CeddImageSearcher extends AbstractImageSearcher {
                 continue;
             }
             Document d = reader.document(i);
-            float distance = getDistance(d, cedd);
+            float distance = getDistance(d, sch);
 
             if (!duplicates.containsKey(distance)) {
                 duplicates.put(distance, new LinkedList<String>());

@@ -120,7 +120,7 @@ public class CreateIndexTest extends TestCase {
             iw.addDocument(doc);
             count++;
             if (count % 25 == 0) System.out.println(count + " files indexed.");
-            // if (count == 100) break;
+            if (count == 100) break;
         }
         long timeTaken = (System.currentTimeMillis() - time);
         float sec = ((float) timeTaken) / 1000f;

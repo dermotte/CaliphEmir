@@ -1,10 +1,7 @@
 package net.semanticmetadata.lire;
 
 import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
-import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
-import net.semanticmetadata.lire.impl.CorrelogramDocumentBuilder;
-import net.semanticmetadata.lire.impl.SimpleDocumentBuilder;
-import net.semanticmetadata.lire.impl.CeddDocumentBuilder;
+import net.semanticmetadata.lire.impl.*;
 
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
@@ -156,6 +153,18 @@ public class DocumentBuilderFactory {
     }
 
     /**
+     * Creates a DocumentBuilder for simple RGB color histograms. See
+     * {@link net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram} for more
+     * information on the image feature.
+     * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @return the created AutoCorrelation feature DocumentBuilder.
+     */
+    public static DocumentBuilder getColorHistogramDocumentBuilder() {
+        return new SimpleColorHistogramDocumentBuilder();
+    }
+
+    /**
      * Creates and returns a DocumentBuilder, which contains all available features. For
      * AutoColorCorrelogram the getDefaultAutoColorCorrelationDocumentBuilder() is used. Therefore
      * it is compatible with the respective Searcher.
@@ -167,6 +176,7 @@ public class DocumentBuilderFactory {
         cdb.addBuilder(DocumentBuilderFactory.getExtensiveDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+        cdb.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
         return cdb;
     }
 }

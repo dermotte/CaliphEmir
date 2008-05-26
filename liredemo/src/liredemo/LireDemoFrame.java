@@ -6,6 +6,9 @@
 
 package liredemo;
 
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
 import net.semanticmetadata.lire.ImageSearcherFactory;
@@ -47,6 +50,13 @@ import edu.uniklu.itec.mosaix.engine.Engine;
  * (c) 2002-2008 by Mathias Lux (mathias@juggle.at)
  * http://www.juggle.at, http://www.SemanticMetadata.net
  */
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.SystemFlavorMap;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetListener;
 
 /**
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
@@ -72,6 +82,44 @@ public class LireDemoFrame extends javax.swing.JFrame {
         initComponents();
         selectboxDocumentBuilder.setSelectedIndex(5);
         buttonSwitchIndex.setBackground(highlightSelectColor);
+        DropTarget t = new DropTarget(searchPanel, new DropTargetListener() {
+
+            public void dragEnter(DropTargetDragEvent dtde) {
+                
+            }
+
+            public void dragOver(DropTargetDragEvent dtde) {
+                
+            }
+
+            public void dropActionChanged(DropTargetDragEvent dtde) {
+                
+            }
+
+            public void dragExit(DropTargetEvent dte) {
+                
+            }
+
+            public void drop(DropTargetDropEvent dtde) {
+                try {
+                    Transferable tr = dtde.getTransferable();
+                    DataFlavor[] flavors = tr.getTransferDataFlavors();
+                    for (int i = 0; i < flavors.length; i++) {
+                        System.out.println("Possible flavor: " + flavors[i].getMimeType());
+                        if (flavors[i].isFlavorJavaFileListType()) {
+                            dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                            java.util.List list = (java.util.List) tr.getTransferData(flavors[i]);
+                            textfieldSearchImage.setText(list.get(0).toString());
+                            dtde.dropComplete(true);
+                            return;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        
     }
 
     /**
@@ -383,7 +431,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         progressBarIndexing.setString(bundle.getString("progressbar.indexing.name")); // NOI18N
         progressBarIndexing.setStringPainted(true);
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18));
         jLabel6.setText("Image Indexing:");
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 2, 11));
@@ -461,8 +509,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18));
         jLabel5.setText("Search for digital images:");
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 2, 11));
-        jLabel7.setText("Hint: Note that a double click on a row within the search results starts a new search for the clicked image.");
+        jLabel7.setText("<html>\n<b>Hints:</b>\n<ul>\n<li> Note that a double click on a row within the search results starts a new search for the clicked image.\n<li>Use Drag'n'Drop to select query image from file explorer\n</ul>\n</html>");
 
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
         searchPanel.setLayout(searchPanelLayout);
@@ -482,7 +529,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
             .addGroup(searchPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel7)
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
         searchPanelLayout.setVerticalGroup(
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -498,7 +545,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
                 .addComponent(buttonStartSearch)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
-                .addContainerGap(339, Short.MAX_VALUE))
+                .addContainerGap(291, Short.MAX_VALUE))
         );
 
         cardPanel.add(searchPanel, "card2");
@@ -786,7 +833,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
 
         jLabel1.setText("Type of IndexSearcher:");
 
-        selectboxDocumentBuilder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All MPEG-7 Descriptors", "Scalable Color (MPEG-7)", "Edge Histogram (MPEG-7)", "Color Layout (MPEG-7)", "Auto Color Correlogram", "CEDD" }));
+        selectboxDocumentBuilder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All MPEG-7 Descriptors", "Scalable Color (MPEG-7)", "Edge Histogram (MPEG-7)", "Color Layout (MPEG-7)", "Auto Color Correlogram", "CEDD", "RGB Color Histogram" }));
         selectboxDocumentBuilder.setToolTipText(bundle.getString("options.tooltip.documentbuilderselection")); // NOI18N
         selectboxDocumentBuilder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1254,7 +1301,7 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
     private void helpMenuAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuAboutActionPerformed
         JOptionPane.showMessageDialog(this, "<html><center><b>Simple demo for Lucene Image Retrieval (LIRe) library.</b><br>" +
                 "<br>Visit http://www.semanticmetadata.net/lire for more information.<br>" +
-                "<br>&copy; 2007 by Mathias Lux<br>" +
+                "<br>&copy; 2007-2008 by Mathias Lux<br>" +
                 "mathias@juggle.at<br></center></html>",
                 "About LIRe demo", JOptionPane.PLAIN_MESSAGE);
     }//GEN-LAST:event_helpMenuAboutActionPerformed
@@ -1343,8 +1390,10 @@ private void selectboxDocumentBuilderActionPerformed(java.awt.event.ActionEvent 
             searcher = ImageSearcherFactory.createWeightedSearcher(numResults, 0f, 1f, 0f);
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 4) {
             searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(numResults);
-        } else if (selectboxDocumentBuilder.getSelectedIndex() > 4) {
+        } else if (selectboxDocumentBuilder.getSelectedIndex() == 5) {
             searcher = ImageSearcherFactory.createCEDDImageSearcher(numResults);
+        } else if (selectboxDocumentBuilder.getSelectedIndex() > 5) {
+            searcher = ImageSearcherFactory.createColorHistogramImageSearcher(numResults);
         }
         return searcher;
     }

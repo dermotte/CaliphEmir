@@ -4,6 +4,7 @@ import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
 import net.semanticmetadata.lire.impl.CorrelogramImageSearcher;
 import net.semanticmetadata.lire.impl.SimpleImageSearcher;
 import net.semanticmetadata.lire.impl.CeddImageSearcher;
+import net.semanticmetadata.lire.impl.SimpleColorHistogramImageSearcher;
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
  *
@@ -156,6 +157,18 @@ public class ImageSearcherFactory {
      */
     public static ImageSearcher createCEDDImageSearcher(int maximumHits) {
         return new CeddImageSearcher(maximumHits);
+    }
+
+
+    /**
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram}
+     * image feature. Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @param maximumHits
+     * @return
+     */
+    public static ImageSearcher createColorHistogramImageSearcher(int maximumHits) {
+        return new SimpleColorHistogramImageSearcher(maximumHits);
     }
 
 

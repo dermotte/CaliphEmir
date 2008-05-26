@@ -1,6 +1,14 @@
 CHANGES for LIRE
 ================
 
+2008-05-26
+==========
+CBIR:
+  - Fixed bugs in CEDD integration & tests
+  - Changed distance function of CEDD feature 
+  - Added RGB color histogram feature to indexing and search.
+  - Added RGB color histogram feature to LireDemo
+
 2008-05-23
 ==========
 General:

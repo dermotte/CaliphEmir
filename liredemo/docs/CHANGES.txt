@@ -1,0 +1,14 @@
+CHANGES for LIRE
+================
+
+2008-05-26
+==========
+General:
+  - Added changes file
+  - Changed image preview in results to EXIF thumbnail if available
+    resulting in a major speedup.
+  - Drag and drop in search panel
+
+CBIR:
+  - Added CEDD descriptor
+  - Added RGB Color Histogram descriptor

@@ -41,17 +41,13 @@ public class SimpleImageSearchHits implements ImageSearchHits {
 
     public SimpleImageSearchHits(Collection<SimpleResult> results, float maxDistance) {
         this.results = new ArrayList<SimpleResult>(results.size());
-        for (Iterator<SimpleResult> iterator = results.iterator(); iterator.hasNext();) {
-            SimpleResult result = iterator.next();
-            this.results.add(result);
-        }
+        this.results.addAll(results);
         // this step normalizes and inverts the distance ...
         // although its now a score or similarity like measure its further called distance
         for (Iterator<SimpleResult> iterator = this.results.iterator(); iterator.hasNext();) {
             SimpleResult result = iterator.next();
             result.setDistance(1f - result.getDistance() / maxDistance);
         }
-
     }
 
     /**

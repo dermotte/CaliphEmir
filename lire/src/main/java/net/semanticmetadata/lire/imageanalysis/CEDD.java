@@ -76,19 +76,16 @@ public class CEDD implements VisualDescriptor {
         double[] Fuzzy24BinResultTable = new double[24];
         double[] CEDD = new double[144];
 
-        // Βλέπε paper για τα T
+
         int width = image.getWidth();
         int height = image.getHeight();
-
-        //   CRizzi RizziC = new CRizzi();
-        //   srcImg = RizziC.Apply(srcImg);
 
         double[][] ImageGrid = new double[width][height];
         double[][] PixelCount = new double[2][2];
         int[][] ImageGridRed = new int[width][height];
         int[][] ImageGridGreen = new int[width][height];
         int[][] ImageGridBlue = new int[width][height];
-        int NumberOfBlocks = 1600; // Ο Αριθμός των Block
+        int NumberOfBlocks = 1600;
         int Step_X = (int) Math.floor(width / Math.sqrt(NumberOfBlocks));
         int Step_Y = (int) Math.floor(height / Math.sqrt(NumberOfBlocks));
 
@@ -108,18 +105,6 @@ public class CEDD implements VisualDescriptor {
         MaskResults MaskValues = new MaskResults();
         Neighborhood PixelsNeighborhood = new Neighborhood();
 
-        /*PixelFormat fmt = (srcImg.PixelFormat == PixelFormat.Format8bppIndexed) ?
-       PixelFormat.Format8bppIndexed : PixelFormat.Format24bppRgb;
-
-
-BitmapData srcData = srcImg.LockBits(
-new Rectangle(0, 0, width, height),
-ImageLockMode.ReadOnly, fmt);
-
-
-
-int offset = srcData.Stride - ((fmt == PixelFormat.Format8bppIndexed) ? width : width * 3);*/
-        // int offsetBnr = BnrData.Stride - ((fmt == PixelFormat.Format8bppIndexed) ? BnrData.Width : BnrData.Width * 3);
 
         for (int i = 0; i < 144; i++) {
             CEDD[i] = 0;
@@ -368,8 +353,33 @@ int offset = srcData.Stride - ((fmt == PixelFormat.Format8bppIndexed) ? width : 
             throw new UnsupportedOperationException("Histogram lengths or color spaces do not match");
 
         // Tanimoto coefficient
-        double tmp = scalarMult(data, ch.data);
-        return (float) (tmp / (scalarMult(data, data) + scalarMult(ch.data, ch.data) - tmp));
+        double Result = 0;
+        double Temp1 = 0;
+        double Temp2 = 0;
+
+        double TempCount1 = 0, TempCount2 = 0, TempCount3 = 0;
+
+        for (int i = 0; i < ch.data.length; i++) {
+            Temp1 += ch.data[i];
+            Temp2 += data[i];
+        }
+
+        if (Temp1 == 0 || Temp2 == 0) Result = 100;
+        if (Temp1 == 0 && Temp2 == 0) Result = 0;
+
+        if (Temp1 > 0 && Temp2 > 0) {
+            for (int i = 0; i < ch.data.length; i++) {
+                TempCount1 += (ch.data[i] / Temp1) * (data[i] / Temp2);
+                TempCount2 += (data[i] / Temp2) * (data[i] / Temp2);
+                TempCount3 += (ch.data[i] / Temp1) * (ch.data[i] / Temp1);
+
+            }
+
+            Result = (100 - 100 * (TempCount1 / (TempCount2 + TempCount3
+                    - TempCount1))); //Tanimoto
+        }
+        return (float) Result;
+
     }
 
     private double scalarMult(double[] a, double[] b) {

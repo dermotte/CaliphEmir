@@ -12,6 +12,8 @@ package liredemo;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -23,6 +25,9 @@ import javax.swing.table.DefaultTableModel;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.utils.ImageUtils;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifReader;
+import com.drew.metadata.exif.ExifDirectory;
 
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
@@ -113,7 +118,17 @@ public class SearchResultsTableModel extends DefaultTableModel{
         for (int i = 0; i<hits.length();i++) {
             ImageIcon icon = null;
             try {
-                BufferedImage img = ImageIO.read(new java.io.FileInputStream(hits.doc(i).getField(net.semanticmetadata.lire.DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue()));
+                BufferedImage img = null;
+                Metadata metadata = new ExifReader(new FileInputStream(hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue())).extract();
+                if (metadata.containsDirectory(ExifDirectory.class)) {
+                    ExifDirectory exifDirectory = (ExifDirectory) metadata.getDirectory(ExifDirectory.class);
+                    if (exifDirectory.containsThumbnail()) {
+                        img = ImageIO.read(new ByteArrayInputStream(exifDirectory.getThumbnailData()));
+                    }
+                }
+                if (img == null) {
+                    img = ImageIO.read(new java.io.FileInputStream(hits.doc(i).getField(net.semanticmetadata.lire.DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue()));
+                }
                 icon = new ImageIcon(ImageUtils.scaleImage(img, 128));
                 progress.setValue((i*100)/hits.length());
             } catch (Exception ex) {

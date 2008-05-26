@@ -33,7 +33,7 @@ import java.util.LinkedList;
  */
 public class AutoColorCorrelogramTest extends TestCase {
     private String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
-    private String testFilesPath = "./src/test/resources/small/";
+    private String testFilesPath = "./lire/src/test/resources/small/";
 
     public void testExtraction() throws IOException {
         AutoColorCorrelogram acc = new AutoColorCorrelogram();
