@@ -4,6 +4,12 @@ CHANGES for LIRE
 2008-05-26
 ==========
 CBIR:
+  - Added Tamura feature based on the code of Marko Keuschnig &
+    Christian Penz to imageanalysis
+  
+2008-05-26
+==========
+CBIR:
   - Fixed bugs in CEDD integration & tests
   - Changed distance function of CEDD feature 
   - Added RGB color histogram feature to indexing and search.

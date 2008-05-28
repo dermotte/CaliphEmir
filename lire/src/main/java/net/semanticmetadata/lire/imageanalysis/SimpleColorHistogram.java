@@ -29,6 +29,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.StringTokenizer;
 
+import net.semanticmetadata.lire.imageanalysis.utils.Quantization;
+
 /**
  * This class provides a simple color histogram for content based image retrieval.
  * Number of bins is configurable, histogram is normalized to 8 bit per bin (0-255). <br>
@@ -119,7 +121,7 @@ public class SimpleColorHistogram implements VisualDescriptor {
         } else if (histogramType == HistogramType.Luminance) {
             return (pixel[0] * histogram.length) / (256);
         } else {
-            return (pixel[0] + pixel[1] * 256 + pixel[2] * 256 * 256) / quantRgb;
+            return Quantization.quantUniformly(pixel, histogram.length, 256);
         }
     }
 
