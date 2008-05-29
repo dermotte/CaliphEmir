@@ -107,6 +107,10 @@ public class TestImageSearcher extends TestCase {
         System.out.println("numDocs = " + numDocs);
         ImageSearcher searcher = ImageSearcherFactory.createDefaultSearcher();
         ImageDuplicates imageDuplicates = searcher.findDuplicates(reader);
+        if (imageDuplicates == null) {
+            System.out.println("No duplicates found");
+            return;
+        }
         for (int i = 0; i < imageDuplicates.length(); i++) {
             System.out.println(imageDuplicates.getDuplicate(i).toString());
         }

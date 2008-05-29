@@ -71,6 +71,7 @@ public interface DocumentBuilder {
     public static final String FIELD_NAME_AUTOCOLORCORRELOGRAM = "featureAutoColorCorrelogram";
     public static final String FIELD_NAME_COLORHISTOGRAM = "featureColorHistogram";
     public static final String FIELD_NAME_CEDD = "featureCEDD";
+    public static final String FIELD_NAME_TAMURA = "featureTAMURA";
     public static final String FIELD_NAME_IDENTIFIER = "descriptorImageIdentifier";
 
     /**

@@ -1,10 +1,10 @@
 package net.semanticmetadata.lire;
 
 import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
-import net.semanticmetadata.lire.impl.CorrelogramImageSearcher;
-import net.semanticmetadata.lire.impl.SimpleImageSearcher;
-import net.semanticmetadata.lire.impl.CeddImageSearcher;
-import net.semanticmetadata.lire.impl.SimpleColorHistogramImageSearcher;
+import net.semanticmetadata.lire.imageanalysis.CEDD;
+import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
+import net.semanticmetadata.lire.imageanalysis.Tamura;
+import net.semanticmetadata.lire.impl.*;
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
  *
@@ -156,7 +156,7 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createCEDDImageSearcher(int maximumHits) {
-        return new CeddImageSearcher(maximumHits);
+        return new GenericImageSearcher(maximumHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
     }
 
 
@@ -168,7 +168,18 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createColorHistogramImageSearcher(int maximumHits) {
-        return new SimpleColorHistogramImageSearcher(maximumHits);
+        return new GenericImageSearcher(maximumHits, SimpleColorHistogram.class, DocumentBuilder.FIELD_NAME_COLORHISTOGRAM);
+    }
+
+    /**
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram}
+     * image feature. Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @param maximumHits
+     * @return
+     */
+    public static ImageSearcher createTamuraImageSearcher(int maximumHits) {
+        return new GenericImageSearcher(maximumHits, Tamura.class, DocumentBuilder.FIELD_NAME_TAMURA);
     }
 
 

@@ -6,7 +6,12 @@ CHANGES for LIRE
 CBIR:
   - Added Tamura feature based on the code of Marko Keuschnig &
     Christian Penz to imageanalysis
-  
+  - Added Tamura to document and search builder factories
+  - Removed specific implementations for color histogram and CEDD
+  - Introduced LireFeature interface (for use in GenericDocumentBuilder
+    and GenericImageSearcher)
+  - Introduced GenericDocumentBuilder and GenericImageSearcher
+
 2008-05-26
 ==========
 CBIR:

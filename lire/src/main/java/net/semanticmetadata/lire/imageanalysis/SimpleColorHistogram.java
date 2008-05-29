@@ -23,13 +23,12 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 import at.lux.imageanalysis.VisualDescriptor;
+import net.semanticmetadata.lire.imageanalysis.utils.Quantization;
 
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.StringTokenizer;
-
-import net.semanticmetadata.lire.imageanalysis.utils.Quantization;
 
 /**
  * This class provides a simple color histogram for content based image retrieval.
@@ -41,7 +40,7 @@ import net.semanticmetadata.lire.imageanalysis.utils.Quantization;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class SimpleColorHistogram implements VisualDescriptor {
+public class SimpleColorHistogram implements LireFeature {
     public static final int DEFAULT_NUMBER_OF_BINS = 64;
     public static final HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.RGB;
     public static final DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.JSD;

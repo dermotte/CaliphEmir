@@ -1,6 +1,9 @@
 package net.semanticmetadata.lire;
 
 import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
+import net.semanticmetadata.lire.imageanalysis.Tamura;
+import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
+import net.semanticmetadata.lire.imageanalysis.CEDD;
 import net.semanticmetadata.lire.impl.*;
 
 /*
@@ -149,7 +152,7 @@ public class DocumentBuilderFactory {
      * @return the created AutoCorrelation feature DocumentBuilder.
      */
     public static DocumentBuilder getCEDDDocumentBuilder() {
-        return new CeddDocumentBuilder();
+        return new GenericDocumentBuilder(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
     }
 
     /**
@@ -158,10 +161,22 @@ public class DocumentBuilderFactory {
      * information on the image feature.
      * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
      *
-     * @return the created AutoCorrelation feature DocumentBuilder.
+     * @return the created feature DocumentBuilder.
      */
     public static DocumentBuilder getColorHistogramDocumentBuilder() {
-        return new SimpleColorHistogramDocumentBuilder();
+        return new GenericDocumentBuilder(SimpleColorHistogram.class, DocumentBuilder.FIELD_NAME_COLORHISTOGRAM);
+    }
+
+    /**
+     * Creates a DocumentBuilder for three Tamura features. See
+     * {@link net.semanticmetadata.lire.imageanalysis.Tamura} for more
+     * information on the image feature.
+     * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @return the created Tamura feature DocumentBuilder.
+     */
+    public static DocumentBuilder getTamuraDocumentBuilder() {
+        return new GenericDocumentBuilder(Tamura.class, DocumentBuilder.FIELD_NAME_TAMURA);
     }
 
     /**
@@ -177,6 +192,7 @@ public class DocumentBuilderFactory {
         cdb.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+        cdb.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
         return cdb;
     }
 }

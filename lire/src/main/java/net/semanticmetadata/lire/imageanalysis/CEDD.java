@@ -40,7 +40,7 @@ import java.util.StringTokenizer;
  *
  * @author: Savvas A. Chatzichristofis, savvash@gmail.com
  */
-public class CEDD implements VisualDescriptor {
+public class CEDD implements LireFeature {
     public double T0;
     public double T1;
     public double T2;

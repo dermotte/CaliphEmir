@@ -24,6 +24,7 @@
 
 package net.semanticmetadata.lire.imageanalysis;
 
+import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.utils.ImageUtils;
 
 import java.awt.*;
@@ -33,8 +34,6 @@ import java.awt.image.ColorConvertOp;
 import java.awt.image.Raster;
 import java.util.StringTokenizer;
 
-import at.lux.imageanalysis.VisualDescriptor;
-
 /**
  * Implementation of (three) Tamura features done by  Marko Keuschnig & Christian Penz
  * Date: 28.05.2008
@@ -42,7 +41,7 @@ import at.lux.imageanalysis.VisualDescriptor;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class Tamura implements VisualDescriptor {
+public class Tamura implements LireFeature {
 	private static final int MAX_IMG_HEIGHT = 64;
     private int[][] grayScales;
     private int imgWidth, imgHeight;
