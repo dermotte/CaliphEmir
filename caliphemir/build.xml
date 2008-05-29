@@ -76,9 +76,10 @@
         </propertyfile>
         <property file="${src}/at/lux/fotoannotation/dialogs/build.properties"/>
         <echo file="default.mf" append="false">Main-Class: at.lux.fotoannotation.AnnotationFrame
-Class-Path: lib/lucene-core-2.1.0.jar lib/jdom.jar lib/jaxen-full.jar lib/saxpath.jar lib/metadata-extractor-2.3.1.jar lib/derby.jar lib/looks-2.0.4.jar
-Build-Date: ${touch.time}
-Build-Number: ${build-number}
+            Class-Path: lib/lucene-core-2.1.0.jar lib/jdom.jar lib/jaxen-full.jar lib/saxpath.jar
+            lib/metadata-extractor-2.3.1.jar lib/derby.jar lib/looks-2.0.4.jar
+            Build-Date: ${touch.time}
+            Build-Number: ${build-number}
         </echo>
         <!--        <propertyfile file="${src}/at/lux/fotoretrieval/dialogs/build.properties" comment="Properties of this specific EMIR build">
                     <entry key="build-date" type="date" value="now"/>
@@ -367,7 +368,12 @@ Build-Number: ${build-number}
 
     </target>
 
-    <target name="createCbirLibrary" depends="dist">
+    <target name="createCbirLibrary" depends="compileCbirLibrary">
+        <description>
+            This target can be used to create a version of the cbir library for lire with
+            a JDK version smaller than 1.6
+            As it just compiles the neccessary java files no swing gui issues can occur.
+        </description>
         <mkdir dir="${dist}"/>
         <mkdir dir="${dist}/lire"/>
         <echo file="default-cbir.mf" append="false">Build-Date: ${touch.time}
@@ -383,6 +389,24 @@ Build-Number: ${build-number}
                 <include name="org/vizir/**/*.*"/>
             </fileset>
         </jar>
+
+    </target>
+
+    <target name="compileCbirLibrary" depends="clean">
+        <description>
+            This target can be used to create a version of the cbir library for lire with
+            a JDK version smaller than 1.6
+            As it just compiles the neccessary java files no swing gui issues can occur.
+        </description>
+        <mkdir dir="${build}"/>
+        <!-- TODO: checkout which org.vizir files are needed -->
+        <javac srcdir="${src}" destdir="${build}" optimize="on" verbose="true" listfiles="true">
+            <include name="at/lux/imageanalysis/*Impl.*"/>
+            <include name="at/lux/imageanalysis/*Implementation.*"/>
+            <include name="at/lux/imageanalysis/VisualDescriptor.*"/>
+            <include name="at/lux/imageanalysis/VisualDescriptorException.*"/>
+            <include name="org/vizir/**/*.*"/>
+        </javac>
 
     </target>
 </project>

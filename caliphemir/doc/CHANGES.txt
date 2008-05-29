@@ -1,6 +1,11 @@
 CHANGES for Caliph & Emir
 =========================
 
+2008-05-29
+==========
+General:
+  - Added targets for compiling cbir-lib (for Lire) with JDK 1.5  to build file
+
 2008-05-23
 ==========
 General:
