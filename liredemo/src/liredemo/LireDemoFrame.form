@@ -1133,7 +1133,7 @@
                     <Component class="javax.swing.JComboBox" name="selectboxDocumentBuilder">
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="7">
+                          <StringArray count="8">
                             <StringItem index="0" value="All MPEG-7 Descriptors"/>
                             <StringItem index="1" value="Scalable Color (MPEG-7)"/>
                             <StringItem index="2" value="Edge Histogram (MPEG-7)"/>
@@ -1141,6 +1141,7 @@
                             <StringItem index="4" value="Auto Color Correlogram"/>
                             <StringItem index="5" value="CEDD"/>
                             <StringItem index="6" value="RGB Color Histogram"/>
+                            <StringItem index="7" value="Tamura"/>
                           </StringArray>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">

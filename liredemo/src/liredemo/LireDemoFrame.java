@@ -9,6 +9,7 @@ package liredemo;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
+import java.io.File;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
 import net.semanticmetadata.lire.ImageSearcherFactory;
@@ -17,7 +18,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
@@ -57,6 +58,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
+import java.io.FilenameFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
@@ -833,7 +836,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
 
         jLabel1.setText("Type of IndexSearcher:");
 
-        selectboxDocumentBuilder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All MPEG-7 Descriptors", "Scalable Color (MPEG-7)", "Edge Histogram (MPEG-7)", "Color Layout (MPEG-7)", "Auto Color Correlogram", "CEDD", "RGB Color Histogram" }));
+        selectboxDocumentBuilder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All MPEG-7 Descriptors", "Scalable Color (MPEG-7)", "Edge Histogram (MPEG-7)", "Color Layout (MPEG-7)", "Auto Color Correlogram", "CEDD", "RGB Color Histogram", "Tamura" }));
         selectboxDocumentBuilder.setToolTipText(bundle.getString("options.tooltip.documentbuilderselection")); // NOI18N
         selectboxDocumentBuilder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1038,7 +1041,7 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
         JFileChooser jfc = new JFileChooser(".");
         jfc.setDialogTitle("Select image to create mosaic ...");
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "JPG, PNG & GIF Images", "jpg", "gif", "png");
+                 "JPG, PNG & GIF Images", "jpg", "gif", "png");
         jfc.setFileFilter(filter);
         if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
@@ -1392,8 +1395,10 @@ private void selectboxDocumentBuilderActionPerformed(java.awt.event.ActionEvent 
             searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(numResults);
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 5) {
             searcher = ImageSearcherFactory.createCEDDImageSearcher(numResults);
-        } else if (selectboxDocumentBuilder.getSelectedIndex() > 5) {
+        } else if (selectboxDocumentBuilder.getSelectedIndex() == 6) {
             searcher = ImageSearcherFactory.createColorHistogramImageSearcher(numResults);
+        } else if (selectboxDocumentBuilder.getSelectedIndex() > 6) {
+            searcher = ImageSearcherFactory.createTamuraImageSearcher(numResults);
         }
         return searcher;
     }
