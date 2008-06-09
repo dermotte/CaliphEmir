@@ -45,7 +45,7 @@
     <property name="config" value="src/main/config"/>
     <property name="build" value="classes"/>
     <property name="dist" value="dist"/>
-    <property name="versionstring" value="0.5.4a"/>
+    <property name="versionstring" value="0.6"/>
     <!-- path to test files -->
     <property name="test" value="test"/>
     <!-- path to documentation like README or CHANGES -->
@@ -148,6 +148,14 @@
                     <include name="README.txt"/>
                     <exclude name="**/CVS/*"/>
                     <exclude name="**/docs/*"/>
+                </patternset>
+            </fileset>
+        </copy>
+        <copy todir="${dist}/Lire-${versionstring}">
+            <fileset dir=".">
+                <patternset>
+                    <include name="src/main/docs/INSTALL.txt"/>
+                    <include name="src/main/docs/CHANGES.txt"/>
                 </patternset>
             </fileset>
         </copy>

@@ -45,7 +45,7 @@ public class CreateIndexTest extends TestCase {
             "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg", "Páginas de 060305_b_Página_1_Imagem_0004_Página_08_Imagem_0002.jpg"};
     private String testFilesPath = "./lire/src/test/resources/images/";
     private String indexPath = "test-index";
-    private String testExtensive = "./caliphemir/testdaten/testdata";
+    private String testExtensive = "./lire/wang-data-1000";
 
     public void testCreateIndex() throws IOException {
         DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
@@ -120,7 +120,7 @@ public class CreateIndexTest extends TestCase {
             iw.addDocument(doc);
             count++;
             if (count % 25 == 0) System.out.println(count + " files indexed.");
-            if (count == 100) break;
+            if (count == 200) break;
         }
         long timeTaken = (System.currentTimeMillis() - time);
         float sec = ((float) timeTaken) / 1000f;
