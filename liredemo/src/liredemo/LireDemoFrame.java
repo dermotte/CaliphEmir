@@ -10,12 +10,14 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.io.File;
+
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
 import net.semanticmetadata.lire.ImageSearcherFactory;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -27,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import edu.uniklu.itec.mosaix.ImageFunctions;
 import edu.uniklu.itec.mosaix.engine.Engine;
 /*
@@ -84,26 +87,31 @@ public class LireDemoFrame extends javax.swing.JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
         }
-
         initComponents();
+        try {
+            Image icon = ImageIO.read(getClass().getResource("/resources/viewmag16.png"));
+            if (icon!=null) setIconImage(icon);
+        } catch (IOException ex) {
+            Logger.getLogger(LireDemoFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
         selectboxDocumentBuilder.setSelectedIndex(5);
         buttonSwitchIndex.setBackground(highlightSelectColor);
         DropTarget t = new DropTarget(searchPanel, new DropTargetListener() {
 
             public void dragEnter(DropTargetDragEvent dtde) {
-                
+
             }
 
             public void dragOver(DropTargetDragEvent dtde) {
-                
+
             }
 
             public void dropActionChanged(DropTargetDragEvent dtde) {
-                
+
             }
 
             public void dragExit(DropTargetEvent dte) {
-                
+
             }
 
             public void drop(DropTargetDropEvent dtde) {
@@ -125,7 +133,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
                 }
             }
         });
-        
+
     }
 
     /**
@@ -275,6 +283,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Bundle"); // NOI18N
         setTitle(bundle.getString("liredemo.frame.titel")); // NOI18N
+        setIconImages(null);
 
         topPane.setLayout(new java.awt.CardLayout());
 
@@ -419,6 +428,11 @@ public class LireDemoFrame extends javax.swing.JFrame {
         cardPanel.setLayout(new java.awt.CardLayout());
 
         textfieldIndexDir.setEditable(false);
+        textfieldIndexDir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textfieldIndexDirActionPerformed(evt);
+            }
+        });
 
         buttonOpenDir.setText(bundle.getString("button.open.indexdirectory")); // NOI18N
         buttonOpenDir.addActionListener(new java.awt.event.ActionListener() {
@@ -442,8 +456,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18));
         jLabel6.setText("Image Indexing:");
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 2, 11));
-        jLabel8.setText("Hint: Note that not only images in the selected directory but also all subdirectories will be indexed.");
+        jLabel8.setText("<html><b>Hints:</b>\n<ul>\n<li> Only images in the selected directory but also all <i>subdirectories</i> will be indexed.\n<li> If you don't specify a directory images are downloaded from <i>Flickr</i>. Configure in options panel the actual number\n</ul>");
 
         checkBoxAddToExisintgIndex.setText("add to existing index");
         checkBoxAddToExisintgIndex.setToolTipText(bundle.getString("index.addToExistingIndex")); // NOI18N
@@ -471,7 +484,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
             .addGroup(indexPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel8)
-                .addContainerGap(168, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         indexPanelLayout.setVerticalGroup(
             indexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1015,36 +1028,36 @@ public class LireDemoFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void checkboxAvoidDuplicatesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_checkboxAvoidDuplicatesStateChanged
-    // TODO: set / unset in Engine.
-    Engine.setAvoidDuplicateTileImages(checkboxAvoidDuplicates.isSelected());
-}//GEN-LAST:event_checkboxAvoidDuplicatesStateChanged
+    private void checkboxAvoidDuplicatesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_checkboxAvoidDuplicatesStateChanged
+        // TODO: set / unset in Engine.
+        Engine.setAvoidDuplicateTileImages(checkboxAvoidDuplicates.isSelected());
+    }//GEN-LAST:event_checkboxAvoidDuplicatesStateChanged
 
-private void mosaicTileCountSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_mosaicTileCountSliderStateChanged
-    labelMosaicSliderValue.setText(mosaicTileCountSlider.getValue() + "");
-}//GEN-LAST:event_mosaicTileCountSliderStateChanged
+    private void mosaicTileCountSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_mosaicTileCountSliderStateChanged
+        labelMosaicSliderValue.setText(mosaicTileCountSlider.getValue() + "");
+    }//GEN-LAST:event_mosaicTileCountSliderStateChanged
 
-private void checkboxMosaicAdvanceOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxMosaicAdvanceOptionsActionPerformed
-    CardLayout cl = (CardLayout) mosaicAdvanceOptionsPanel.getLayout();
-    if (checkboxMosaicAdvanceOptions.isSelected()) {
-        cl.last(mosaicAdvanceOptionsPanel);
-    } else {
-        cl.first(mosaicAdvanceOptionsPanel);
-    }
-}//GEN-LAST:event_checkboxMosaicAdvanceOptionsActionPerformed
-
-private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMosaicSaveActionPerformed
-    try {
-        JFileChooser saveIt = new JFileChooser("Save image as PNG ...");
-        if (saveIt.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            javax.imageio.ImageIO.write(javax.imageio.ImageIO.read(new java.io.File("result.png")), "png", new java.io.FileOutputStream(saveIt.getSelectedFile()));
+    private void checkboxMosaicAdvanceOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxMosaicAdvanceOptionsActionPerformed
+        CardLayout cl = (CardLayout) mosaicAdvanceOptionsPanel.getLayout();
+        if (checkboxMosaicAdvanceOptions.isSelected()) {
+            cl.last(mosaicAdvanceOptionsPanel);
+        } else {
+            cl.first(mosaicAdvanceOptionsPanel);
         }
-    } catch (IOException ex) {
-        Logger.getLogger("global").log(Level.SEVERE, null, ex);
-    }
+    }//GEN-LAST:event_checkboxMosaicAdvanceOptionsActionPerformed
+
+    private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMosaicSaveActionPerformed
+        try {
+            JFileChooser saveIt = new JFileChooser("Save image as PNG ...");
+            if (saveIt.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                javax.imageio.ImageIO.write(javax.imageio.ImageIO.read(new java.io.File("result.png")), "png", new java.io.FileOutputStream(saveIt.getSelectedFile()));
+            }
+        } catch (IOException ex) {
+            Logger.getLogger("global").log(Level.SEVERE, null, ex);
+        }
 
 
-}//GEN-LAST:event_buttonMosaicSaveActionPerformed
+    }//GEN-LAST:event_buttonMosaicSaveActionPerformed
 
     private void buttonStartMosaicingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartMosaicingActionPerformed
         if (!org.apache.lucene.index.IndexReader.indexExists(textfieldIndexName.getText()))
@@ -1062,7 +1075,7 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
         JFileChooser jfc = new JFileChooser(".");
         jfc.setDialogTitle("Select image to create mosaic ...");
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                 "JPG, PNG & GIF Images", "jpg", "gif", "png");
+                "JPG, PNG & GIF Images", "jpg", "gif", "png");
         jfc.setFileFilter(filter);
         if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
@@ -1178,6 +1191,7 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
             icon = new ImageIcon(ImageUtils.scaleImage(img, Math.min(imageLabel.getWidth(), imageLabel.getHeight())));
             imageLabel.setIcon(icon);
         } catch (Exception e) {
+            JOptionPane.showConfirmDialog(this, "Error loading image:\n" + e.toString(), "An error occurred", JOptionPane.ERROR_MESSAGE);
             System.err.println(e.toString());
         }
 
@@ -1221,9 +1235,9 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
                 try {
                     ImageFunctions iFunc = new ImageFunctions();
                     BufferedImage mosaic = iFunc.getMosaic(javax.imageio.ImageIO.read(new java.io.FileInputStream(textfieldMosaicImage.getText())),
-                            new java.awt.Dimension(320, 320), new java.awt.Dimension(numTiles, numTiles), 
-                            ((Double) spinnerMosaicOptionSc.getValue()).floatValue(), 
-                            ((Double) spinnerMosaicOptionCl.getValue()).floatValue(), 
+                            new java.awt.Dimension(320, 320), new java.awt.Dimension(numTiles, numTiles),
+                            ((Double) spinnerMosaicOptionSc.getValue()).floatValue(),
+                            ((Double) spinnerMosaicOptionCl.getValue()).floatValue(),
                             ((Double) spinnerMosaicOptionEh.getValue()).floatValue(), textfieldIndexName.getText(),
                             progressMonitor);
                     mosaicImageLable.setIcon(new ImageIcon(ImageUtils.scaleImage(mosaic, Math.min(mosaicImageLable.getSize().width, mosaicImageLable.getSize().height))));
@@ -1375,13 +1389,17 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
         }
     }//GEN-LAST:event_buttonOpenImageActionPerformed
 
-private void selectboxDocumentBuilderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectboxDocumentBuilderActionPerformed
+    private void selectboxDocumentBuilderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectboxDocumentBuilderActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_selectboxDocumentBuilderActionPerformed
+    }//GEN-LAST:event_selectboxDocumentBuilderActionPerformed
 
-private void textFieldFlickrDownloadMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFlickrDownloadMaxActionPerformed
+    private void textFieldFlickrDownloadMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFlickrDownloadMaxActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_textFieldFlickrDownloadMaxActionPerformed
+    }//GEN-LAST:event_textFieldFlickrDownloadMaxActionPerformed
+
+private void textfieldIndexDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textfieldIndexDirActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_textfieldIndexDirActionPerformed
 
     private void searchForImage(String imagePath) throws FileNotFoundException, IOException {
         // setting to search panel:

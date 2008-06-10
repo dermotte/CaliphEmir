@@ -6,6 +6,8 @@ CHANGES for LIRE
 General:
   - Added FlickrPhotoGrabber (multithreaded), used if
     no directory to index is given.
+  - Re-organized IndexingThread for parallel use.
+  - Added icon image for Frame.
 
 2008-05-26
 ==========

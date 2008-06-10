@@ -23,6 +23,8 @@ import com.drew.imaging.jpeg.JpegProcessingException;
 
 import javax.imageio.ImageIO;
 
+import liredemo.indexing.ParallelIndexer;
+
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
  *
@@ -59,7 +61,8 @@ public class IndexingThread extends Thread {
     public IndexingThread(LireDemoFrame parent) {
         this.parent = parent;
     }
-    
+
+    // TODO: make parallel
     public void run() {
         DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance();
         df.setMaximumFractionDigits(0);
@@ -74,12 +77,14 @@ public class IndexingThread extends Thread {
             DocumentBuilder builder = DocumentBuilderFactory.getFullDocumentBuilder();
             int count = 0;
             long time = System.currentTimeMillis();
-            for (String identifier : images) {
+            Document doc;
+            ParallelIndexer indexer = new ParallelIndexer(images, builder);
+            new Thread(indexer).start();
+            while ((doc = indexer.getNext())!=null) {
                 try {
-                    Document doc = builder.createDocument(readFile(identifier), identifier);
                     iw.addDocument(doc);
                 } catch (Exception e) {
-                    System.err.println("Could not add document " + identifier);
+                    System.err.println("Could not add document.");
                     e.printStackTrace();
                 }
                 count++;
