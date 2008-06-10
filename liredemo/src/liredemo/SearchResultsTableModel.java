@@ -18,10 +18,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.net.URL;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JProgressBar;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.utils.ImageUtils;
@@ -57,23 +58,25 @@ import com.drew.metadata.exif.ExifDirectory;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class SearchResultsTableModel extends DefaultTableModel{
+public class SearchResultsTableModel extends DefaultTableModel {
     DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance();
     ImageSearchHits hits = null;
     private ArrayList<ImageIcon> icons;
-    
-    /** Creates a new instance of SearchResultsTableModel */
+
+    /**
+     * Creates a new instance of SearchResultsTableModel
+     */
     public SearchResultsTableModel() {
         df.setMaximumFractionDigits(2);
         df.setMinimumFractionDigits(2);
     }
-    
+
     public int getColumnCount() {
         return 2;
     }
-    
+
     public String getColumnName(int col) {
-        if (col==0) {
+        if (col == 0) {
             return "File";
         } else if (col == 1) {
             return "Preview";
@@ -82,22 +85,27 @@ public class SearchResultsTableModel extends DefaultTableModel{
         }
         return "";
     }
+
     public Class getColumnClass(int column) {
-        if (column==0) {
+        if (column == 0) {
             return String.class;
         } else {
             return ImageIcon.class;
         }
     }
-    
+
     public int getRowCount() {
         if (hits == null) return 0;
         return hits.length();
     }
-    
+
     public Object getValueAt(int row, int col) {
-        if (col==0) {
-            return df.format(hits.score(row)) + ": " + hits.doc(row).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
+        if (col == 0) {
+            String text = hits.doc(row).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
+            if (hits.doc(row).getField("FlickrURL") != null) {
+                text = hits.doc(row).getField("FlickrTitle").stringValue() + " - " + hits.doc(row).getField("FlickrURL").stringValue();
+            }
+            return df.format(hits.score(row)) + ": " + text;
 //        } else if (col == 1) {
 //            return hits.doc(row).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
         } else if (col == 1) {
@@ -105,32 +113,36 @@ public class SearchResultsTableModel extends DefaultTableModel{
         }
         return null;
     }
-    
+
     /**
-     *
      * @param hits
-     * @param progress 
+     * @param progress
      */
     public void setHits(ImageSearchHits hits, JProgressBar progress) {
         this.hits = hits;
         icons = new ArrayList<ImageIcon>(hits.length());
-        progress.setString("Searching finished. Loading images for result list.");;
-        for (int i = 0; i<hits.length();i++) {
+        progress.setString("Searching finished. Loading images for result list.");
+        for (int i = 0; i < hits.length(); i++) {
             ImageIcon icon = null;
             try {
                 BufferedImage img = null;
-                Metadata metadata = new ExifReader(new FileInputStream(hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue())).extract();
-                if (metadata.containsDirectory(ExifDirectory.class)) {
-                    ExifDirectory exifDirectory = (ExifDirectory) metadata.getDirectory(ExifDirectory.class);
-                    if (exifDirectory.containsThumbnail()) {
-                        img = ImageIO.read(new ByteArrayInputStream(exifDirectory.getThumbnailData()));
+                String fileIdentifier = hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
+                if (!fileIdentifier.startsWith("http:")) {
+                    Metadata metadata = new ExifReader(new FileInputStream(fileIdentifier)).extract();
+                    if (metadata.containsDirectory(ExifDirectory.class)) {
+                        ExifDirectory exifDirectory = (ExifDirectory) metadata.getDirectory(ExifDirectory.class);
+                        if (exifDirectory.containsThumbnail()) {
+                            img = ImageIO.read(new ByteArrayInputStream(exifDirectory.getThumbnailData()));
+                        }
                     }
-                }
-                if (img == null) {
-                    img = ImageIO.read(new java.io.FileInputStream(hits.doc(i).getField(net.semanticmetadata.lire.DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue()));
+                    if (img == null) {
+                        img = ImageIO.read(new FileInputStream(fileIdentifier));
+                    }
+                } else {
+                    img = ImageIO.read(new URL(fileIdentifier));
                 }
                 icon = new ImageIcon(ImageUtils.scaleImage(img, 128));
-                progress.setValue((i*100)/hits.length());
+                progress.setValue((i * 100) / hits.length());
             } catch (Exception ex) {
                 Logger.getLogger("global").log(Level.SEVERE, null, ex);
             }
@@ -139,17 +151,16 @@ public class SearchResultsTableModel extends DefaultTableModel{
         progress.setValue(100);
         fireTableDataChanged();
     }
-    
+
     /**
-     * 
-     * @return 
+     * @return
      */
     public ImageSearchHits getHits() {
         return hits;
     }
-    
+
     public boolean isCellEditable(int row, int column) {
         return false;
     }
-    
+
 }

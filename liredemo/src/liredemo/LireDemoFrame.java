@@ -59,7 +59,10 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
 import java.io.FilenameFilter;
+import java.net.URL;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import liredemo.flickr.FlickrIndexingThread;
 
 /**
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
@@ -205,6 +208,8 @@ public class LireDemoFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         textfieldNumSearchResults = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        textFieldFlickrDownloadMax = new javax.swing.JTextField();
         resultsCardPane = new javax.swing.JPanel();
         resultsPane = new javax.swing.JScrollPane();
         resultsTable = new javax.swing.JTable();
@@ -857,6 +862,16 @@ public class LireDemoFrame extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18));
         jLabel4.setText("Options:");
 
+        jLabel17.setText("Flickr download maximum:");
+
+        textFieldFlickrDownloadMax.setText("100");
+        textFieldFlickrDownloadMax.setToolTipText("If no directory to index is given images can be downloaded from Flickr. This is the maximum of images retrieved in one batch.");
+        textFieldFlickrDownloadMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldFlickrDownloadMaxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
         optionsPanelLayout.setHorizontalGroup(
@@ -869,14 +884,16 @@ public class LireDemoFrame extends javax.swing.JFrame {
                         .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel17))
                         .addGap(14, 14, 14)
                         .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textfieldNumSearchResults, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
                             .addComponent(selectboxDocumentBuilder, 0, 500, Short.MAX_VALUE)
                             .addGroup(optionsPanelLayout.createSequentialGroup()
                                 .addComponent(textfieldIndexName, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addComponent(textFieldFlickrDownloadMax, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         optionsPanelLayout.setVerticalGroup(
@@ -895,7 +912,11 @@ public class LireDemoFrame extends javax.swing.JFrame {
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textfieldNumSearchResults, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addContainerGap(364, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(textFieldFlickrDownloadMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(338, Short.MAX_VALUE))
         );
 
         cardPanel.add(optionsPanel, "card4");
@@ -1131,6 +1152,10 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
         try {
             if (browseReader == null)
                 browseReader = org.apache.lucene.index.IndexReader.open(textfieldIndexName.getText());
+            else {
+                browseReader.close();
+                browseReader = org.apache.lucene.index.IndexReader.open(textfieldIndexName.getText());
+            }
             spinnerMaxDocCount.setValue(browseReader.maxDoc());
             setDocumentImageIcon(((Integer) spinnerCurrentDocNum.getValue()).intValue());
         } catch (IOException ex) {
@@ -1144,7 +1169,12 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
         try {
             Document d = browseReader.document(docID);
             ImageIcon icon = null;
-            BufferedImage img = ImageIO.read(new java.io.FileInputStream(d.getField(net.semanticmetadata.lire.DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue()));
+            BufferedImage img = null;
+            String file = d.getField(net.semanticmetadata.lire.DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
+            if (!file.startsWith("http:"))
+                img = ImageIO.read(new java.io.FileInputStream(file));
+            else
+                img = ImageIO.read(new URL(file));
             icon = new ImageIcon(ImageUtils.scaleImage(img, Math.min(imageLabel.getWidth(), imageLabel.getHeight())));
             imageLabel.setIcon(icon);
         } catch (Exception e) {
@@ -1282,8 +1312,17 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
             buttonStartIndexing.setEnabled(false);
             t.start();
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a directory to index first.\n" +
-                    "At least some digital image should be found there.", "Error", JOptionPane.ERROR_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(this, "You did not specify images to index.\n" +
+                    "Should LireDemo download random Flickr images for indexing?.\n" +
+                    "Note that this is rather slow an consumes a lot of bandwidth.");
+            if (result == JOptionPane.OK_OPTION) {
+                FlickrIndexingThread t = new FlickrIndexingThread(this, Integer.parseInt(textFieldFlickrDownloadMax.getText()));
+                buttonStartIndexing.setEnabled(false);
+                t.start();
+            }
+
+//            JOptionPane.showMessageDialog(this, "Please select a directory to index first.\n" +
+//                    "At least some digital image should be found there.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_buttonStartIndexingActionPerformed
@@ -1339,6 +1378,10 @@ private void buttonMosaicSaveActionPerformed(java.awt.event.ActionEvent evt) {//
 private void selectboxDocumentBuilderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectboxDocumentBuilderActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_selectboxDocumentBuilderActionPerformed
+
+private void textFieldFlickrDownloadMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFlickrDownloadMaxActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_textFieldFlickrDownloadMaxActionPerformed
 
     private void searchForImage(String imagePath) throws FileNotFoundException, IOException {
         // setting to search panel:
@@ -1451,6 +1494,7 @@ private void selectboxDocumentBuilderActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1491,6 +1535,7 @@ private void selectboxDocumentBuilderActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JSpinner spinnerMosaicOptionEh;
     private javax.swing.JSpinner spinnerMosaicOptionSc;
     private javax.swing.JPanel switchButtonsPanel;
+    private javax.swing.JTextField textFieldFlickrDownloadMax;
     public javax.swing.JTextField textfieldIndexDir;
     public javax.swing.JTextField textfieldIndexName;
     private javax.swing.JTextField textfieldMosaicImage;

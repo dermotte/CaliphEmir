@@ -1084,6 +1084,7 @@
                                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel17" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -1093,6 +1094,7 @@
                                               <Component id="textfieldIndexName" pref="500" max="32767" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                           </Group>
+                                          <Component id="textFieldFlickrDownloadMax" alignment="0" pref="500" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -1119,7 +1121,12 @@
                                   <Component id="textfieldNumSearchResults" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="364" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="textFieldFlickrDownloadMax" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="338" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1191,6 +1198,20 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Options:"/>
                       </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel17">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Flickr download maximum:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="textFieldFlickrDownloadMax">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="100"/>
+                        <Property name="toolTipText" type="java.lang.String" value="If no directory to index is given images can be downloaded from Flickr. This is the maximum of images retrieved in one batch."/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldFlickrDownloadMaxActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

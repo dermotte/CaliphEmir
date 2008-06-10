@@ -1,6 +1,12 @@
 CHANGES for LIRE
 ================
 
+2008-06-10
+==========
+General:
+  - Added FlickrPhotoGrabber (multithreaded), used if
+    no directory to index is given.
+
 2008-05-26
 ==========
 General:
