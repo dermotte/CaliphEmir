@@ -3,6 +3,14 @@ CHANGES for LIRE
 
 2008-06-10
 ==========
+Indexing:
+  - Fixed bug in indexing of local files.
+
+Mosaic:
+  - Change options, default now CEDD
+  
+2008-06-10
+==========
 General:
   - Added FlickrPhotoGrabber (multithreaded), used if
     no directory to index is given.

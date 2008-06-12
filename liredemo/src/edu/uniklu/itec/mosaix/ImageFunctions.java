@@ -136,10 +136,13 @@ public class ImageFunctions {
                 reader = IndexReader.open(path);
             }
             if (searcher == null) {
-                if (colorHist + colorDist + texture < 1f) {
-//                System.out.println("Using AutoColorCorrelogram Searcher ...");
+                if (colorHist > 0f) {
+//              et  System.out.println("Using AutoColorCorrelogram Searcher ...");
+//                    searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(50);
+                    searcher = ImageSearcherFactory.createCEDDImageSearcher(50);
+                } else if (texture > 0f) {
                     searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(50);
-                } else {
+                } else if (colorDist > 0f) {
 //                System.out.println("Using Default Weighted Searcher ...");
                     searcher = ImageSearcherFactory.createWeightedSearcher(50, colorHist, colorDist, texture); //.createSimpleSearcher(10);
                 }

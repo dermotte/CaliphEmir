@@ -88,7 +88,7 @@ public class IndexingThread extends Thread {
                     e.printStackTrace();
                 }
                 count++;
-                float percentage = (float) count/ (float) images.size();
+                float percentage = (float) count / (float) images.size();
                 parent.progressBarIndexing.setValue((int) Math.floor(100f*percentage));
                 float msleft = (float) (System.currentTimeMillis() - time) / percentage;
                 float secLeft = msleft * (1 - percentage) / 1000f;
@@ -98,9 +98,10 @@ public class IndexingThread extends Thread {
             }
             long timeTaken = (System.currentTimeMillis() - time);
             float sec = ((float) timeTaken) / 1000f;
-            
+            System.out.println("Finished indexing ...");
             parent.progressBarIndexing.setString(Math.round(sec) + " sec. for " + count + " files");
             parent.buttonStartIndexing.setEnabled(true);
+            parent.progressBarIndexing.setValue(100);
             iw.optimize();
             iw.close();
             

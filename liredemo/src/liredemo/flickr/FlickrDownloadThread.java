@@ -111,7 +111,7 @@ class SinglePhotoThread implements Runnable {
             doc.add(new Field("FlickrTitle", photo.title, Field.Store.YES, Field.Index.UN_TOKENIZED));
             fdt.addDocumentToFinished(doc);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Warning: Exception reading & indexing image " + photo.photourl + ": " + e.getMessage());
             fdt.addDocumentToFinished(null);
         }
 

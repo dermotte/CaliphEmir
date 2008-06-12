@@ -6,9 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.ByteArrayInputStream;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.awt.image.BufferedImage;
@@ -32,79 +30,87 @@ import org.apache.lucene.document.Document;
  */
 public class ParallelIndexer implements Runnable {
     List<String> imageFiles;
-    HashSet<String> todo;
     private int NUMBER_OF_SYNC_THREADS = 3;
+    Hashtable<String, Boolean> indexThreads = new Hashtable<String, Boolean>(3);
     DocumentBuilder builder;
     LinkedList<Document> finished = new LinkedList<Document>();
+    private boolean started = false;
 
     public ParallelIndexer(List<String> imageFiles, DocumentBuilder b) {
-        this.imageFiles = imageFiles;
-        todo = new HashSet<String>();
-        todo.addAll(imageFiles);
+        this.imageFiles = new LinkedList<String>();
+        this.imageFiles.addAll(imageFiles);
         builder = b;
     }
 
     public void run() {
-        ExecutorService pool = Executors.newFixedThreadPool(NUMBER_OF_SYNC_THREADS);
-        for (String photo : todo) {
-            // System.out.println("photo.title = " + photo.title);
-            pool.execute(new PhotoIndexer(photo, this));
+        for (int i = 1; i < NUMBER_OF_SYNC_THREADS; i++) {
+            PhotoIndexer runnable = new PhotoIndexer(this);
+            Thread t = new Thread(runnable);
+            t.start();
+            indexThreads.put(t.getName(), false);
         }
-        pool.shutdown();
-        while (!pool.isTerminated()) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-        while (todo.size()>0) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
+        started = true;
     }
 
-    public synchronized void addDoc(Document doc, String photofile) {
-        if (doc!=null) finished.add(doc);
-        todo.remove(photofile);
+    public void addDoc(Document doc, String photofile) {
+        synchronized (finished) {
+            if (doc != null) finished.add(doc);
+            Thread.yield();
+        }
     }
 
     public Document getNext() {
-        if (todo.size()<1) return null;
-        else {
-            while (finished.size()<1) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        if (imageFiles.size() < 1) {
+            boolean fb = true;
+            for (String t : indexThreads.keySet()) {
+                fb = fb && indexThreads.get(t);
             }
-            return finished.removeFirst();
+            if (started && fb) {
+                return null;
+            }
         }
+        while (finished.size() < 1) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return finished.removeFirst();
+
+    }
+
+    private String getNextImage() {
+        synchronized (imageFiles) {
+            if (imageFiles.size() > 0) {
+                return imageFiles.remove(0);
+
+            } else return null;
+        }
+
     }
 
     class PhotoIndexer implements Runnable {
         String photo;
         ParallelIndexer parent;
+        private boolean hasFinished = false;
 
-        PhotoIndexer(String photo, ParallelIndexer parent) {
-            this.photo = photo;
+        PhotoIndexer(ParallelIndexer parent) {
             this.parent = parent;
 
         }
 
         public void run() {
-            try {
-                Document doc = parent.builder.createDocument(readFile(photo), photo);
-                parent.addDoc(doc, photo);
-            } catch (IOException e) {
-                e.printStackTrace();
-                parent.addDoc(null, photo);
+            while ((photo = parent.getNextImage()) != null) {
+                try {
+                    Document doc = parent.builder.createDocument(readFile(photo), photo);
+                    parent.addDoc(doc, photo);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    parent.addDoc(null, photo);
+                }
             }
-
+            parent.indexThreads.put(Thread.currentThread().getName(),true);
         }
 
         private BufferedImage readFile(String path) throws IOException {
@@ -131,6 +137,11 @@ public class ParallelIndexer implements Runnable {
             if (image == null) image = ImageIO.read(new FileInputStream(path));
             return image;
         }
+
+        public boolean hasFinished() {
+            return hasFinished;
+        }
     }
+
 
 }

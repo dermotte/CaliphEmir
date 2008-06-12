@@ -1,14 +1,14 @@
 <project name="LireDemoRelease" default="release" basedir=".">
     <!--
 /*
- * This file is part of the Caliph & Emir project.
+ * This file is part of the LIRe project.
  *
- * Caliph & Emir is free software; you can redistribute it and/or modify
+ * LIRe is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Caliph & Emir is distributed in the hope that it will be useful,
+ * LIRe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -19,10 +19,11 @@
  *
  * Copyright statement:
  * ********************
- * (c) 2002-2006 by Mathias Lux (mathias@juggle.at)
- * Inffeldgasse 21a, 8010 Graz, Austria
- * http://www.know-center.at
+ * (c) 2002-2008 by Mathias Lux (mathias@juggle.at)
+ * Palmengasse 20, 9020 Klagenfurt, Austria
+ * http://www.semanticmetadata.net
  */
+
 
     -->
     <description>
@@ -59,7 +60,7 @@
     <target name="release">
         <!-- Make a zip file -->
         <!--subant antfile="nbbuild.xml" target="LireDemo-impl.jar"/-->
-        <zip destfile="${dist}/Lire-src-${versionstring}.zip">
+        <zip destfile="${dist}/LireDemo-src-${versionstring}.zip">
             <fileset dir="${src}">
                 <patternset>
                     <!--include name="${src}"/-->
