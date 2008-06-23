@@ -35,7 +35,11 @@ import java.awt.image.Raster;
 import java.util.StringTokenizer;
 
 /**
- * Implementation of (three) Tamura features done by  Marko Keuschnig & Christian Penz
+ * Implementation of (three) Tamura features done by  Marko Keuschnig & Christian Penz<br>
+ * Changes by
+ * <ul>
+ * <li> Ankit Jain (jankit87@gmail.com): histogram length in set string
+ * </ul>
  * Date: 28.05.2008
  * Time: 11:52:03
  *
@@ -296,7 +300,13 @@ public class Tamura implements LireFeature {
         if (!name.equals(TAMURA_NAME)) {
             throw new UnsupportedOperationException("This is not a Tamura feature string.");
         }
-        histogram = new double[18] ;
+
+        /*
+        * changes made by Ankit Jain here otherwise the histogram length would be assigned to histogram[i]
+        * jankit87@gmail.com
+        * */
+        histogram=new double[Integer.parseInt(st.nextToken())];
+        
         for (int i = 0; i < histogram.length; i++) {
             if (!st.hasMoreTokens())
                 throw new IndexOutOfBoundsException("Too few numbers in string representation.");
