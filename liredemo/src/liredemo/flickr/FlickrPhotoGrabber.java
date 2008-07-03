@@ -27,7 +27,8 @@ public class FlickrPhotoGrabber extends DefaultHandler {
     private LinkedList<FlickrPhoto> photos = new LinkedList<FlickrPhoto>();
     private boolean inEntry = false;
     private boolean inTitle = false;
-    private String currentTitle="", currentUrl=null, currentImage=null;
+    private String currentTitle = "", currentUrl = null, currentImage = null;
+    private LinkedList<String> currentTags = new LinkedList<String>();
 
     public static List<FlickrPhoto> getRecentPhotos() throws IOException, SAXException, ParserConfigurationException {
         LinkedList<FlickrPhoto> photos = new LinkedList<FlickrPhoto>();
@@ -47,23 +48,25 @@ public class FlickrPhotoGrabber extends DefaultHandler {
                 if (attributes.getValue("rel").equals("enclosure")) currentImage = attributes.getValue("href");
             }
         }
+        if (qName.equals("category")) currentTags.add(attributes.getValue("term"));
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("entry")) {
             inEntry = false;
             // add entry to list:
-            photos.add(new FlickrPhoto(currentTitle.trim(), currentUrl.trim(), currentImage.trim()));
+            photos.add(new FlickrPhoto(currentTitle.trim(), currentUrl.trim(), currentImage.trim(), currentTags));
             // clear:
             currentImage = null;
             currentTitle = "";
             currentUrl = null;
+            currentTags.clear();
         }
         if (qName.equals("title")) inTitle = false;
     }
 
     public void characters(char ch[], int start, int length) throws SAXException {
-        if (inTitle) currentTitle += new String(ch,  start, length);
+        if (inTitle) currentTitle += new String(ch, start, length);
     }
 
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
@@ -74,5 +77,5 @@ public class FlickrPhotoGrabber extends DefaultHandler {
         }
     }
 
-    
+
 }

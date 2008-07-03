@@ -1,24 +1,19 @@
 package liredemo.flickr;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.io.File;
-import java.io.IOException;
-import java.awt.image.BufferedImage;
-import java.net.URL;
-
+import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.w3c.dom.DOMImplementation;
 
 import javax.imageio.ImageIO;
-
-import net.semanticmetadata.lire.utils.ImageUtils;
-import net.semanticmetadata.lire.DocumentBuilder;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * ...
@@ -62,7 +57,7 @@ public class FlickrDownloadThread implements Runnable {
                 e.printStackTrace();
             }
             System.out.println("WARNING: " + (images.size() - currentIndex) + " images left");
-            currentIndex = images.size(); 
+            currentIndex = images.size();
         }
     }
 
@@ -70,7 +65,7 @@ public class FlickrDownloadThread implements Runnable {
     public synchronized Document getCurrentDoc() {
         if (currentIndex < (images.size() - 1)) {
             currentIndex++;
-            while (finished.size()<1) {
+            while (finished.size() < 1) {
                 try {
                     Thread.sleep(250);
                 } catch (InterruptedException e) {
@@ -86,7 +81,7 @@ public class FlickrDownloadThread implements Runnable {
     }
 
     public void addDocumentToFinished(Document doc) {
-        if (doc==null) currentIndex++;
+        if (doc == null) currentIndex++;
         else finished.add(doc);
     }
 }
@@ -109,6 +104,9 @@ class SinglePhotoThread implements Runnable {
             Document doc = fdt.getDocumentBuilder().createDocument(image, cachedImage.getAbsolutePath());
             doc.add(new Field("FlickrURL", photo.url, Field.Store.YES, Field.Index.UN_TOKENIZED));
             doc.add(new Field("FlickrTitle", photo.title, Field.Store.YES, Field.Index.UN_TOKENIZED));
+            for (String tag : photo.tags) {
+                doc.add(new Field("FlickrTag", tag, Field.Store.YES, Field.Index.UN_TOKENIZED));
+            }
             fdt.addDocumentToFinished(doc);
         } catch (IOException e) {
             System.out.println("Warning: Exception reading & indexing image " + photo.photourl + ": " + e.getMessage());

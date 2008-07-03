@@ -1,6 +1,8 @@
 package liredemo.flickr;
 
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * ...
@@ -12,11 +14,13 @@ import java.awt.image.BufferedImage;
 public class FlickrPhoto {
     String title, url, photourl;
     BufferedImage img = null;
-    
-    public FlickrPhoto(String title, String url, String photourl) {
+    List<String> tags;
+
+    public FlickrPhoto(String title, String url, String photourl, List<String> tags) {
         this.title = title;
         this.url = url;
         this.photourl = photourl;
+        this.tags = new LinkedList<String>(tags);
     }
 
     public String toString() {

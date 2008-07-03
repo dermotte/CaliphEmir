@@ -1,6 +1,11 @@
 CHANGES for LIRE
 ================
 
+2008-07-03
+==========
+Indexing:
+  - Added indexing of tags to Flickr downloader.
+
 2008-06-10
 ==========
 Indexing:
