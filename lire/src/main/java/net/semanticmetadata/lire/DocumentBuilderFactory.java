@@ -1,10 +1,10 @@
 package net.semanticmetadata.lire;
 
-import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
-import net.semanticmetadata.lire.imageanalysis.Tamura;
-import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
-import net.semanticmetadata.lire.imageanalysis.CEDD;
-import net.semanticmetadata.lire.impl.*;
+import net.semanticmetadata.lire.imageanalysis.*;
+import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
+import net.semanticmetadata.lire.impl.CorrelogramDocumentBuilder;
+import net.semanticmetadata.lire.impl.GenericDocumentBuilder;
+import net.semanticmetadata.lire.impl.SimpleDocumentBuilder;
 
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
@@ -156,6 +156,17 @@ public class DocumentBuilderFactory {
     }
 
     /**
+     * Creates a DocumentBuilder for the FCTH feature. See
+     * {@link net.semanticmetadata.lire.imageanalysis.FCTH} for more information on the image feature.
+     * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @return the created AutoCorrelation feature DocumentBuilder.
+     */
+    public static DocumentBuilder getFCTHDocumentBuilder() {
+        return new GenericDocumentBuilder(FCTH.class, DocumentBuilder.FIELD_NAME_FCTH);
+    }
+
+    /**
      * Creates a DocumentBuilder for simple RGB color histograms. See
      * {@link net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram} for more
      * information on the image feature.
@@ -180,6 +191,18 @@ public class DocumentBuilderFactory {
     }
 
     /**
+     * Creates a DocumentBuilder for the Gabor feature. See
+     * {@link net.semanticmetadata.lire.imageanalysis.Gabor} for more
+     * information on the image feature.
+     * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @return the created Tamura feature DocumentBuilder.
+     */
+    public static DocumentBuilder getGaborDocumentBuilder() {
+        return new GenericDocumentBuilder(Gabor.class, DocumentBuilder.FIELD_NAME_GABOR);
+    }
+
+    /**
      * Creates and returns a DocumentBuilder, which contains all available features. For
      * AutoColorCorrelogram the getDefaultAutoColorCorrelationDocumentBuilder() is used. Therefore
      * it is compatible with the respective Searcher.
@@ -191,8 +214,10 @@ public class DocumentBuilderFactory {
         cdb.addBuilder(DocumentBuilderFactory.getExtensiveDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+        cdb.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+        cdb.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
         return cdb;
     }
 }

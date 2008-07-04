@@ -1,10 +1,9 @@
 package net.semanticmetadata.lire;
 
-import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
-import net.semanticmetadata.lire.imageanalysis.CEDD;
-import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
-import net.semanticmetadata.lire.imageanalysis.Tamura;
-import net.semanticmetadata.lire.impl.*;
+import net.semanticmetadata.lire.imageanalysis.*;
+import net.semanticmetadata.lire.impl.CorrelogramImageSearcher;
+import net.semanticmetadata.lire.impl.GenericImageSearcher;
+import net.semanticmetadata.lire.impl.SimpleImageSearcher;
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
  *
@@ -161,6 +160,18 @@ public class ImageSearcherFactory {
 
 
     /**
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.FCTH}
+     * image feature. Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @param maximumHits
+     * @return
+     */
+    public static ImageSearcher createFCTHImageSearcher(int maximumHits) {
+        return new GenericImageSearcher(maximumHits, FCTH.class, DocumentBuilder.FIELD_NAME_FCTH);
+    }
+
+
+    /**
      * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram}
      * image feature. Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
      *
@@ -172,7 +183,7 @@ public class ImageSearcherFactory {
     }
 
     /**
-     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram}
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.Tamura}
      * image feature. Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
      *
      * @param maximumHits
@@ -180,6 +191,17 @@ public class ImageSearcherFactory {
      */
     public static ImageSearcher createTamuraImageSearcher(int maximumHits) {
         return new GenericImageSearcher(maximumHits, Tamura.class, DocumentBuilder.FIELD_NAME_TAMURA);
+    }
+
+    /**
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.Gabor}
+     * image feature. Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @param maximumHits
+     * @return
+     */
+    public static ImageSearcher createGaborImageSearcher(int maximumHits) {
+        return new GenericImageSearcher(maximumHits, Gabor.class, DocumentBuilder.FIELD_NAME_GABOR);
     }
 
 

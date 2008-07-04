@@ -112,6 +112,7 @@
                 <patternset>
                     <include name="**/*.*"/>
                     <exclude name="**/CVS/*"/>
+                    <exclude name="**/.svn/*"/>
                 </patternset>
             </fileset>
         </copy>
@@ -120,9 +121,21 @@
                 <patternset>
                     <include name="**/*.*"/>
                     <exclude name="**/CVS/*"/>
+                    <exclude name="**/.svn/*"/>
                 </patternset>
             </fileset>
         </copy>
+
+        <zip destfile="${dist}/Lire-src-${versionstring}.zip">
+            <fileset dir="src/main/java">
+                <patternset>
+                    <include name="**/*.*"/>
+                    <exclude name="**/CVS/*"/>
+                    <exclude name="**/.svn/*"/>
+                </patternset>
+            </fileset>
+            <filename name="build.xml"/>
+        </zip>
 
         <!--jar jarfile="${dist}/lire.jar" basedir="${build}" manifest="default.mf"/-->
 
@@ -137,6 +150,7 @@
                 <patternset>
                     <include name="**/*.*"/>
                     <exclude name="**/CVS/*"/>
+                    <exclude name="**/.svn/*"/>
                 </patternset>
             </fileset>
             <fileset dir=".">
@@ -147,6 +161,7 @@
                     <include name="LICENSE.txt"/>
                     <include name="README.txt"/>
                     <exclude name="**/CVS/*"/>
+                    <exclude name="**/.svn/*"/>
                     <exclude name="**/docs/*"/>
                 </patternset>
             </fileset>

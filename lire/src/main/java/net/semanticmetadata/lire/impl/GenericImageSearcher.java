@@ -4,7 +4,6 @@ import net.semanticmetadata.lire.AbstractImageSearcher;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.imageanalysis.CEDD;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
@@ -17,8 +16,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
@@ -205,6 +204,10 @@ public class GenericImageSearcher extends AbstractImageSearcher {
         }
         return simpleImageDuplicates;
 
+    }
+
+    public String toString() {
+        return "GenericSearcher using " + descriptorClass.getName();
     }
 
 }

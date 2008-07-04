@@ -1,6 +1,13 @@
 CHANGES for LIRE
 ================
 
+2008-07-04
+==========
+CBIR:
+  - Added FCTH implementation of Savvas Chatzichristofis
+  - Added Gabor feature based on the code of Marko Keuschnig &
+    Christian Penz to imageanalysis
+    
 2008-06-09
 ==========
 General:
