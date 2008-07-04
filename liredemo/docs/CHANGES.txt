@@ -1,6 +1,12 @@
 CHANGES for LIRE
 ================
 
+2008-07-04
+==========
+CBIR:
+  - Added FCTH to indexing & search
+  - Added Gabor to indexing & search
+   
 2008-07-03
 ==========
 Indexing:

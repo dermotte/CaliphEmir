@@ -844,7 +844,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
 
         jLabel1.setText("Type of IndexSearcher:");
 
-        selectboxDocumentBuilder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All MPEG-7 Descriptors", "Scalable Color (MPEG-7)", "Edge Histogram (MPEG-7)", "Color Layout (MPEG-7)", "Auto Color Correlogram", "CEDD", "RGB Color Histogram", "Tamura" }));
+        selectboxDocumentBuilder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All MPEG-7 Descriptors", "Scalable Color (MPEG-7)", "Edge Histogram (MPEG-7)", "Color Layout (MPEG-7)", "Auto Color Correlogram", "CEDD", "FCTH", "RGB Color Histogram", "Tamura", "Gabor" }));
         selectboxDocumentBuilder.setToolTipText(bundle.getString("options.tooltip.documentbuilderselection")); // NOI18N
         selectboxDocumentBuilder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1014,8 +1014,6 @@ public class LireDemoFrame extends javax.swing.JFrame {
         frameMenu.add(helpMenu);
 
         setJMenuBar(frameMenu);
-
-        getAccessibleContext().setAccessibleName("LIRe demo 0.6");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1280,7 +1278,8 @@ public class LireDemoFrame extends javax.swing.JFrame {
                     progressSearch.setValue(0);
                     IndexReader reader = IndexReader.open(textfieldIndexName.getText());
                     ImageSearcher searcher = getSearcher();
-                    progressSearch.setString("Searching for matching images.");
+                    // System.out.println(searcher.getClass().getName() + " " + searcher.toString());
+                    progressSearch.setString("Searching for matching images: " + searcher.getClass().getName());
                     ImageSearchHits hits = searcher.search(myDoc, reader);
                     tableModel.setHits(hits, progressSearch);
                     reader.close();
@@ -1462,9 +1461,13 @@ private void mosaicOptionsColorLayoutActionPerformed(java.awt.event.ActionEvent 
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 5) {
             searcher = ImageSearcherFactory.createCEDDImageSearcher(numResults);
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 6) {
+            searcher = ImageSearcherFactory.createFCTHImageSearcher(numResults);
+        } else if (selectboxDocumentBuilder.getSelectedIndex() == 7) {
             searcher = ImageSearcherFactory.createColorHistogramImageSearcher(numResults);
-        } else if (selectboxDocumentBuilder.getSelectedIndex() > 6) {
+        } else if (selectboxDocumentBuilder.getSelectedIndex() == 8) {
             searcher = ImageSearcherFactory.createTamuraImageSearcher(numResults);
+        } else if (selectboxDocumentBuilder.getSelectedIndex() > 8) {
+            searcher = ImageSearcherFactory.createGaborImageSearcher(numResults);
         }
         return searcher;
     }
