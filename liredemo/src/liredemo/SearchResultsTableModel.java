@@ -128,11 +128,14 @@ public class SearchResultsTableModel extends DefaultTableModel {
                 BufferedImage img = null;
                 String fileIdentifier = hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
                 if (!fileIdentifier.startsWith("http:")) {
-                    Metadata metadata = new ExifReader(new FileInputStream(fileIdentifier)).extract();
-                    if (metadata.containsDirectory(ExifDirectory.class)) {
-                        ExifDirectory exifDirectory = (ExifDirectory) metadata.getDirectory(ExifDirectory.class);
-                        if (exifDirectory.containsThumbnail()) {
-                            img = ImageIO.read(new ByteArrayInputStream(exifDirectory.getThumbnailData()));
+                    // check isf it is a jpg file ...
+                    if (fileIdentifier.toLowerCase().endsWith(".jpg")) {
+                        Metadata metadata = new ExifReader(new FileInputStream(fileIdentifier)).extract();
+                        if (metadata.containsDirectory(ExifDirectory.class)) {
+                            ExifDirectory exifDirectory = (ExifDirectory) metadata.getDirectory(ExifDirectory.class);
+                            if (exifDirectory.containsThumbnail()) {
+                                img = ImageIO.read(new ByteArrayInputStream(exifDirectory.getThumbnailData()));
+                            }
                         }
                     }
                     if (img == null) {

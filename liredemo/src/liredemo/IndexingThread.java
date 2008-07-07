@@ -23,6 +23,7 @@ import com.drew.imaging.jpeg.JpegProcessingException;
 
 import javax.imageio.ImageIO;
 
+import javax.swing.JOptionPane;
 import liredemo.indexing.ParallelIndexer;
 
 /*
@@ -72,6 +73,10 @@ public class IndexingThread extends Thread {
             java.util.ArrayList<java.lang.String> images =
                     getAllImages(
                     new java.io.File(parent.textfieldIndexDir.getText()), true);
+            if (images==null) {
+                JOptionPane.showMessageDialog(parent, "Could not find any files in " + parent.textfieldIndexDir.getText(), "No files found", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             IndexWriter iw = new IndexWriter(parent.textfieldIndexName.getText(), new SimpleAnalyzer(), !parent.checkBoxAddToExisintgIndex.isSelected());
             int builderIdx = parent.selectboxDocumentBuilder.getSelectedIndex();
             DocumentBuilder builder = DocumentBuilderFactory.getFullDocumentBuilder();
@@ -114,7 +119,7 @@ public class IndexingThread extends Thread {
         ArrayList<String> resultList = new ArrayList<String>(256);
         File[] f = directory.listFiles();
         for (File file : f) {
-            if (file != null && file.getName().toLowerCase().endsWith(".jpg") && !file.getName().startsWith("tn_")) {
+            if (file != null && (file.getName().toLowerCase().endsWith(".jpg") || file.getName().toLowerCase().endsWith(".png"))&& !file.getName().startsWith("tn_")) {
                 resultList.add(file.getCanonicalPath());
             }
             if (descendIntoSubDirectories && file.isDirectory()) {

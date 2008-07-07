@@ -38,6 +38,7 @@ public class ParallelIndexer implements Runnable {
 
     public ParallelIndexer(List<String> imageFiles, DocumentBuilder b) {
         this.imageFiles = new LinkedList<String>();
+        assert(imageFiles!=null);
         this.imageFiles.addAll(imageFiles);
         builder = b;
     }
@@ -115,25 +116,27 @@ public class ParallelIndexer implements Runnable {
 
         private BufferedImage readFile(String path) throws IOException {
             BufferedImage image = null;
-            FileInputStream jpegFile = new FileInputStream(path);
-            Metadata metadata = new Metadata();
-            try {
-                new ExifReader(jpegFile).extract(metadata);
-                byte[] thumb = ((ExifDirectory) metadata.getDirectory(ExifDirectory.class)).getThumbnailData();
-                if (thumb != null) image = ImageIO.read(new ByteArrayInputStream(thumb));
-//            System.out.print("Read from thumbnail data ... ");
-//            System.out.println(image.getWidth() + " x " + image.getHeight());
-            } catch (JpegProcessingException e) {
-                System.err.println("Could not extract thumbnail");
-                e.printStackTrace();
-            } catch (MetadataException e) {
-                System.err.println("Could not extract thumbnail");
-                e.printStackTrace();
-            } catch (Exception e) {
-                System.err.println("Could not extract thumbnail");
-                e.printStackTrace();
+            if (path.toLowerCase().endsWith(".jpg")) {
+                FileInputStream jpegFile = new FileInputStream(path);
+                Metadata metadata = new Metadata();
+                try {
+                    new ExifReader(jpegFile).extract(metadata);
+                    byte[] thumb = ((ExifDirectory) metadata.getDirectory(ExifDirectory.class)).getThumbnailData();
+                    if (thumb != null) image = ImageIO.read(new ByteArrayInputStream(thumb));
+    //            System.out.print("Read from thumbnail data ... ");
+    //            System.out.println(image.getWidth() + " x " + image.getHeight());
+                } catch (JpegProcessingException e) {
+                    System.err.println("Could not extract thumbnail");
+                    e.printStackTrace();
+                } catch (MetadataException e) {
+                    System.err.println("Could not extract thumbnail");
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    System.err.println("Could not extract thumbnail");
+                    e.printStackTrace();
+                }
             }
-            // Fallback:
+            // Fallback & PNGs:
             if (image == null) image = ImageIO.read(new FileInputStream(path));
             return image;
         }

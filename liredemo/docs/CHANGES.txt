@@ -1,6 +1,12 @@
 CHANGES for LIRE
 ================
 
+2008-07-07
+==========
+Indexing:
+  - Fixed bug in IndexingThread (THX to Klaus Schoeffmann)
+  - added ability to index PNGs
+
 2008-07-04
 ==========
 CBIR:
