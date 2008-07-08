@@ -1,6 +1,13 @@
 CHANGES for LIRE
 ================
 
+2008-07-08
+==========
+General:
+  - Added options button in search results
+  - Added options item in view menu
+  - Added accelerators in view menu
+
 2008-07-07
 ==========
 Indexing:

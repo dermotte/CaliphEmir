@@ -222,12 +222,15 @@ public class LireDemoFrame extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         buttonBackToSearch = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        buttonBackToOptions = new javax.swing.JButton();
         frameMenu = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         fileMenuExit = new javax.swing.JMenuItem();
         viewMenu = new javax.swing.JMenu();
         vieMenuStartPage = new javax.swing.JMenuItem();
         viewMenuResults = new javax.swing.JMenuItem();
+        viewMenuOptions = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuAbout = new javax.swing.JMenuItem();
 
@@ -947,6 +950,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         buttonBackToSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/viewmag16.png"))); // NOI18N
         buttonBackToSearch.setToolTipText("Go back to search ...");
         buttonBackToSearch.setBorderPainted(false);
+        buttonBackToSearch.setFocusPainted(false);
         buttonBackToSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonBackToSearchActionPerformed(evt);
@@ -958,6 +962,21 @@ public class LireDemoFrame extends javax.swing.JFrame {
         jLabel9.setText("Search Results:");
         jLabel9.setComponentPopupMenu(sameSearchMenu.getPopupMenu());
         jPanel2.add(jLabel9, java.awt.BorderLayout.WEST);
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        buttonBackToOptions.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/configure16.png"))); // NOI18N
+        buttonBackToOptions.setToolTipText("Go  to options ...");
+        buttonBackToOptions.setBorderPainted(false);
+        buttonBackToOptions.setFocusPainted(false);
+        buttonBackToOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonBackToOptionsActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonBackToOptions, java.awt.BorderLayout.EAST);
+
+        jPanel2.add(jPanel1, java.awt.BorderLayout.CENTER);
 
         resultsCardPane.add(jPanel2, java.awt.BorderLayout.NORTH);
 
@@ -981,6 +1000,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
 
         viewMenu.setText("View");
 
+        vieMenuStartPage.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
         vieMenuStartPage.setText("Start page");
         vieMenuStartPage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -989,6 +1009,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         });
         viewMenu.add(vieMenuStartPage);
 
+        viewMenuResults.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK));
         viewMenuResults.setText("Results");
         viewMenuResults.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -996,6 +1017,15 @@ public class LireDemoFrame extends javax.swing.JFrame {
             }
         });
         viewMenu.add(viewMenuResults);
+
+        viewMenuOptions.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.ALT_MASK));
+        viewMenuOptions.setText("Options");
+        viewMenuOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewMenuOptionsActionPerformed(evt);
+            }
+        });
+        viewMenu.add(viewMenuOptions);
 
         frameMenu.add(viewMenu);
 
@@ -1405,6 +1435,20 @@ private void mosaicOptionsColorLayoutActionPerformed(java.awt.event.ActionEvent 
 // TODO add your handling code here:
 }//GEN-LAST:event_mosaicOptionsColorLayoutActionPerformed
 
+private void buttonBackToOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackToOptionsActionPerformed
+    // change to options tab ...
+    CardLayout cl = (CardLayout) cardPanel.getLayout();
+    cl.first(cardPanel);
+    cl.last(cardPanel);
+    // hide results ...
+    ((CardLayout) topPane.getLayout()).first(topPane);
+}//GEN-LAST:event_buttonBackToOptionsActionPerformed
+
+private void viewMenuOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewMenuOptionsActionPerformed
+// TODO add your handling code here:
+    buttonBackToOptionsActionPerformed(evt);
+}//GEN-LAST:event_viewMenuOptionsActionPerformed
+
     private void searchForImage(String imagePath) throws FileNotFoundException, IOException {
         // setting to search panel:
         ((CardLayout) cardPanel.getLayout()).first(cardPanel);
@@ -1485,6 +1529,7 @@ private void mosaicOptionsColorLayoutActionPerformed(java.awt.event.ActionEvent 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel browsePanel;
+    private javax.swing.JButton buttonBackToOptions;
     private javax.swing.JButton buttonBackToSearch;
     private javax.swing.JButton buttonMosaicSave;
     private javax.swing.JButton buttonOpenDir;
@@ -1526,6 +1571,7 @@ private void mosaicOptionsColorLayoutActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JLabel labelDocCount;
@@ -1568,6 +1614,7 @@ private void mosaicOptionsColorLayoutActionPerformed(java.awt.event.ActionEvent 
     private javax.swing.JPanel topPane;
     private javax.swing.JMenuItem vieMenuStartPage;
     private javax.swing.JMenu viewMenu;
+    private javax.swing.JMenuItem viewMenuOptions;
     private javax.swing.JMenuItem viewMenuResults;
     // End of variables declaration//GEN-END:variables
 
