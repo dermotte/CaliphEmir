@@ -35,7 +35,7 @@ import java.util.StringTokenizer;
  * <p>see also DOI <a href="http://doi.ieeecomputersociety.org/10.1109/CVPR.1997.609412">10.1109/CVPR.1997.609412</a></p>
  * <p/>
  */
-public class AutoColorCorrelogram implements VisualDescriptor {
+public class AutoColorCorrelogram implements LireFeature {
     private float quantH;
     private float quantV;
     private float quantS;

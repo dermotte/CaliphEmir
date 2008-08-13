@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
 /*
  * This file is part of LIRe.
  *
@@ -40,7 +41,7 @@ import java.util.ArrayList;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class CreateIndexTest extends TestCase {
+public class RuntimeTest extends TestCase {
     private String[] testFiles = new String[]{"img01.JPG", "img02.JPG", "img03.JPG", "img04.JPG", "img05.JPG",
             "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg", "Páginas de 060305_b_Página_1_Imagem_0004_Página_08_Imagem_0002.jpg"};
     private String testFilesPath = "./lire/src/test/resources/images/";
@@ -96,22 +97,26 @@ public class CreateIndexTest extends TestCase {
 //        indexFiles(images);
 //    }
 
+    /**
+     * Tests the runtime for creating an index based on the Wang data set.
+     *
+     * @throws IOException
+     */
     public void testCreateBigIndex() throws IOException {
         ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
-//        ArrayList<String> images = FileUtils.getAllImages(new File("C:\\Dokumente und Einstellungen\\All Users\\Dokumente\\Eigene Bilder\\2003"), true);
-//        System.out.println(">> Fast DocumentBuilder:");
-//        indexFiles(images, DocumentBuilderFactory.getFastDocumentBuilder(), indexPath + "-fast");
-//        System.out.println(">> Default DocumentBuilder:");
-//        indexFiles(images, DocumentBuilderFactory.getDefaultDocumentBuilder(), indexPath + "-default");
-//        System.out.println(">> Extensive DocumentBuilder:");
-//        indexFiles(images, DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder(), indexPath + "-extensive");
-        indexFiles(images, DocumentBuilderFactory.getFullDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("ColorHist: ", images, DocumentBuilderFactory.getColorHistogramDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("CEDD: ", images, DocumentBuilderFactory.getCEDDDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("ColorHist: ", images, DocumentBuilderFactory.getColorHistogramDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("ACC: ", images, DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("FCTH: ", images, DocumentBuilderFactory.getFCTHDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("Gabor: ", images, DocumentBuilderFactory.getGaborDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("Tamura: ", images, DocumentBuilderFactory.getTamuraDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("MPEG7: ", images, DocumentBuilderFactory.getExtensiveDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("All: ", images, DocumentBuilderFactory.getFullDocumentBuilder(), indexPath + "-extensive");
     }
 
-    private void indexFiles(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
+    private void indexFiles(String prefix, ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         System.out.println(">> Indexing " + images.size() + " files.");
-//        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
-//        DocumentBuilder builder = DocumentBuilderFactory.getFastDocumentBuilder();
         IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(), true);
         int count = 0;
         long time = System.currentTimeMillis();
@@ -119,14 +124,13 @@ public class CreateIndexTest extends TestCase {
             Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
             iw.addDocument(doc);
             count++;
-            if (count % 25 == 0) System.out.println(count + " files indexed.");
-            if (count == 200) break;
+            if (count % 100 == 0) System.out.print((100 * count) / images.size() + "% ");
         }
         long timeTaken = (System.currentTimeMillis() - time);
         float sec = ((float) timeTaken) / 1000f;
-
-        System.out.println(sec + " seconds taken, " + (timeTaken / count) + " ms per image.");
-        iw.optimize();
+        System.out.println("");
+        System.out.println(prefix + sec + " seconds taken, " + (timeTaken / count) + " ms per image.");
+        // iw.optimize();
         iw.close();
     }
 }

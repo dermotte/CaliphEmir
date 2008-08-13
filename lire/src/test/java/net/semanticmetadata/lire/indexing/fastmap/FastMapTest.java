@@ -45,8 +45,9 @@ import java.util.LinkedList;
  */
 public class FastMapTest extends TestCase {
     private String[] testFiles = new String[]{"img01.JPG", "img02.JPG", "img03.JPG", "img04.JPG", "img05.JPG",
-            "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg"};
-    private String testFilesPath = "./src/test/resources/images/";
+            "img06.JPG", "img07.JPG", "img08.JPG", "error.jpg"};
+    //            "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg"};
+    private String testFilesPath = "./lire/src/test/resources/images/";
     private String indexPath = "test-index";
     private String testExtensive = "../Caliph/testdata";
     private DocumentBuilder db;
@@ -78,9 +79,39 @@ public class FastMapTest extends TestCase {
         }
         System.out.println("--------------- < COLORLAYOUT > ---------------");
         long nano = System.nanoTime();
-        createFastMapForObjects(objs);
+        createFastMapForObjects(objs, null);
         nano = System.nanoTime() - nano;
         System.out.println("Time taken: ~ " + (nano / (1000 * 1000 * 1000)) + " s");
+    }
+
+    public void testIterativeFastMap() throws InstantiationException, IllegalAccessException {
+        // creating the list of user objects ...
+        LinkedList<VisualDescriptor> objs = new LinkedList<VisualDescriptor>();
+        for (Iterator<Document> documentIterator = docs.iterator(); documentIterator.hasNext();) {
+            Document document = documentIterator.next();
+            String[] cls = document.getValues(DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM);
+            if (cls.length > 0) {
+                objs.add(new EdgeHistogramImplementation(cls[0]));
+            }
+        }
+        // create set of non mapped objects in the first place:
+        LinkedList<VisualDescriptor> remainingObj = new LinkedList<VisualDescriptor>();
+        remainingObj.add(objs.removeLast());
+
+        System.out.println("--------------- < 1st run of iterative fastmap > ---------------");
+        long nano = System.nanoTime();
+        // create map and get pivots:
+        int[][] p = createFastMapForObjects(objs, null);
+        nano = System.nanoTime() - nano;
+        System.out.println("---< Time taken: ~ " + (nano / (1000 * 1000 * 1000)) + " s");
+        // save pivots:
+        SavedPivots sp = new SavedPivots(p, objs);
+
+        System.out.println("--------------- < 2nd run of iterative fastmap > ---------------");
+        // first create a set of objects for mapping by adding the pivots:
+        int[][] pivots = sp.getPivots(remainingObj, EdgeHistogramImplementation.class); // note that the class has to be known.
+        p = createFastMapForObjects(remainingObj, pivots);
+
     }
 
     public void testScalableColorFastMap() {
@@ -95,7 +126,7 @@ public class FastMapTest extends TestCase {
         }
         System.out.println("--------------- < ScalableColor > ---------------");
         long nano = System.nanoTime();
-        createFastMapForObjects(objs);
+        createFastMapForObjects(objs, null);
         nano = System.nanoTime() - nano;
         System.out.println("Time taken: ~ " + (nano / (1000 * 1000)) + " ms");
     }
@@ -112,7 +143,7 @@ public class FastMapTest extends TestCase {
         }
         System.out.println("--------------- < EdgeHistogram > ---------------");
         long nano = System.nanoTime();
-        createFastMapForObjects(objs);
+        createFastMapForObjects(objs, null);
         nano = System.nanoTime() - nano;
         System.out.println("Time taken: ~ " + (nano / (1000 * 1000)) + " ms");
     }
@@ -131,15 +162,17 @@ public class FastMapTest extends TestCase {
         }
         System.out.println("--------------- < AutoColorCorrelogram > ---------------");
         long nano = System.nanoTime();
-        createFastMapForObjects(objs);
+        createFastMapForObjects(objs, null);
         nano = System.nanoTime() - nano;
         System.out.println("Time taken: ~ " + (nano / (1000 * 1000)) + " ms");
     }
 
-    private void createFastMapForObjects(LinkedList<VisualDescriptor> objs) {
+    private int[][] createFastMapForObjects(LinkedList<VisualDescriptor> objs, int[][] savedPivots) {
         ArrayFastmapDistanceMatrix fdm = new ArrayFastmapDistanceMatrix(objs, new VisualDescriptorDistanceCalculator());
         // note that fastmap needs at least dimensions*2 objects as it needs enough pivots :)
-        FastMap fm = new FastMap(fdm, 4);
+        FastMap fm;
+        if (savedPivots == null) fm = new FastMap(fdm, 3);
+        else fm = new FastMap(fdm, 3, savedPivots);
         fm.run();
         for (int i = 0; i < fm.getPoints().length; i++) {
             double[] pts = fm.getPoints()[i];
@@ -149,5 +182,12 @@ public class FastMapTest extends TestCase {
             }
             System.out.println(")");
         }
+        int[][] pivots = fm.getPivots();
+        for (int i = 0; i < pivots[0].length; i++) {
+            System.out.println("dim = " + i);
+            System.out.println("p0 = " + objs.get(pivots[0][i]).getStringRepresentation());
+            System.out.println("p1 = " + objs.get(pivots[1][i]).getStringRepresentation());
+        }
+        return fm.getPivots();
     }
 }

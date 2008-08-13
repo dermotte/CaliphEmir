@@ -31,7 +31,11 @@ package net.semanticmetadata.lire.indexing.fastmap;
  */
 public class FastMap implements Runnable {
     private double[][] X;
+    /**
+     * Pivots
+     */
     private int[][] PA;
+    private boolean predefinedPivots = false;
     private int col, currentDimension;
     private FastmapDistanceMatrix matrixFastmap;
     int dimensions;
@@ -47,6 +51,23 @@ public class FastMap implements Runnable {
         this.matrixFastmap = matrixFastmap;
         this.dimensions = dimensions;
         init();
+    }
+
+    /**
+     * Creates a new FastMap which uses attached FastmapDistanceMatrix and projects to
+     * a space with given dimensions
+     *
+     * @param dimensions    defines the dimensions of the target space
+     * @param matrixFastmap the distance matrixFastmapFastmap upon the computation takes place
+     * @param pivots
+     */
+    public FastMap(FastmapDistanceMatrix matrixFastmap, int dimensions, int[][] pivots) {
+        this.matrixFastmap = matrixFastmap;
+        this.dimensions = dimensions;
+        init();
+        // set the pivots from the parameters:
+        predefinedPivots = true;
+        PA = pivots;
     }
 
     private void init() {
@@ -70,8 +91,8 @@ public class FastMap implements Runnable {
             return 0;
         else
             col++;
-
-        findPivots(k);
+        // TODO: change if pivots are known before ...
+        if (!predefinedPivots) findPivots(k);
         int pivot1 = PA[0][k - 1];
         int pivot2 = PA[1][k - 1];
         if (matrixFastmap.getDistance(pivot1, pivot2, currentDimension, X[pivot1], X[pivot2]) == 0f) {
@@ -119,5 +140,14 @@ public class FastMap implements Runnable {
 
     public int getIndexOfObject(Object o) {
         return matrixFastmap.getIndexOfObject(o);
+    }
+
+    /**
+     * The found pivots for later use.
+     *
+     * @return the pivots.
+     */
+    public int[][] getPivots() {
+        return PA;
     }
 }

@@ -1,6 +1,11 @@
 CHANGES for LIRE
 ================
 
+2008-07-11
+==========
+General:
+  - Made AutoColorCorrelogram a "LireFeature"
+  
 2008-07-04
 ==========
 CBIR:
