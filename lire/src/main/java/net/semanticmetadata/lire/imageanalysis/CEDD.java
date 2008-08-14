@@ -66,7 +66,6 @@ public class CEDD implements LireFeature {
     // Apply filter
     // signature changed by mlux
     public void extract(BufferedImage image) {
-
         Fuzzy10Bin Fuzzy10 = new Fuzzy10Bin(false);
         Fuzzy24Bin Fuzzy24 = new Fuzzy24Bin(false);
         RGB2HSV HSVConverter = new RGB2HSV();
@@ -76,9 +75,9 @@ public class CEDD implements LireFeature {
         double[] Fuzzy24BinResultTable = new double[24];
         double[] CEDD = new double[144];
 
-
         int width = image.getWidth();
         int height = image.getHeight();
+
 
         double[][] ImageGrid = new double[width][height];
         double[][] PixelCount = new double[2][2];
@@ -96,7 +95,6 @@ public class CEDD implements LireFeature {
             Step_Y = Step_Y - 1;
         }
 
-
         if (Step_Y < 2) Step_Y = 2;
         if (Step_X < 2) Step_X = 2;
 
@@ -104,7 +102,6 @@ public class CEDD implements LireFeature {
 
         MaskResults MaskValues = new MaskResults();
         Neighborhood PixelsNeighborhood = new Neighborhood();
-
 
         for (int i = 0; i < 144; i++) {
             CEDD[i] = 0;
@@ -121,6 +118,7 @@ public class CEDD implements LireFeature {
             }
         }
 
+
         int[] CororRed = new int[Step_Y * Step_X];
         int[] CororGreen = new int[Step_Y * Step_X];
         int[] CororBlue = new int[Step_Y * Step_X];
@@ -129,10 +127,12 @@ public class CEDD implements LireFeature {
         int[] CororGreenTemp = new int[Step_Y * Step_X];
         int[] CororBlueTemp = new int[Step_Y * Step_X];
 
-        int MeanRed, MeanGreen, MeanBlue = 0;
+        int MeanRed, MeanGreen, MeanBlue;
 
         for (int y = 0; y < height - Step_Y; y += Step_Y) {
             for (int x = 0; x < width - Step_X; x += Step_X) {
+
+
                 MeanRed = 0;
                 MeanGreen = 0;
                 MeanBlue = 0;
@@ -151,7 +151,6 @@ public class CEDD implements LireFeature {
                     for (int j = 0; j < 2; j++) {
                         PixelCount[i][j] = 0;
                     }
-
                 }
 
                 int TempSum = 0;
@@ -194,7 +193,6 @@ public class CEDD implements LireFeature {
                 MaskValues.Mask4 = MaskValues.Mask4 / Max;
                 MaskValues.Mask5 = MaskValues.Mask5 / Max;
 
-
                 int T = -1;
 
                 if (Max < T0) {
@@ -226,110 +224,57 @@ public class CEDD implements LireFeature {
 
                 }
 
-                // Τέλος και με το Texture :)
-
-
-                int TempColor = 0;
-                double[] ColorGreaterThanThress = new double[Step_Y * Step_X];
-
                 for (int i = 0; i < (Step_Y * Step_X); i++) {
-                    TempColor = i;
-
-                    for (int j = 0; j < (Step_Y * Step_X); j++) {
-                        if (CororRedTemp[j] == CororRed[i] && CororGreenTemp[j] == CororGreen[i] && CororBlueTemp[j] == CororBlue[i]) {
-
-                            ColorGreaterThanThress[i] += (double) 1 / (double) (Step_Y * Step_X);
-                            CororRedTemp[j] = -1;
-                            CororGreenTemp[j] = -1;
-                            CororBlueTemp[j] = -1;
-
-                        }
-
-                    }
-
-
-                }
-                TempColor = 0;
-
-                for (int i = 0; i < (Step_Y * Step_X); i++) {
-                    if (ColorGreaterThanThress[i] >= 0.5) {
-                        TempColor++;
-                        MeanRed = CororRed[i];
-                        MeanGreen = CororGreen[i];
-                        MeanBlue = CororBlue[i];
-                    }
-
+                    MeanRed += CororRed[i];
+                    MeanGreen += CororGreen[i];
+                    MeanBlue += CororBlue[i];
                 }
 
-                if (TempColor == 0) {
-                    for (int i = 0; i < (Step_Y * Step_X); i++) {
-                        MeanRed += CororRed[i] / (Step_Y * Step_X);
-                        MeanGreen += CororGreen[i] / (Step_Y * Step_X);
-                        MeanBlue += CororBlue[i] / (Step_Y * Step_X);
-                    }
-                }
+                MeanRed = (int) (MeanRed / (Step_Y * Step_X));
+                MeanGreen = (int) (MeanGreen / (Step_Y * Step_X));
+                MeanBlue = (int) (MeanBlue / (Step_Y * Step_X));
 
                 HSV = HSVConverter.ApplyFilter(MeanRed, MeanGreen, MeanBlue);
-
 
                 if (this.Compact == false) {
                     Fuzzy10BinResultTable = Fuzzy10.ApplyFilter(HSV[0], HSV[1], HSV[2], 2);
                     Fuzzy24BinResultTable = Fuzzy24.ApplyFilter(HSV[0], HSV[1], HSV[2], Fuzzy10BinResultTable, 2);
 
-
                     for (int i = 0; i <= T; i++) {
                         for (int j = 0; j < 24; j++) {
-
                             if (Fuzzy24BinResultTable[j] > 0) CEDD[24 * Edges[i] + j] += Fuzzy24BinResultTable[j];
-
                         }
-
                     }
                 } else {
-
                     Fuzzy10BinResultTable = Fuzzy10.ApplyFilter(HSV[0], HSV[1], HSV[2], 2);
-
                     for (int i = 0; i <= T; i++) {
                         for (int j = 0; j < 10; j++) {
-
                             if (Fuzzy10BinResultTable[j] > 0) CEDD[10 * Edges[i] + j] += Fuzzy10BinResultTable[j];
-
                         }
-
                     }
                 }
-
-
             }
-
         }
 
-
         double Sum = 0;
-
         for (int i = 0; i < 144; i++) {
-
-
             Sum += CEDD[i];
         }
 
         for (int i = 0; i < 144; i++) {
-
-
             CEDD[i] = CEDD[i] / Sum;
         }
 
         double qCEDD[];
 
+
         if (Compact == false) {
             qCEDD = new double[144];
             CEDDQuant quants = new CEDDQuant();
-
             qCEDD = quants.Apply(CEDD);
         } else {
             qCEDD = new double[60];
             CompactCEDDQuant quants = new CompactCEDDQuant();
-
             qCEDD = quants.Apply(CEDD);
         }
 

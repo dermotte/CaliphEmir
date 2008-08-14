@@ -1,6 +1,17 @@
 CHANGES for LIRE
 ================
 
+2008-08-14
+==========
+CBIR:
+  - Updated CEDD descriptor based on code patch of Savvas Chatzichristofis
+  - Updated FCTH descriptor based on code patch of Savvas Chatzichristofis
+
+2008-08-13
+==========
+General:
+  - Added option to FastMap for iterative mapping
+
 2008-07-11
 ==========
 General:

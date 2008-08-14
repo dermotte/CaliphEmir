@@ -79,23 +79,11 @@ public class FCTH implements LireFeature {
 
         WaveletMatrixPlus Matrix = new WaveletMatrixPlus();
 
-        /*PixelFormat fmt = (srcImg.PixelFormat == PixelFormat.Format8bppIndexed) ?
-       PixelFormat.Format8bppIndexed : PixelFormat.Format24bppRgb;
-
-BitmapData srcData = srcImg.LockBits(
-new Rectangle(0, 0, width, height),
-ImageLockMode.ReadOnly, fmt);
-
-
-
-int offset = srcData.Stride - ((fmt == PixelFormat.Format8bppIndexed) ? width : width * 3);
-// int offsetBnr = BnrData.Stride - ((fmt == PixelFormat.Format8bppIndexed) ? BnrData.Width : BnrData.Width * 3);*/
 
         double[][] ImageGrid = new double[width][height];
         int[][] ImageGridRed = new int[width][height];
         int[][] ImageGridGreen = new int[width][height];
         int[][] ImageGridBlue = new int[width][height];
-        //double[][] WaveletImageGrid = new double[width][height];
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -103,15 +91,14 @@ int offset = srcData.Stride - ((fmt == PixelFormat.Format8bppIndexed) ? width : 
                 ImageGridRed[x][y] = (pixel >> 16) & 0xff;
                 ImageGridGreen[x][y] = (pixel >> 8) & 0xff;
                 ImageGridBlue[x][y] = (pixel) & 0xff;
-                ;
 
                 int mean = (int) (0.114 * ImageGridBlue[x][y] + 0.587 * ImageGridGreen[x][y] + 0.299 * ImageGridRed[x][y]);
                 ImageGrid[x][y] = mean;
             }
         }
 
-        // Allages
-        int NumberOfBlocks = 1600; // Ο Αριθμός των Block
+
+        int NumberOfBlocks = 1600;
         int Step_X = (int) Math.floor(width / Math.sqrt(NumberOfBlocks));
         int Step_Y = (int) Math.floor(height / Math.sqrt(NumberOfBlocks));
 
@@ -150,9 +137,6 @@ int offset = srcData.Stride - ((fmt == PixelFormat.Format8bppIndexed) ? width : 
                 int MeanBlue = 0;
                 int CurrentPixelX = 0;
                 int CurrentPixelY = 0;
-                // an tha ginei allagh telika olh h douleia mpenei edo
-
-                //#region Αρχικοποιηση
                 for (int i = 0; i < 4; i++) {
 
                     for (int j = 0; j < 4; j++) {
@@ -205,45 +189,17 @@ int offset = srcData.Stride - ((fmt == PixelFormat.Format8bppIndexed) ? width : 
 
                 Matrix = singlePassThreshold(Block, 1);
 
-                int TempColor = 0;
-                double[] ColorGreaterThanThress = new double[Step_Y * Step_X];
 
                 for (int i = 0; i < (Step_Y * Step_X); i++) {
-                    TempColor = i;
-
-                    for (int j = 0; j < (Step_Y * Step_X); j++) {
-                        if (CororRedTemp[j] == CororRed[i] && CororGreenTemp[j] == CororGreen[i] && CororBlueTemp[j] == CororBlue[i]) {
-
-                            ColorGreaterThanThress[i] += (double) 1 / (double) (Step_Y * Step_X);
-                            CororRedTemp[j] = -1;
-                            CororGreenTemp[j] = -1;
-                            CororBlueTemp[j] = -1;
-
-                        }
-
-                    }
-
-
-                }
-                TempColor = 0;
-                for (int i = 0; i < (Step_Y * Step_X); i++) {
-                    if (ColorGreaterThanThress[i] >= 0.50) {
-                        TempColor++;
-                        MeanRed = CororRed[i];
-                        MeanGreen = CororGreen[i];
-                        MeanBlue = CororBlue[i];
-
-                    }
-
+                    MeanRed += CororRed[i];
+                    MeanGreen += CororGreen[i];
+                    MeanBlue += CororBlue[i];
                 }
 
-                if (TempColor == 0) {
-                    for (int i = 0; i < (Step_Y * Step_X); i++) {
-                        MeanRed += CororRed[i] / (Step_Y * Step_X);
-                        MeanGreen += CororGreen[i] / (Step_Y * Step_X);
-                        MeanBlue += CororBlue[i] / (Step_Y * Step_X);
-                    }
-                }
+                MeanRed = (int) (MeanRed / (Step_Y * Step_X));
+                MeanGreen = (int) (MeanGreen / (Step_Y * Step_X));
+                MeanBlue = (int) (MeanBlue / (Step_Y * Step_X));
+
 
                 HSV = HSVConverter.ApplyFilter(MeanRed, MeanGreen, MeanBlue);
 
