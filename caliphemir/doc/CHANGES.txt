@@ -1,6 +1,14 @@
 CHANGES for Caliph & Emir
 =========================
 
+2008-08-27
+==========
+Descriptors
+  - Made empty constructors for ScalableColorImpl and ColorLayoutImpl
+    public for Lire
+  - Added extract(BufferedImage) to EdgeHistogramImplementation,
+    ScalableColorImpl and ColorLayoutImpl for Lire 
+
 2008-05-29
 ==========
 General:

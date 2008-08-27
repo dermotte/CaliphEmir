@@ -127,6 +127,14 @@ public class EdgeHistogramImplementation implements VisualDescriptor {
         edgeHistogram = setEdgeHistogram();
     }
 
+    public void extract(BufferedImage image) {
+        this.image = image;
+        width = image.getWidth();
+        height = image.getHeight();
+        extractFeature();
+        edgeHistogram = setEdgeHistogram();
+    }
+
     public EdgeHistogramImplementation(String descriptor) {
         setStringRepresentation(descriptor);
     }

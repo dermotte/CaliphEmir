@@ -24,9 +24,6 @@ package at.lux.imageanalysis;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.util.Iterator;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 
 /**
@@ -90,8 +87,8 @@ public class ColorLayoutImpl implements VisualDescriptor {
     protected static int[][] weightMatrix = new int[3][64];
     protected BufferedImage colorLayoutImage;
 
-    protected ColorLayoutImpl() {
-
+    public ColorLayoutImpl() {
+        // empty constructor, used for new instance if setStringRepresentation is called later.
     }
 
     /**
@@ -109,6 +106,7 @@ public class ColorLayoutImpl implements VisualDescriptor {
 
     /**
      * Uses the method {@link at.lux.imageanalysis.ColorLayoutImpl#setStringRepresentation(String)}
+     *
      * @param descriptorValues
      * @see at.lux.imageanalysis.ColorLayoutImpl#setStringRepresentation(String)
      */
@@ -142,6 +140,13 @@ public class ColorLayoutImpl implements VisualDescriptor {
         CrCoeff = new int[64];
         colorLayoutImage = null;
         extract();
+    }
+
+    public void extract(BufferedImage bimg) {
+        this.img = bimg;
+        imgYSize = img.getHeight();
+        imgXSize = img.getWidth();
+        init();
     }
 
     private void createShape() {

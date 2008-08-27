@@ -25,8 +25,8 @@ package at.lux.imageanalysis;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import java.util.StringTokenizer;
 import java.awt.image.BufferedImage;
+import java.util.StringTokenizer;
 
 /**
  * ScalableColor
@@ -40,6 +40,10 @@ public class ScalableColor extends ScalableColorImpl implements JDomVisualDescri
 
     public ScalableColor(BufferedImage image) {
         super(image);
+    }
+
+    public ScalableColor() {
+        super();
     }
 
     public ScalableColor(BufferedImage image, int NumberOfCoefficients, int NumberOfBitplanesDiscarded) {

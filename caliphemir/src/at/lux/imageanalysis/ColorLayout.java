@@ -26,7 +26,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -45,6 +44,10 @@ public class ColorLayout extends ColorLayoutImpl implements JDomVisualDescriptor
 
     public ColorLayout(int numberOfYCoeff, int numberOfCCoeff, BufferedImage image) {
         super(numberOfYCoeff, numberOfCCoeff, image);
+    }
+
+    public ColorLayout() {
+        super();
     }
 
     /**

@@ -43,6 +43,10 @@ public class EdgeHistogram extends EdgeHistogramImplementation implements JDomVi
         super(image);
     }
 
+    public EdgeHistogram() {
+        super();
+    }
+
     public EdgeHistogram(Element descriptor) throws VisualDescriptorException {
         Namespace mpeg7, xsi;
         mpeg7 = Namespace.getNamespace("", "urn:mpeg:mpeg7:schema:2001");

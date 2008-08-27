@@ -158,7 +158,7 @@ public class ScalableColorImpl implements VisualDescriptor {
     };
     private int[] pixels = null;
 
-    protected ScalableColorImpl() {
+    public ScalableColorImpl() {
 
     }
 
@@ -186,6 +186,16 @@ public class ScalableColorImpl implements VisualDescriptor {
     }
 
     public ScalableColorImpl(BufferedImage image) {
+        this.img = image;
+        this.NumberOfBitplanesDiscarded = 0;
+        this.NumberOfCoefficients = 64;
+        _xSize = img.getWidth();
+        _ySize = img.getHeight();
+        init();
+        extract();
+    }
+
+    public void extract(BufferedImage image) {
         this.img = image;
         this.NumberOfBitplanesDiscarded = 0;
         this.NumberOfCoefficients = 64;
