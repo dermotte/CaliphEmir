@@ -69,5 +69,32 @@ public class SimpleHistogramTest extends TestCase {
         }
     }
 
+    public void testHmmdRetrieval() throws Exception {
+        SimpleColorHistogram[] acc = new SimpleColorHistogram[testFiles.length];
+        LinkedList<String> vds = new LinkedList<String>();
+        for (int i = 0; i < acc.length; i++) {
+            System.out.println("Extracting from number " + i);
+            acc[i] = new SimpleColorHistogram(SimpleColorHistogram.HistogramType.HMMD, SimpleColorHistogram.DistanceFunction.JSD);
+            acc[i].extract(ImageIO.read(new FileInputStream(testFilesPath + testFiles[i])));
+            vds.add(acc[i].getStringRepresentation());
+            System.out.println("acc = " + acc[i].getStringRepresentation());
+        }
+
+        System.out.println("Calculating distance for " + testFiles[5]);
+        for (int i = 0; i < acc.length; i++) {
+            float distance = acc[i].getDistance(acc[5]);
+            System.out.println(testFiles[i] + " distance = " + distance);
+        }
+        int count = 0;
+        for (Iterator<String> iterator = vds.iterator(); iterator.hasNext();) {
+            String s = iterator.next();
+            SimpleColorHistogram a = new SimpleColorHistogram(SimpleColorHistogram.HistogramType.HMMD, SimpleColorHistogram.DistanceFunction.JSD);
+            a.setStringRepresentation(s);
+            float distance = acc[count].getDistance(a);
+            System.out.println(testFiles[count] + " distance = " + distance);
+            count++;
+        }
+    }
+
 
 }

@@ -30,6 +30,7 @@ import junit.framework.TestCase;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilderFactory;
 import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
+import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
 import org.apache.lucene.document.Document;
 
 import java.io.FileInputStream;
@@ -86,12 +87,47 @@ public class FastMapTest extends TestCase {
 
     public void testIterativeFastMap() throws InstantiationException, IllegalAccessException {
         // creating the list of user objects ...
+
+        // ColorLayout
+//        Class descriptor = ColorLayoutImpl.class;
+//        String fieldName = DocumentBuilder.FIELD_NAME_COLORLAYOUT;
+
+        // EdgeHistogram
+//        Class descriptor = EdgeHistogramImplementation.class;
+//        String fieldName = DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM;
+
+        // ScalableColor
+//        Class descriptor = ScalableColorImpl.class;
+//        String fieldName = DocumentBuilder.FIELD_NAME_SCALABLECOLOR;
+
+        // CEDD
+//        Class descriptor = CEDD.class;
+//        String fieldName = DocumentBuilder.FIELD_NAME_CEDD;
+
+        // FCTH
+//        Class descriptor = FCTH.class;
+//        String fieldName = DocumentBuilder.FIELD_NAME_FCTH;
+
+        // Tamura
+//        Class descriptor = CEDD.class;
+//        String fieldName = DocumentBuilder.FIELD_NAME_CEDD;
+
+        // Gabor
+//        Class descriptor = CEDD.class;
+//        String fieldName = DocumentBuilder.FIELD_NAME_CEDD;
+
+        // Color histogram
+        Class descriptor = SimpleColorHistogram.class;
+        String fieldName = DocumentBuilder.FIELD_NAME_COLORHISTOGRAM;
+
         LinkedList<VisualDescriptor> objs = new LinkedList<VisualDescriptor>();
         for (Iterator<Document> documentIterator = docs.iterator(); documentIterator.hasNext();) {
             Document document = documentIterator.next();
-            String[] cls = document.getValues(DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM);
+            String[] cls = document.getValues(fieldName);
             if (cls.length > 0) {
-                objs.add(new EdgeHistogramImplementation(cls[0]));
+                VisualDescriptor tempDescriptor = (VisualDescriptor) descriptor.newInstance();
+                tempDescriptor.setStringRepresentation(cls[0]);
+                objs.add(tempDescriptor);
             }
         }
         // create set of non mapped objects in the first place:
@@ -109,7 +145,7 @@ public class FastMapTest extends TestCase {
 
         System.out.println("--------------- < 2nd run of iterative fastmap > ---------------");
         // first create a set of objects for mapping by adding the pivots:
-        int[][] pivots = sp.getPivots(remainingObj, EdgeHistogramImplementation.class); // note that the class has to be known.
+        int[][] pivots = sp.getPivots(remainingObj, descriptor); // note that the class has to be known.
         p = createFastMapForObjects(remainingObj, pivots);
 
     }

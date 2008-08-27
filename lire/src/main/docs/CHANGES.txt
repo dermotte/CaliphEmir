@@ -1,6 +1,16 @@
 CHANGES for LIRE
 ================
 
+2008-08-27
+==========
+Descriptors
+  - Made empty constructors fro ScalableColorImpl and ColorLayoutImpl
+    public for Lire (in updated cbir-jar lib)
+  - Added HMMD color space to SimpleColorHistogram as well as an appropriate
+    quantization.
+  - Added wrappers for ScalableColor, EdgeHistogram and ColorLayout, which
+    implement the LireFeature interface.
+
 2008-08-14
 ==========
 CBIR:
