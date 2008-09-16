@@ -162,7 +162,10 @@ public class FastMapTest extends TestCase {
         }
         System.out.println("--------------- < ScalableColor > ---------------");
         long nano = System.nanoTime();
+        System.out.println("---------< No cache >----------------");
         createFastMapForObjects(objs, null);
+        System.out.println("---------< Array cache >----------------");
+        createArrayFastMapForObjects(objs, null);
         nano = System.nanoTime() - nano;
         System.out.println("Time taken: ~ " + (nano / (1000 * 1000)) + " ms");
     }
@@ -203,7 +206,7 @@ public class FastMapTest extends TestCase {
         System.out.println("Time taken: ~ " + (nano / (1000 * 1000)) + " ms");
     }
 
-    private int[][] createFastMapForObjects(LinkedList<VisualDescriptor> objs, int[][] savedPivots) {
+    private int[][] createArrayFastMapForObjects(LinkedList<VisualDescriptor> objs, int[][] savedPivots) {
         ArrayFastmapDistanceMatrix fdm = new ArrayFastmapDistanceMatrix(objs, new VisualDescriptorDistanceCalculator());
         // note that fastmap needs at least dimensions*2 objects as it needs enough pivots :)
         FastMap fm;
@@ -226,4 +229,29 @@ public class FastMapTest extends TestCase {
         }
         return fm.getPivots();
     }
+
+    private int[][] createFastMapForObjects(LinkedList<VisualDescriptor> objs, int[][] savedPivots) {
+        FastmapDistanceMatrix fdm = new NocacheFastmapDistanceMatrix(objs, new VisualDescriptorDistanceCalculator());
+        // note that fastmap needs at least dimensions*2 objects as it needs enough pivots :)
+        FastMap fm;
+        if (savedPivots == null) fm = new FastMap(fdm, 3);
+        else fm = new FastMap(fdm, 3, savedPivots);
+        fm.run();
+        for (int i = 0; i < fm.getPoints().length; i++) {
+            double[] pts = fm.getPoints()[i];
+            System.out.print("Obj " + i + ": ( ");
+            for (int j = 0; j < pts.length; j++) {
+                System.out.print(pts[j] + " ");
+            }
+            System.out.println(")");
+        }
+        int[][] pivots = fm.getPivots();
+        for (int i = 0; i < pivots[0].length; i++) {
+            System.out.println("dim = " + i);
+            System.out.println("p0 = " + objs.get(pivots[0][i]).getStringRepresentation());
+            System.out.println("p1 = " + objs.get(pivots[1][i]).getStringRepresentation());
+        }
+        return fm.getPivots();
+    }
+
 }
