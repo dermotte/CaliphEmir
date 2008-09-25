@@ -74,6 +74,8 @@ public interface DocumentBuilder {
     public static final String FIELD_NAME_FCTH = "featureFCTH";
     public static final String FIELD_NAME_TAMURA = "featureTAMURA";
     public static final String FIELD_NAME_GABOR = "featureGabor";
+    public static final String FIELD_NAME_SIFT = "featureSift";
+    public static final String FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM = "featureSiftHistogram";
     public static final String FIELD_NAME_IDENTIFIER = "descriptorImageIdentifier";
 
     /**

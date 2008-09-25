@@ -1,6 +1,11 @@
 CHANGES for Caliph & Emir
 =========================
 
+2008-09-23
+==========
+Descriptors
+  - Changed default values of ColorLayoutImpl
+  
 2008-08-27
 ==========
 Descriptors

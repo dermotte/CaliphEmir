@@ -41,9 +41,9 @@ import java.util.StringTokenizer;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SimpleColorHistogram implements LireFeature {
-    public static final int DEFAULT_NUMBER_OF_BINS = 64;
+    public static final int DEFAULT_NUMBER_OF_BINS = 256;
     public static final HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.RGB;
-    public static final DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.JSD;
+    public static final DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.L2;
 
     private static final int[] quantTable = {1, 32, 4, 8, 16, 4, 16, 4, 16, 4,             // Hue, Sum - subspace 0,1,2,3,4 for 256 levels
             1, 16, 4, 4, 8, 4, 8, 4, 8, 4,            // Hue, Sum - subspace 0,1,2,3,4 for 128 levels
@@ -62,7 +62,7 @@ public class SimpleColorHistogram implements LireFeature {
      * Lists distance functions possible for this histogram class
      */
     enum DistanceFunction {
-        L1, L2, JSD
+        L1, L2, TANIMOTO, JSD
     }
 
     /**
@@ -111,8 +111,10 @@ public class SimpleColorHistogram implements LireFeature {
                     rgb2hsv(pixel[0], pixel[1], pixel[2], pixel);
                 } else if (histogramType == HistogramType.Luminance) {
                     rgb2yuv(pixel[0], pixel[1], pixel[2], pixel);
+                } else if (histogramType == HistogramType.HMMD) {
+                    histogram[quantHmmd(rgb2hmmd(pixel[0], pixel[1], pixel[2]), DEFAULT_NUMBER_OF_BINS)]++;
                 }
-                histogram[quant(pixel)]++;
+                if (histogramType != HistogramType.HMMD) histogram[quant(pixel)]++;
             }
         }
         normalize(histogram);
@@ -161,6 +163,8 @@ public class SimpleColorHistogram implements LireFeature {
         double sum = 0;
         if (distFunc == DistanceFunction.JSD)
             return (float) jsd(histogram, ch.histogram);
+        else if (distFunc == DistanceFunction.TANIMOTO)
+            return (float) tanimoto(histogram, ch.histogram);
         else if (distFunc == DistanceFunction.L1)
             return (float) distL1(histogram, ch.histogram);
         else
@@ -208,13 +212,39 @@ public class SimpleColorHistogram implements LireFeature {
     private static double jsd(int[] h1, int[] h2) {
         double sum = 0d;
         for (int i = 0; i < h1.length; i++) {
-            // don't know if this one is right, but however ...
-            if (h1[i] > 0 && h2[i] > 0) {
-                sum += h1[i] * Math.log(2d * h1[i] / (h1[i] + h2[i])) +
-                        h2[i] * Math.log(2d * h2[i] / (h1[i] + h2[i]));
-            }
+            sum += h1[i] > 0 ? h1[i] * Math.log(2d * h1[i] / (h1[i] + h2[i])) : 0 +
+                    h2[i] > 0 ? h2[i] * Math.log(2d * h2[i] / (h1[i] + h2[i])) : 0;
         }
         return sum;
+    }
+
+    private static double tanimoto(int[] h1, int[] h2) {
+        double result = 0;
+        double tmp1 = 0;
+        double tmp2 = 0;
+
+        double tmpCnt1 = 0, tmpCnt2 = 0, tmpCnt3 = 0;
+
+        for (int i = 0; i < h1.length; i++) {
+            tmp1 += h1[i];
+            tmp2 += h2[i];
+        }
+
+        if (tmp1 == 0 || tmp2 == 0) result = 100;
+        if (tmp1 == 0 && tmp2 == 0) result = 0;
+
+        if (tmp1 > 0 && tmp2 > 0) {
+            for (int i = 0; i < h1.length; i++) {
+                tmpCnt1 += (h1[i] / tmp1) * (h2[i] / tmp2);
+                tmpCnt2 += (h2[i] / tmp2) * (h2[i] / tmp2);
+                tmpCnt3 += (h1[i] / tmp1) * (h1[i] / tmp1);
+
+            }
+
+            result = (100 - 100 * (tmpCnt1 / (tmpCnt2 + tmpCnt3
+                    - tmpCnt1))); //Tanimoto
+        }
+        return result;
     }
 
     public String getStringRepresentation() {

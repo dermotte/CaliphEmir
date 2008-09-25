@@ -131,7 +131,10 @@ public class AutoColorCorrelogram implements LireFeature {
 
     public void extract(BufferedImage bi) {
         Raster r = bi.getRaster();
-
+        int[] histogram = new int[numBins];
+        for (int i = 0; i < histogram.length; i++) {
+            histogram[i] = 0;
+        }
         int[][] quantPixels = new int[r.getWidth()][r.getHeight()];
         // quantize colors for each pixel (done in HSV color space):
         int[] pixel = new int[3];
@@ -142,6 +145,8 @@ public class AutoColorCorrelogram implements LireFeature {
                 convertRgbToHsv(r.getPixel(x, y, pixel), hsv);
                 // quantize the actual pixel:
                 quantPixels[x][y] = quantize(hsv);
+                // for normalization:
+                histogram[quantPixels[x][y]]++;
             }
         }
 
@@ -164,15 +169,20 @@ public class AutoColorCorrelogram implements LireFeature {
             }
         }
         // normalize the correlogram:
-        float sum = 0;
+        // Note that this is not the common normalization routine described in the paper, but an adapted one.
+        float[] max = new float[maxDistance];
+        for (int i = 0; i < max.length; i++) {
+            max[i] = 0;
+
+        }
         for (int c = 0; c < numBins; c++) {
             for (int i = 0; i < maxDistance; i++) {
-                sum += correlogram[c][i];
+                max[i] = Math.max(correlogram[c][i], max[i]);
             }
         }
         for (int c = 0; c < numBins; c++) {
             for (int i = 0; i < maxDistance; i++) {
-                correlogram[c][i] = correlogram[c][i] / sum;
+                correlogram[c][i] = correlogram[c][i] / max[i];
             }
         }
     }
@@ -183,7 +193,9 @@ public class AutoColorCorrelogram implements LireFeature {
             correlogramm[i][0] = 0;
         }
         for (int d = 1; d <= maxDistance; d++) {
-            if (d > 1) correlogramm[d - 1] = correlogramm[d - 2];
+            // bug fixed based on comments of Rodrigo Carvalho Rezende, rcrezende <at> gmail.com
+//            if (d > 1) correlogramm[d - 1] = correlogramm[d - 2]; -> Wrong! Just the reference
+            if (d > 1) System.arraycopy(correlogramm[d - 2], 0, correlogramm[d - 1], 0, correlogramm[d - 1].length);
             if (mode == Mode.QuarterNeighbourhood) {
                 // TODO: does not work properly (possible) -> check if funnny
                 for (int td = 0; td < d; td++) {
@@ -295,13 +307,93 @@ public class AutoColorCorrelogram implements LireFeature {
         if (!(vd instanceof AutoColorCorrelogram)) return -1;
         float result = 0f;
         float[][] vdCorrelogram = ((AutoColorCorrelogram) vd).correlogram;
+        result = tanimoto(vdCorrelogram);
+        return result;
+    }
+
+    private float l2(float[][] vdCorrelogram) {
+        float result = 0;
         for (int i = 0; i < correlogram.length; i++) {
             float[] ints = correlogram[i];
             for (int j = 0; j < ints.length; j++) {
-                result += Math.abs(correlogram[i][j] - vdCorrelogram[i][j]);
+                float v = correlogram[i][j] - vdCorrelogram[i][j];
+                result += v * v;
+            }
+        }
+        return (float) Math.sqrt(result);
+    }
+
+    private float cosineCoeff(float[][] vdCorrelogram) {
+        float result = 0;
+        float dot = 0, c1 = 0, c2 = 0;
+        for (int i = 0; i < correlogram.length; i++) {
+            float[] ints = correlogram[i];
+            for (int j = 0; j < ints.length; j++) {
+                dot += correlogram[i][j] * vdCorrelogram[i][j];
+                c1 += correlogram[i][j] * correlogram[i][j];
+                c2 += vdCorrelogram[i][j] * vdCorrelogram[i][j];
+            }
+        }
+        return 1 - (float) (dot / (Math.sqrt(c1) * Math.sqrt(c2)));
+    }
+
+    private float jsd(float[][] vdCorrelogram) {
+        double sum = 0d;
+        for (int i = 0; i < correlogram.length; i++) {
+            float[] ints = correlogram[i];
+            for (int j = 0; j < ints.length; j++) {
+                sum += correlogram[i][j] > 0 ? correlogram[i][j] * Math.log(2d * correlogram[i][j] / (correlogram[i][j] + vdCorrelogram[i][j])) : 0 +
+                        vdCorrelogram[i][j] > 0 ? vdCorrelogram[i][j] * Math.log(2d * vdCorrelogram[i][j] / (correlogram[i][j] + vdCorrelogram[i][j])) : 0;
+            }
+        }
+        return (float) sum;
+    }
+
+    private float l1(float[][] vdCorrelogram) {
+        float result = 0;
+        for (int i = 0; i < correlogram.length; i++) {
+            float[] ints = correlogram[i];
+            for (int j = 0; j < ints.length; j++) {
+                float v = Math.abs(correlogram[i][j] - vdCorrelogram[i][j]);
+                result += v;
             }
         }
         return result;
+    }
+
+    private float tanimoto(float[][] vdCorrelogram) {
+        // Tanimoto coefficient
+        double Result = 0;
+        double Temp1 = 0;
+        double Temp2 = 0;
+
+        double TempCount1 = 0, TempCount2 = 0, TempCount3 = 0;
+
+        for (int i = 0; i < correlogram.length; i++) {
+            float[] ints = correlogram[i];
+            for (int j = 0; j < ints.length; j++) {
+                Temp1 += correlogram[i][j];
+                Temp2 += vdCorrelogram[i][j];
+            }
+        }
+
+        if (Temp1 == 0 || Temp2 == 0) Result = 100;
+        if (Temp1 == 0 && Temp2 == 0) Result = 0;
+
+        if (Temp1 > 0 && Temp2 > 0) {
+            for (int i = 0; i < correlogram.length; i++) {
+                float[] ints = correlogram[i];
+                for (int j = 0; j < ints.length; j++) {
+                    TempCount1 += (correlogram[i][j] / Temp1) * (vdCorrelogram[i][j] / Temp2);
+                    TempCount2 += (vdCorrelogram[i][j] / Temp2) * (vdCorrelogram[i][j] / Temp2);
+                    TempCount3 += (correlogram[i][j] / Temp1) * (correlogram[i][j] / Temp1);
+
+                }
+            }
+            Result = (100 - 100 * (TempCount1 / (TempCount2 + TempCount3
+                    - TempCount1))); //Tanimoto
+        }
+        return (float) Result;
     }
 
     public String getStringRepresentation() {

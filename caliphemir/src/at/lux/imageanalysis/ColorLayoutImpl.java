@@ -41,7 +41,7 @@ public class ColorLayoutImpl implements VisualDescriptor {
 
     protected int[] YCoeff, CbCoeff, CrCoeff;
 
-    protected int numCCoeff = 3, numYCoeff = 6;
+    protected int numCCoeff = 28, numYCoeff = 64;
 
     protected static int[] arrayZigZag = {
             0, 1, 8, 16, 9, 2, 3, 10, 17, 24, 32, 25, 18, 11, 4, 5,

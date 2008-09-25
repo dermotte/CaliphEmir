@@ -1,6 +1,41 @@
 CHANGES for LIRE
 ================
 
+2008-09-23
+==========
+Descriptors:
+  - Fixed bug in Autocolorcorrelogram based on comments of
+    Rodrigo Carvalho Rezende, rcrezende <at> gmail.com
+  - Changed normalization in Autocolorcorrelogram based on
+    comments of Rodrigo Carvalho Rezende
+  - Changed dissimilarity of AutoColorCorrelogram to Tanimoto
+  - Created a way to compute local feature histograms.
+  - Added SIFT
+
+2008-09-23
+==========
+General:
+  - Fixed Bug in ChainedDocumentBuilder (With single entry chain no
+    doc was generated)
+
+Descriptors:
+  - Changed default params of the SimpleColorHistogram based on MAP
+    tests on the Wang 1000 data set.
+  - Changed default params of ColorLayout in caliph-emir-cbir.jar
+
+Tests:
+  - Added simple benchmarking based on the Wang data set 
+
+2008-09-18
+==========
+Descriptors:
+  - Added JCD, a joint descriptor for CEDD and FCTH (from Savvas)
+
+2008-09-15
+==========
+General:
+  - Added non caching option to FastMap (use for more than 3000 objects to map) 
+
 2008-08-27
 ==========
 Descriptors

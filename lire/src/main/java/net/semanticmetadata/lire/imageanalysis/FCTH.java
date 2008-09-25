@@ -41,7 +41,7 @@ import java.util.StringTokenizer;
  */
 
 public class FCTH implements LireFeature {
-    private double[] histogram = null;
+    protected double[] histogram = null;
 
     public boolean Compact = false;
 

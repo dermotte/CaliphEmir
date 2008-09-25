@@ -46,7 +46,7 @@ public class CEDD implements LireFeature {
     public double T2;
     public double T3;
     public boolean Compact = false;
-    public double[] data = null;
+    protected double[] data = null;
 
     public CEDD(double Th0, double Th1, double Th2, double Th3, boolean CompactDescriptor) {
         this.T0 = Th0;
