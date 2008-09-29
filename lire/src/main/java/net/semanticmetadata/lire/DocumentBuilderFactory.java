@@ -127,7 +127,7 @@ public class DocumentBuilderFactory {
      * @return the created AutoCorrelation feature DocumentBuilder.
      */
     public static DocumentBuilder getDefaultAutoColorCorrelationDocumentBuilder() {
-        return new CorrelogramDocumentBuilder(AutoColorCorrelogram.Mode.FullNeighbourhood);
+        return new CorrelogramDocumentBuilder(AutoColorCorrelogram.Mode.SuperFast);
     }
 
     /**

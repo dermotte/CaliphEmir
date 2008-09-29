@@ -77,8 +77,8 @@ public class Fuzzy10Bin {
             {6, 1, 2, 9},
             {7, 1, 1, 3},
             {7, 1, 2, 3}
-    };  // 48 0 Áñéèìüò ôùí êáíüíùí êáé 4 ïé 3 åßóïäïé êáé ç ìßá Ýîïäïò
-    //
+    };  
+    
 
     public Fuzzy10Bin(boolean KeepPreviuesValues) {
 
@@ -106,17 +106,17 @@ public class Fuzzy10Bin {
 
             MembershipFunctionToSave[Temp] = 0;
 
-            //Áí åßíáé áêñéâüò óôç êïñõöÞ
+            //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (Input >= Triangles[i + 1] && Input <= +Triangles[i + 2]) {
                 MembershipFunctionToSave[Temp] = 1;
             }
 
-            //Áí åßíáé äåîéÜ ôïõ ôñéãþíïõ    
+            //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½    
             if (Input >= Triangles[i] && Input < Triangles[i + 1]) {
                 MembershipFunctionToSave[Temp] = (Input - Triangles[i]) / (Triangles[i + 1] - Triangles[i]);
             }
 
-            //Áí åßíáé áñéóôåñá ôïõ ôñéãþíïõ    
+            //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½    
 
             if (Input > Triangles[i + 2] && Input <= Triangles[i + 3]) {
                 MembershipFunctionToSave[Temp] = (Input - Triangles[i + 2]) / (Triangles[i + 2] - Triangles[i + 3]) + 1;

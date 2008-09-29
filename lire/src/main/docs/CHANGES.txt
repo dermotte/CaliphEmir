@@ -1,6 +1,18 @@
 CHANGES for LIRE
 ================
 
+2008-09-25
+==========
+Descriptors:
+  - Changed AutoColorCorrelogram to be a lot faster
+  - Changed AutoColorCorrelogram defaults to faster mode
+   
+2008-09-25
+==========
+Descriptors:
+  - Fixed bug in Autocolorcorrelogram based on comments of
+    Rodrigo Carvalho Rezende, rcrezende <at> gmail.com
+
 2008-09-23
 ==========
 Descriptors:

@@ -34,16 +34,20 @@ import java.util.StringTokenizer;
  * Indexing Using Color Correlograms", IEEE Computer Society</p>
  * <p>see also DOI <a href="http://doi.ieeecomputersociety.org/10.1109/CVPR.1997.609412">10.1109/CVPR.1997.609412</a></p>
  * <p/>
+ * Todo: Change the 2-dim array to a one dim array, as this is much faster in Java.
  */
 public class AutoColorCorrelogram implements LireFeature {
     private float quantH;
     private float quantV;
     private float quantS;
-    private int[][][] quantTable;
+//    private int[][][] quantTable;
     private int maxDistance = 4;
     private float[][] correlogram;
-    private Mode mode = Mode.FullNeighbourhood;
-    private int numBins = 64;
+    private Mode mode = Mode.SuperFast;
+    private int numBins = 256;
+    private float quantH_f;
+    private float quantS_f;
+    private float quantV_f;
 
     /**
      * Defines the available analysis modes: Superfast uses the approach described in the paper, Quarterneighbourhood
@@ -89,7 +93,6 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     private void init() {
-        float quantH_f, quantS_f, quantV_f;
         if (numBins < 33) {
             quantH_f = 8f;
             quantS_f = 2f;
@@ -116,17 +119,17 @@ public class AutoColorCorrelogram implements LireFeature {
         quantV = 256f / quantV_f;
 
         // init quantization table:
-        int count = 0;
-        quantTable = new int[(int) quantH_f][(int) quantS_f][(int) quantV_f];
-        for (int[][] ints : quantTable) {
-            for (int[] anInt : ints) {
-                for (int k = 0; k < anInt.length; k++) {
-                    anInt[k] = count;
-                    assert (count < numBins);
-                    count++;
-                }
-            }
-        }
+//        int count = 0;
+//        quantTable = new int[(int) quantH_f][(int) quantS_f][(int) quantV_f];
+//        for (int[][] ints : quantTable) {
+//            for (int[] anInt : ints) {
+//                for (int k = 0; k < anInt.length; k++) {
+//                    anInt[k] = count;
+//                    assert (count < numBins);
+//                    count++;
+//                }
+//            }
+//        }
     }
 
     public void extract(BufferedImage bi) {
@@ -157,14 +160,14 @@ public class AutoColorCorrelogram implements LireFeature {
                 correlogram[i1][j] = 0;
             }
         }
-        int[][] tmpCorrelogram = new int[numBins][maxDistance];
+        int[] tmpCorrelogram = new int[maxDistance];
         for (int x = 0; x < r.getWidth(); x++) {
             for (int y = 0; y < r.getHeight(); y++) {
+                int color = quantPixels[x][y];
                 getNumPixelsInNeighbourhood(x, y, quantPixels, tmpCorrelogram);
                 for (int i = 0; i < maxDistance; i++) {
-                    for (int c = 0; c < numBins; c++) {
-                        correlogram[c][i] += tmpCorrelogram[c][i];
-                    }
+                    // bug fixed based on comments of Rodrigo Carvalho Rezende, rcrezende <at> gmail.com
+                    correlogram[color][i] += tmpCorrelogram[i];
                 }
             }
         }
@@ -187,59 +190,58 @@ public class AutoColorCorrelogram implements LireFeature {
         }
     }
 
-    private void getNumPixelsInNeighbourhood(int x, int y, int[][] quantPixels, int[][] correlogramm) {
+    private void getNumPixelsInNeighbourhood(int x, int y, int[][] quantPixels, int[] correlogramm) {
         // set to zero for each color at distance 1:
         for (int i = 0; i < correlogramm.length; i++) {
-            correlogramm[i][0] = 0;
+            correlogramm[i] = 0;
         }
         for (int d = 1; d <= maxDistance; d++) {
             // bug fixed based on comments of Rodrigo Carvalho Rezende, rcrezende <at> gmail.com
-//            if (d > 1) correlogramm[d - 1] = correlogramm[d - 2]; -> Wrong! Just the reference
-            if (d > 1) System.arraycopy(correlogramm[d - 2], 0, correlogramm[d - 1], 0, correlogramm[d - 1].length);
+            if (d > 1) correlogramm[d - 1] += correlogramm[d - 2]; // -> Wrong! Just the reference
+//            if (d > 1) System.arraycopy(correlogramm[d - 2], 0, correlogramm[d - 1], 0, correlogramm[d - 1].length);
+            int color = quantPixels[x][y];
             if (mode == Mode.QuarterNeighbourhood) {
                 // TODO: does not work properly (possible) -> check if funnny
                 for (int td = 0; td < d; td++) {
                     if (isInPicture(x + d, y + td, quantPixels.length, quantPixels[0].length))
-                        correlogramm[quantPixels[x + d][y + td]][d - 1]++;
+                        if (quantPixels[x + d][y + td] == color) correlogramm[d - 1]++;
                     if (isInPicture(x + td, y + d, quantPixels.length, quantPixels[0].length))
-                        correlogramm[quantPixels[x + td][y + d]][d - 1]++;
+                        if (color == quantPixels[x + td][y + d]) correlogramm[d - 1]++;
                     if (isInPicture(x + d, y + d, quantPixels.length, quantPixels[0].length))
-                        correlogramm[quantPixels[x + d][y + d]][d - 1]++;
+                        if (color == quantPixels[x + d][y + d]) correlogramm[d - 1]++;
                 }
             } else if (mode == Mode.FullNeighbourhood) {
                 //if (isInPicture(x + d, y + d, quantPixels.length, quantPixels[0].length))
                 //    correlogramm[quantPixels[x + d][y + d]][d - 1]++;
                 for (int i = -d; i <= d; i++) {
                     if (isInPicture(x + i, y + d, quantPixels.length, quantPixels[0].length))
-                        correlogramm[quantPixels[x + i][y + d]][d - 1]++;
+                        if (color == quantPixels[x + i][y + d]) correlogramm[d - 1]++;
                     if (isInPicture(x + i, y - d, quantPixels.length, quantPixels[0].length))
-                        correlogramm[quantPixels[x + i][y - d]][d - 1]++;
+                        if (color == quantPixels[x + i][y - d]) correlogramm[d - 1]++;
                 }
                 for (int i = -d + 1; i <= d - 1; i++) {
                     if (isInPicture(x + d, y + i, quantPixels.length, quantPixels[0].length))
-                        correlogramm[quantPixels[x + d][y + i]][d - 1]++;
+                        if (color == quantPixels[x + d][y + i]) correlogramm[d - 1]++;
                     if (isInPicture(x - d, y + i, quantPixels.length, quantPixels[0].length))
-                        correlogramm[quantPixels[x - d][y + i]][d - 1]++;
+                        if (color == quantPixels[x - d][y + i]) correlogramm[d - 1]++;
                 }
             } else {
                 if (isInPicture(x + d, y, quantPixels.length, quantPixels[0].length)) {
                     assert (quantPixels[x + d][y] < numBins);
                     assert (d - 1 < maxDistance);
-                    correlogramm[quantPixels[x + d][y]][d - 1]++;
+                    if (color == quantPixels[x + d][y]) correlogramm[d - 1]++;
                 }
                 if (isInPicture(x, y + d, quantPixels.length, quantPixels[0].length)) {
                     assert (quantPixels[x][y + d] < numBins);
-                    correlogramm[quantPixels[x][y + d]][d - 1]++;
+                    if (color == quantPixels[x][y + d]) correlogramm[d - 1]++;
                 }
             }
         }
     }
 
     private static boolean isInPicture(int x, int y, int maxX, int maxY) {
-        boolean result = true;
-        if (x < 0 || y < 0) result = false;
-        if (y >= maxY || x >= maxX) result = false;
-        return result;
+        // possibly made faster??
+        return !(x < 0 || y < 0) && !(y >= maxY || x >= maxX);
     }
 
     /**
@@ -249,7 +251,9 @@ public class AutoColorCorrelogram implements LireFeature {
      * @return the quantized value ...
      */
     private int quantize(int[] pixel) {
-        return quantTable[(int) (pixel[0] / quantH)][(int) (pixel[1] / quantS)][(int) (pixel[2] / quantV)];
+        return (int) ((int) (pixel[0] / quantH) * (quantV_f) * (quantS_f)
+                + (int) (pixel[1] / quantS) * (quantV_f)
+                + (int) (pixel[2] / quantV) );
     }
 
     /**
@@ -305,9 +309,9 @@ public class AutoColorCorrelogram implements LireFeature {
 
     public float getDistance(VisualDescriptor vd) {
         if (!(vd instanceof AutoColorCorrelogram)) return -1;
-        float result = 0f;
+        float result;
         float[][] vdCorrelogram = ((AutoColorCorrelogram) vd).correlogram;
-        result = tanimoto(vdCorrelogram);
+        result = l1(vdCorrelogram);
         return result;
     }
 
@@ -324,7 +328,6 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     private float cosineCoeff(float[][] vdCorrelogram) {
-        float result = 0;
         float dot = 0, c1 = 0, c2 = 0;
         for (int i = 0; i < correlogram.length; i++) {
             float[] ints = correlogram[i];

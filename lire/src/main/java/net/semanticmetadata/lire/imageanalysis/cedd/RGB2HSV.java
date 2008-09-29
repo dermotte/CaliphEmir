@@ -33,14 +33,11 @@ public class RGB2HSV {
         double MaxHSV = (Math.max(red, Math.max(green, blue)));
         double MinHSV = (Math.min(red, Math.min(green, blue)));
 
-        //Παραγωγη Του V του HSV
         HSV_V = (int) (MaxHSV);
 
-        //Παραγωγη Του S του HSV
         HSV_S = 0;
         if (MaxHSV != 0) HSV_S = (int) (255 - 255 * (MinHSV / MaxHSV));
 
-        //Παραγωγη Του H
         if (MaxHSV != MinHSV) {
 
             int IntegerMaxHSV = (int) (MaxHSV);

@@ -36,7 +36,7 @@ import java.util.StringTokenizer;
  * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis,
  * <i>CEDD: Color and Edge Directivity Descriptor. A Compact
  * Descriptor for Image Indexing and Retrieval</i>, A. Gasteratos, M. Vincze, and J.K.
- * Tsotsos (Eds.): ICVS 2008, LNCS 5008, pp. 312–322, 2008.
+ * Tsotsos (Eds.): ICVS 2008, LNCS 5008, pp. 312-322, 2008.
  *
  * @author: Savvas A. Chatzichristofis, savvash@gmail.com
  */

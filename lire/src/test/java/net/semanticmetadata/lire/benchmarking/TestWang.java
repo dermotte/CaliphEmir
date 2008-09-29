@@ -45,7 +45,7 @@ public class TestWang extends TestCase {
 //        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
 //        builder.addBuilder(new SimpleDocumentBuilder(true, true, true));
 //        builder.addBuilder(new SiftDocumentBuilder());
-        builder.addBuilder(new CorrelogramDocumentBuilder(AutoColorCorrelogram.Mode.SuperFast));
+        builder.addBuilder(new CorrelogramDocumentBuilder(AutoColorCorrelogram.Mode.FullNeighbourhood));
     }
 
     public void testIndexWang() throws IOException {
@@ -95,7 +95,7 @@ public class TestWang extends TestCase {
 //        searcher = ImageSearcherFactory.createColorHistogramImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createCEDDImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createFCTHImageSearcher(maxHits);
-        searcher = ImageSearcherFactory.createFastCorrelogramImageSearcher(maxHits);
+        searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(maxHits);
         Pattern p = Pattern.compile("\\\\\\d+\\.jpg");
         double map = 0;
         for (int i = 0; i < sampleQueries.length; i++) {

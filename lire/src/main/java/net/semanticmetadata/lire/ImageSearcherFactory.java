@@ -133,7 +133,7 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createDefaultCorrelogramImageSearcher(int maximumHits) {
-        return new CorrelogramImageSearcher(maximumHits, AutoColorCorrelogram.Mode.FullNeighbourhood);
+        return new CorrelogramImageSearcher(maximumHits, AutoColorCorrelogram.Mode.SuperFast);
     }
 
     /**

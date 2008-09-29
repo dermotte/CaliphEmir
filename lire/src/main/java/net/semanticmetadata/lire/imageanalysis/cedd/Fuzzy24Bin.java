@@ -70,17 +70,14 @@ public class Fuzzy24Bin {
 
             MembershipFunctionToSave[Temp] = 0;
 
-            //Αν είναι ακριβός στη κορυφή
             if (Input >= Triangles[i + 1] && Input <= +Triangles[i + 2]) {
                 MembershipFunctionToSave[Temp] = 1;
             }
 
-            //Αν είναι δεξιά του τριγώνου    
             if (Input >= Triangles[i] && Input < Triangles[i + 1]) {
                 MembershipFunctionToSave[Temp] = (Input - Triangles[i]) / (Triangles[i + 1] - Triangles[i]);
             }
 
-            //Αν είναι αριστερα του τριγώνου    
 
             if (Input > Triangles[i + 2] && Input <= Triangles[i + 3]) {
                 MembershipFunctionToSave[Temp] = (Input - Triangles[i + 2]) / (Triangles[i + 2] - Triangles[i + 3]) + 1;
