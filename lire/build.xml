@@ -45,7 +45,7 @@
     <property name="config" value="src/main/config"/>
     <property name="build" value="classes"/>
     <property name="dist" value="dist"/>
-    <property name="versionstring" value="0.6"/>
+    <property name="versionstring" value="0.7"/>
     <!-- path to test files -->
     <property name="test" value="test"/>
     <!-- path to documentation like README or CHANGES -->
