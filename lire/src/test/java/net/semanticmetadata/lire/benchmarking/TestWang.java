@@ -2,15 +2,13 @@ package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.DocumentBuilderFactory;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
-import net.semanticmetadata.lire.ImageSearcherFactory;
-import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
-import net.semanticmetadata.lire.imageanalysis.CEDD;
-import net.semanticmetadata.lire.imageanalysis.FCTH;
-import net.semanticmetadata.lire.imageanalysis.JCD;
+import net.semanticmetadata.lire.imageanalysis.*;
 import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
-import net.semanticmetadata.lire.impl.CorrelogramDocumentBuilder;
+import net.semanticmetadata.lire.impl.GenericDocumentBuilder;
+import net.semanticmetadata.lire.impl.GenericImageSearcher;
 import net.semanticmetadata.lire.impl.SiftLocalFeatureHistogramImageSearcher;
 import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
@@ -38,14 +36,21 @@ public class TestWang extends TestCase {
     private int[] sampleQueries = {284, 77, 108, 416, 144, 534, 898, 104, 67, 10, 607, 165, 343, 973, 591, 659, 812, 231, 261, 224, 227, 914, 427, 810, 979, 716, 253, 708, 751, 269, 531, 699, 835, 370, 642, 504, 297, 970, 929, 20, 669, 434, 201, 9, 575, 631, 730, 7, 546, 816, 431, 235, 289, 111, 862, 184, 857, 624, 323, 393, 465, 905, 581, 626, 212, 459, 722, 322, 584, 540, 194, 704, 410, 267, 349, 371, 909, 403, 724, 573, 539, 812, 831, 600, 667, 672, 454, 873, 452, 48, 322, 424, 952, 277, 565, 388, 149, 966, 524, 36, 528, 75, 337, 655, 836, 698, 230, 259, 897, 652, 590, 757, 673, 937, 676, 650, 297, 434, 358, 789, 484, 975, 318, 12, 506, 38, 979, 732, 957, 904, 852, 635, 620, 28, 59, 732, 84, 788, 562, 913, 173, 508, 32, 16, 882, 847, 320, 185, 268, 230, 259, 931, 653, 968, 838, 906, 596, 140, 880, 847, 297, 77, 983, 536, 494, 530, 870, 922, 467, 186, 254, 727, 439, 241, 12, 947, 561, 160, 740, 705, 619, 571, 745, 774, 845, 507, 156, 936, 473, 830, 88, 66, 204, 737, 770, 445, 358, 707, 95, 349};
 
     protected void setUp() throws Exception {
-        super.setUp();    //To change body of overridden methods use File | Settings | File Templates.
+        super.setUp();
         // Setting up DocumentBuilder:
         builder = new ChainedDocumentBuilder();
-//        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
-//        builder.addBuilder(new SimpleDocumentBuilder(true, true, true));
+//        builder.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
+
+        // from Arthur:
+        builder.addBuilder(new GenericDocumentBuilder(FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"));
+        builder.addBuilder(new GenericDocumentBuilder(JpegCofficientHistogram.class, "FIELD_JPEGCOEFFHIST"));
+
+//        builder.addBuilder(new SimpleDocumentBuilder(false, false, true));
 //        builder.addBuilder(new SiftDocumentBuilder());
-        builder.addBuilder(new CorrelogramDocumentBuilder(AutoColorCorrelogram.Mode.FullNeighbourhood));
+//        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
     }
 
     public void testIndexWang() throws IOException {
@@ -86,16 +91,20 @@ public class TestWang extends TestCase {
         iw.close();
     }
 
+
     public void testMAP() throws IOException {
         int maxSearches = 200;
-        int maxHits = 100;
+        int maxHits = 1000;
         IndexReader reader = IndexReader.open(indexPath);
         ImageSearcher searcher;
-//        searcher = new SimpleImageSearcher(maxHits, 0f, 1f, 0f);
+//        searcher = new SimpleImageSearcher(maxHits, 0f, 0f, 1f);
 //        searcher = ImageSearcherFactory.createColorHistogramImageSearcher(maxHits);
+//        searcher = ImageSearcherFactory.createGaborImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createCEDDImageSearcher(maxHits);
-//        searcher = ImageSearcherFactory.createFCTHImageSearcher(maxHits);
-        searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(maxHits);
+        //       searcher = ImageSearcherFactory.createFCTHImageSearcher(maxHits);
+//        searcher = ImageSearcherFactory.createFastCorrelogramImageSearcher(maxHits);
+//        searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(maxHits);
+        searcher = new GenericImageSearcher(maxHits, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST");
         Pattern p = Pattern.compile("\\\\\\d+\\.jpg");
         double map = 0;
         for (int i = 0; i < sampleQueries.length; i++) {
@@ -115,16 +124,17 @@ public class TestWang extends TestCase {
                 else
                     fail("Did not get the number ...");
                 int testID = Integer.parseInt(hitsId);
-                if ((int) Math.floor(id / 100) == (int) Math.floor(testID / 100)) {
+                if ((testID != id) && ((int) Math.floor(id / 100) == (int) Math.floor(testID / 100))) {
                     goodOnes++;
+                    // Only if there is a change in recall
+                    avgPrecision += (double) goodOnes / (double) (j + 1);
                     System.out.print("x");
                 } else {
                     System.out.print("o");
                 }
 //                System.out.print(" (" + testID + ") ");
-                avgPrecision += (double) goodOnes / (double) (j + 1);
             }
-            avgPrecision = avgPrecision / hits.length();
+            avgPrecision = avgPrecision / goodOnes;
             map += avgPrecision;
             System.out.println(" " + avgPrecision + " (" + map / (i + 1) + ")");
         }
@@ -132,7 +142,7 @@ public class TestWang extends TestCase {
         System.out.println("map = " + map);
     }
 
-    public void testMAPLocalFeatureHistogram() throws IOException {
+    public void tttestMAPLocalFeatureHistogram() throws IOException {
         int maxSearches = 200;
         int maxHits = 100;
         IndexReader reader = IndexReader.open(indexPath);
@@ -191,7 +201,7 @@ public class TestWang extends TestCase {
         return null;
     }
 
-    public void testGetDistribution() throws IOException {
+    public void tttestGetDistribution() throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter("data.csv"));
         IndexReader reader = IndexReader.open(indexPath);
         // get the first document:
@@ -242,7 +252,7 @@ public class TestWang extends TestCase {
         bw.close();
     }
 
-    public void testGetSampleQueries() {
+    public void tttestGetSampleQueries() {
         for (int i = 0; i < 200; i++) {
             System.out.print((int) (Math.random() * 1000) + ", ");
         }
