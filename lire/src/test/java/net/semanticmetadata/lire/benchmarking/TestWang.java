@@ -1,14 +1,13 @@
 package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
-import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.DocumentBuilderFactory;
-import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.ImageSearcher;
-import net.semanticmetadata.lire.imageanalysis.*;
+import net.semanticmetadata.lire.*;
+import net.semanticmetadata.lire.imageanalysis.CEDD;
+import net.semanticmetadata.lire.imageanalysis.FCTH;
+import net.semanticmetadata.lire.imageanalysis.JCD;
+import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
 import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
-import net.semanticmetadata.lire.impl.GenericDocumentBuilder;
-import net.semanticmetadata.lire.impl.GenericImageSearcher;
+import net.semanticmetadata.lire.impl.ParallelImageSearcher;
 import net.semanticmetadata.lire.impl.SiftLocalFeatureHistogramImageSearcher;
 import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
@@ -37,19 +36,25 @@ public class TestWang extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        // set to all queries ... approach "leave one out"
+        sampleQueries = new int[1000];
+        for (int i = 0; i < sampleQueries.length; i++) {
+            sampleQueries[i] = i;
+
+        }
         // Setting up DocumentBuilder:
         builder = new ChainedDocumentBuilder();
-        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
 
         // from Arthur:
-        builder.addBuilder(new GenericDocumentBuilder(FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"));
-        builder.addBuilder(new GenericDocumentBuilder(JpegCofficientHistogram.class, "FIELD_JPEGCOEFFHIST"));
+//        builder.addBuilder(new GenericDocumentBuilder(FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"));
+//        builder.addBuilder(new GenericDocumentBuilder(JpegCofficientHistogram.class, "FIELD_JPEGCOEFFHIST"));
 
 //        builder.addBuilder(new SimpleDocumentBuilder(false, false, true));
 //        builder.addBuilder(new SiftDocumentBuilder());
-//        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
     }
 
@@ -91,25 +96,35 @@ public class TestWang extends TestCase {
         iw.close();
     }
 
-
     public void testMAP() throws IOException {
-        int maxSearches = 200;
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.JSD;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - JSD");
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L1;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L1");
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L2;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
+    }
+
+    public void computeMAP(ImageSearcher searcher, String prefix) throws IOException {
+
         int maxHits = 1000;
         IndexReader reader = IndexReader.open(indexPath);
-        ImageSearcher searcher;
+
 //        searcher = new SimpleImageSearcher(maxHits, 0f, 0f, 1f);
-//        searcher = ImageSearcherFactory.createColorHistogramImageSearcher(maxHits);
+        // searcher = ImageSearcherFactory.createColorHistogramImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createGaborImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createCEDDImageSearcher(maxHits);
-        //       searcher = ImageSearcherFactory.createFCTHImageSearcher(maxHits);
+//        searcher = new ParallelImageSearcher(maxHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
+//               searcher = ImageSearcherFactory.createFCTHImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createFastCorrelogramImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(maxHits);
-        searcher = new GenericImageSearcher(maxHits, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST");
+//        searcher = new GenericImageSearcher(maxHits, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST");
         Pattern p = Pattern.compile("\\\\\\d+\\.jpg");
         double map = 0;
+        double errorRate = 0d;
         for (int i = 0; i < sampleQueries.length; i++) {
             int id = sampleQueries[i];
-            System.out.print("id = " + id + ": ");
+//            System.out.print("id = " + id + ": ");
             String file = testExtensive + "/" + id + ".jpg";
 //            Document document = builder.createDocument(new FileInputStream(file), file);
             ImageSearchHits hits = searcher.search(findDoc(reader, id + ".jpg"), reader);
@@ -128,18 +143,83 @@ public class TestWang extends TestCase {
                     goodOnes++;
                     // Only if there is a change in recall
                     avgPrecision += (double) goodOnes / (double) (j + 1);
-                    System.out.print("x");
+//                    System.out.print("x");
                 } else {
-                    System.out.print("o");
+                    if (j == 1) { // error rate
+                        errorRate++;
+                    }
                 }
 //                System.out.print(" (" + testID + ") ");
             }
             avgPrecision = avgPrecision / goodOnes;
             map += avgPrecision;
-            System.out.println(" " + avgPrecision + " (" + map / (i + 1) + ")");
+//            System.out.println(" " + avgPrecision + " (" + map / (i + 1) + ")");
         }
         map = map / sampleQueries.length;
+        errorRate = errorRate / sampleQueries.length;
+        System.out.print(prefix + " - ");
+        System.out.print("map = " + map);
+        System.out.println(" - errorRate = " + errorRate);
+    }
+
+    public void testParallelMAP() throws IOException {
+
+        int maxHits = 1000;
+        IndexReader reader = IndexReader.open(indexPath);
+        ParallelImageSearcher searcher;
+//        searcher = new SimpleImageSearcher(maxHits, 0f, 0f, 1f);
+//        searcher = ImageSearcherFactory.createColorHistogramImageSearcher(maxHits);
+//        searcher = ImageSearcherFactory.createGaborImageSearcher(maxHits);
+//        searcher = ImageSearcherFactory.createCEDDImageSearcher(maxHits);
+        searcher = new ParallelImageSearcher(maxHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
+//               searcher = ImageSearcherFactory.createFCTHImageSearcher(maxHits);
+//        searcher = ImageSearcherFactory.createFastCorrelogramImageSearcher(maxHits);
+//        searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(maxHits);
+//        searcher = new GenericImageSearcher(maxHits, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST");
+        Pattern p = Pattern.compile("\\\\\\d+\\.jpg");
+        double map = 0;
+        double errorRate = 0d;
+        for (int i = 0; i < sampleQueries.length; i++) {
+            int id = sampleQueries[i];
+            System.out.print("id = " + id + ": ");
+            String file = testExtensive + "/" + id + ".jpg";
+            String[] files = {id + ".jpg", (id + 1) + ".jpg", (id + 2) + ".jpg", (id + 3) + ".jpg", (id + 4) + ".jpg"};
+            ImageSearchHits[] hits = searcher.search(findDocs(reader, files), reader);
+            for (int k = 0; k < hits.length; k++) {
+                int currentID = id + k;
+                ImageSearchHits h = hits[k];
+                int goodOnes = 0;
+                double avgPrecision = 0;
+                for (int j = 0; j < h.length(); j++) {
+                    Document d = h.doc(j);
+                    String hitsId = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
+                    Matcher matcher = p.matcher(hitsId);
+                    if (matcher.find())
+                        hitsId = hitsId.substring(matcher.start() + 1, hitsId.lastIndexOf("."));
+                    else
+                        fail("Did not get the number ...");
+                    int testID = Integer.parseInt(hitsId);
+                    if ((testID != currentID) && ((int) Math.floor(id / 100) == (int) Math.floor(testID / 100))) {
+                        goodOnes++;
+                        // Only if there is a change in recall
+                        avgPrecision += (double) goodOnes / (double) (j + 1);
+//                    System.out.print("x");
+                    } else {
+                        if (j == 1) { // error rate
+                            errorRate++;
+                        }
+                    }
+//                System.out.print(" (" + testID + ") ");
+                }
+                avgPrecision = avgPrecision / goodOnes;
+                map += avgPrecision;
+//                System.out.println(" " + avgPrecision + " (" + map / (i + 1) + ")");
+            }
+        }
+        map = map / sampleQueries.length;
+        errorRate = errorRate / sampleQueries.length;
         System.out.println("map = " + map);
+        System.out.println("errorRate = " + errorRate);
     }
 
     public void tttestMAPLocalFeatureHistogram() throws IOException {
@@ -199,6 +279,21 @@ public class TestWang extends TestCase {
             }
         }
         return null;
+    }
+
+    private Document[] findDocs(IndexReader reader, String[] file) throws IOException {
+        Document[] result = new Document[file.length];
+        for (int i = 0; i < reader.numDocs(); i++) {
+            Document document = reader.document(i);
+            String s = document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
+            for (int j = 0; j < result.length; j++) {
+                if (s.endsWith("\\" + file[j])) {
+//                System.out.println("s = " + s);
+                    result[j] = document;
+                }
+            }
+        }
+        return result;
     }
 
     public void tttestGetDistribution() throws IOException {

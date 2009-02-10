@@ -1,6 +1,14 @@
 CHANGES for LIRE
 ================
 
+2009-02-10
+==========
+General:
+  - Changed routine for determining MAP
+  - Added error rate computation
+  - Changed normalization in color histogram
+  - Changed quantization in color histogram
+
 2008-10-23
 ==========
 General:
