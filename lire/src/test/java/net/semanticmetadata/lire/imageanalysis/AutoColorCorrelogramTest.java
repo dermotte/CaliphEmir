@@ -52,16 +52,16 @@ public class AutoColorCorrelogramTest extends TestCase {
             System.out.println("id = " + id + ": ");
             String file = testExtensive + "/" + id + ".jpg";
             AutoColorCorrelogram acc = new AutoColorCorrelogram(AutoColorCorrelogram.Mode.SuperFast);
-            OldColorCorrelogram occ = new OldColorCorrelogram(OldColorCorrelogram.Mode.SuperFast);
+//            OldColorCorrelogram occ = new OldColorCorrelogram(OldColorCorrelogram.Mode.SuperFast);
             BufferedImage image = ImageIO.read(new FileInputStream(file));
-            occ.extract(image);
+//            occ.extract(image);
             ms = System.currentTimeMillis();
             acc.extract(image);
             ms = System.currentTimeMillis() - ms;
             sum += ms;
-            System.out.println("the same? " + acc.getStringRepresentation().equals(occ.getStringRepresentation()));
+//            System.out.println("the same? " + acc.getStringRepresentation().equals(occ.getStringRepresentation()));
         }
-        System.out.println("time per image = " + sum/sampleQueries.length);
+        System.out.println("time per image = " + sum / sampleQueries.length);
         System.out.println("sum = " + sum);
     }
 
@@ -72,15 +72,15 @@ public class AutoColorCorrelogramTest extends TestCase {
             System.out.println("id = " + id + ": ");
             String file = testExtensive + "/" + id + ".jpg";
             AutoColorCorrelogram acc = new AutoColorCorrelogram(AutoColorCorrelogram.Mode.SuperFast);
-            OldColorCorrelogram occ = new OldColorCorrelogram(OldColorCorrelogram.Mode.SuperFast);
+//            OldColorCorrelogram occ = new OldColorCorrelogram(OldColorCorrelogram.Mode.SuperFast);
             BufferedImage image = ImageIO.read(new FileInputStream(file));
-            occ.extract(image);
+//            occ.extract(image);
             acc.extract(image);
-            System.out.println("the same? " + acc.getStringRepresentation().equals(occ.getStringRepresentation()));
-            if (!acc.getStringRepresentation().equals(occ.getStringRepresentation())) {
-                System.out.println("acc.getStringRepresentation() = " + acc.getStringRepresentation());
-                System.out.println("occ.getStringRepresentation() = " + occ.getStringRepresentation());
-            }
+//            System.out.println("the same? " + acc.getStringRepresentation().equals(occ.getStringRepresentation()));
+//            if (!acc.getStringRepresentation().equals(occ.getStringRepresentation())) {
+//                System.out.println("acc.getStringRepresentation() = " + acc.getStringRepresentation());
+//                System.out.println("occ.getStringRepresentation() = " + occ.getStringRepresentation());
+//            }
         }
     }
 
