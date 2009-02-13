@@ -2,13 +2,8 @@ package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.*;
-import net.semanticmetadata.lire.imageanalysis.CEDD;
-import net.semanticmetadata.lire.imageanalysis.FCTH;
-import net.semanticmetadata.lire.imageanalysis.JCD;
-import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
-import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
-import net.semanticmetadata.lire.impl.ParallelImageSearcher;
-import net.semanticmetadata.lire.impl.SiftLocalFeatureHistogramImageSearcher;
+import net.semanticmetadata.lire.imageanalysis.*;
+import net.semanticmetadata.lire.impl.*;
 import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
@@ -50,7 +45,7 @@ public class TestWang extends TestCase {
 
         // from Arthur:
 //        builder.addBuilder(new GenericDocumentBuilder(FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"));
-//        builder.addBuilder(new GenericDocumentBuilder(JpegCofficientHistogram.class, "FIELD_JPEGCOEFFHIST"));
+//        builder.addBuilder(new GenericDocumentBuilder(JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"));
 
 //        builder.addBuilder(new SimpleDocumentBuilder(false, false, true));
 //        builder.addBuilder(new SiftDocumentBuilder());
@@ -103,6 +98,11 @@ public class TestWang extends TestCase {
         computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L1");
         SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L2;
         computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
+//        computeMAP(new GenericImageSearcher(1000, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"), "FuzzyColorHistogram");
+//        computeMAP(new GenericImageSearcher(1000, JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"), "JpegCoefficientHistogram");
+//        computeMAP(ImageSearcherFactory.createCEDDImageSearcher(1000), "CEDD");
+//        computeMAP(ImageSearcherFactory.createFCTHImageSearcher(1000), "FCTH");
+
     }
 
     public void computeMAP(ImageSearcher searcher, String prefix) throws IOException {
@@ -122,6 +122,7 @@ public class TestWang extends TestCase {
         Pattern p = Pattern.compile("\\\\\\d+\\.jpg");
         double map = 0;
         double errorRate = 0d;
+        double precision10 = 0d;
         for (int i = 0; i < sampleQueries.length; i++) {
             int id = sampleQueries[i];
 //            System.out.print("id = " + id + ": ");
@@ -130,6 +131,7 @@ public class TestWang extends TestCase {
             ImageSearchHits hits = searcher.search(findDoc(reader, id + ".jpg"), reader);
             int goodOnes = 0;
             double avgPrecision = 0;
+            double precision10temp =0d;
             for (int j = 0; j < hits.length(); j++) {
                 Document d = hits.doc(j);
                 String hitsId = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
@@ -144,6 +146,9 @@ public class TestWang extends TestCase {
                     // Only if there is a change in recall
                     avgPrecision += (double) goodOnes / (double) (j + 1);
 //                    System.out.print("x");
+                    if (j<=10) {
+                        precision10temp +=1.0;
+                    }
                 } else {
                     if (j == 1) { // error rate
                         errorRate++;
@@ -152,13 +157,16 @@ public class TestWang extends TestCase {
 //                System.out.print(" (" + testID + ") ");
             }
             avgPrecision = avgPrecision / goodOnes;
+            precision10 += precision10temp / 10;
             map += avgPrecision;
 //            System.out.println(" " + avgPrecision + " (" + map / (i + 1) + ")");
         }
         map = map / sampleQueries.length;
         errorRate = errorRate / sampleQueries.length;
+        precision10 = precision10 / sampleQueries.length;
         System.out.print(prefix + " - ");
         System.out.print("map = " + map);
+        System.out.print(" precision@10 = " + precision10);
         System.out.println(" - errorRate = " + errorRate);
     }
 

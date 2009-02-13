@@ -1,12 +1,12 @@
 /*
  * JpegCoefficientHistogram.java
- * 
+ *
  * Ported from C#, performance is probably poor
- * 
+ *
  * JpegCoefficientHistogram.cs
  * Part of the Callisto framework
  * (c) 2009 Arthur Pitman. All rights reserved.
- * 
+ *
  */
 
 
@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.StringTokenizer;
 
-public class JpegCofficientHistogram implements LireFeature {
+public class JpegCoefficientHistogram implements LireFeature {
 
-    protected byte[] descriptorBytes;
+    protected int[] descriptorValues;
     protected final int BLOCK_SIZE = 8;
 
     protected double[][][][] transform;
@@ -50,10 +50,10 @@ public class JpegCofficientHistogram implements LireFeature {
         int newWidth = bimg.getWidth() - bimg.getWidth() % BLOCK_SIZE;
         int newHeight = bimg.getHeight() - bimg.getHeight() % BLOCK_SIZE;
         int[][][] yuvImage = getYUVImage(bimg.getRaster(), newWidth, newHeight, -128);
-        descriptorBytes = new byte[BLOCK_SIZE * BLOCK_SIZE * 3];
-        getComponentHistogram(yuvImage, newWidth, newHeight, 0, descriptorBytes);
-        getComponentHistogram(yuvImage, newWidth, newHeight, 1, descriptorBytes);
-        getComponentHistogram(yuvImage, newWidth, newHeight, 2, descriptorBytes);
+        descriptorValues = new int[BLOCK_SIZE * BLOCK_SIZE * 3];
+        getComponentHistogram(yuvImage, newWidth, newHeight, 0, descriptorValues);
+        getComponentHistogram(yuvImage, newWidth, newHeight, 1, descriptorValues);
+        getComponentHistogram(yuvImage, newWidth, newHeight, 2, descriptorValues);
     }
 
     protected class DctPoint {
@@ -72,7 +72,7 @@ public class JpegCofficientHistogram implements LireFeature {
 
     }
 
-    protected void getComponentHistogram(int[][][] yuvImage, int width, int height, int component, byte[] descriptorBytes) {
+    protected void getComponentHistogram(int[][][] yuvImage, int width, int height, int component, int[] descriptorBytes) {
 
         int hBlockCount = width / BLOCK_SIZE;
         int vBlockCount = height / BLOCK_SIZE;
@@ -87,6 +87,9 @@ public class JpegCofficientHistogram implements LireFeature {
                         for (int j = 0; j < BLOCK_SIZE; j++) {
                             for (int i = 0; i < BLOCK_SIZE; i++) {
                                 t += yuvImage[bx * BLOCK_SIZE + i][by * BLOCK_SIZE + j][component] * transform[i][j][u][v];
+
+                                // Info Dump
+                                // System.out.println(i + ", " + j +", " + u +", " + v + ", " +t + ", " + yuvImage[bx * BLOCK_SIZE + i][by * BLOCK_SIZE + j][component] + ", " + transform[i][j][u][v]);
                             }
                         }
                         double cU = 1;
@@ -99,7 +102,16 @@ public class JpegCofficientHistogram implements LireFeature {
                     }
                 }
 
+                // filtering for noise (ensures that c# and java implementations give the same output)
                 dctValues[0][0] = 0;
+                for (int j=0; j < BLOCK_SIZE; j++)
+                {
+                	for (int i=0; i<BLOCK_SIZE; i++)
+                	{
+                		if (Math.abs(dctValues[i][j]) < 0.001)
+                			dctValues[i][j] = 0;
+                	}
+                }
 
                 DctPoint[] dctPoints = new DctPoint[BLOCK_SIZE * BLOCK_SIZE];
                 int p = 0;
@@ -109,6 +121,7 @@ public class JpegCofficientHistogram implements LireFeature {
                         dctPoints[p].i = i;
                         dctPoints[p].j = j;
                         dctPoints[p].v = Math.abs(dctScaler2[i][j][component] * dctValues[i][j]);
+                        p++;
                     }
                 }
 
@@ -136,7 +149,7 @@ public class JpegCofficientHistogram implements LireFeature {
         int p = BLOCK_SIZE * BLOCK_SIZE * component;
         for (int j = 0; j < BLOCK_SIZE; j++) {
             for (int i = 0; i < BLOCK_SIZE; i++) {
-                descriptorBytes[p] = (byte) (tempHistogram[i][j] / maxPoint * 255);
+                descriptorBytes[p] = (int) (tempHistogram[i][j] / maxPoint * 255);
                 p++;
             }
         }
@@ -144,30 +157,30 @@ public class JpegCofficientHistogram implements LireFeature {
 
 
     public float getDistance(VisualDescriptor vd) {
-        if (!(vd instanceof JpegCofficientHistogram))
+        if (!(vd instanceof JpegCoefficientHistogram))
             throw new UnsupportedOperationException("Wrong descriptor.");
-        JpegCofficientHistogram target = (JpegCofficientHistogram) vd;
-        if (descriptorBytes == null)
+        JpegCoefficientHistogram target = (JpegCoefficientHistogram) vd;
+        if (descriptorValues == null)
             throw new UnsupportedOperationException("source descriptor bytes are null");
-        if (target.descriptorBytes == null)
+        if (target.descriptorValues == null)
             throw new UnsupportedOperationException("target descriptor bytes are null");
 
         int size2 = BLOCK_SIZE * BLOCK_SIZE * 3;
         double distance = 0;
 
         for (int i = 0; i < size2; i++)
-            distance += ((descriptorBytes[i] - target.descriptorBytes[i]) * (descriptorBytes[i] - target.descriptorBytes[i]));
+            distance += ((descriptorValues[i] - target.descriptorValues[i]) * (descriptorValues[i] - target.descriptorValues[i]));
 
         return (float) Math.sqrt(distance / size2);
     }
 
     public String getStringRepresentation() { // added by mlux
-        StringBuilder sb = new StringBuilder(descriptorBytes.length * 2 + 25);
+        StringBuilder sb = new StringBuilder(descriptorValues.length * 2 + 25);
         sb.append("jpegcoeffhist");
         sb.append(' ');
-        sb.append(descriptorBytes.length);
+        sb.append(descriptorValues.length);
         sb.append(' ');
-        for (double aData : descriptorBytes) {
+        for (double aData : descriptorValues) {
             sb.append((int) aData);
             sb.append(' ');
         }
@@ -178,11 +191,11 @@ public class JpegCofficientHistogram implements LireFeature {
         StringTokenizer st = new StringTokenizer(s);
         if (!st.nextToken().equals("jpegcoeffhist"))
             throw new UnsupportedOperationException("This is not a jpegcoeffhist descriptor.");
-        descriptorBytes = new byte[Integer.parseInt(st.nextToken())];
-        for (int i = 0; i < descriptorBytes.length; i++) {
+        descriptorValues = new int[Integer.parseInt(st.nextToken())];
+        for (int i = 0; i < descriptorValues.length; i++) {
             if (!st.hasMoreTokens())
                 throw new IndexOutOfBoundsException("Too few numbers in string representation.");
-            descriptorBytes[i] = (byte) Integer.parseInt(st.nextToken());
+            descriptorValues[i] = (int) Integer.parseInt(st.nextToken());
         }
 
     }

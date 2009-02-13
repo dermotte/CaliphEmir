@@ -1,12 +1,12 @@
 /*
  * FuzzyColorHistogram.java
- * 
+ *
  * Ported from C#, performance is probably poor
- * 
+ *
  * FuzzyColorHistogram.cs
  * Part of the Callisto framework
  * (c) 2009 Arthur Pitman. All rights reserved.
- * 
+ *
  */
 
 package net.semanticmetadata.lire.imageanalysis;
@@ -24,7 +24,7 @@ public class FuzzyColorHistogram implements LireFeature {
     protected final int SIZE = 5;
     protected final int SIZE3 = SIZE * SIZE * SIZE;
 
-    protected byte[] descriptorBytes;
+    protected int[] descriptorValues;
 
 
     public void extract(BufferedImage bimg) {
@@ -72,9 +72,9 @@ public class FuzzyColorHistogram implements LireFeature {
                 maxA = histogramA[k];
         }
 
-        descriptorBytes = new byte[SIZE3];
+        descriptorValues = new int[SIZE3];
         for (int k = 0; k < SIZE3; k++)
-            descriptorBytes[k] = (byte) (histogramA[k] / maxA * 255);
+            descriptorValues[k] = (int) (histogramA[k] / maxA * 255);
     }
 
 
@@ -84,18 +84,18 @@ public class FuzzyColorHistogram implements LireFeature {
         FuzzyColorHistogram target = (FuzzyColorHistogram) vd;
         double distance = 0;
         for (int i = 0; i < SIZE3; i++)
-            distance += ((descriptorBytes[i] - target.descriptorBytes[i]) * (descriptorBytes[i] - target.descriptorBytes[i]));
+            distance += ((descriptorValues[i] - target.descriptorValues[i]) * (descriptorValues[i] - target.descriptorValues[i]));
 
         return (float) Math.sqrt(distance / SIZE3);
     }
 
     public String getStringRepresentation() { // added by mlux
-        StringBuilder sb = new StringBuilder(descriptorBytes.length * 2 + 25);
+        StringBuilder sb = new StringBuilder(descriptorValues.length * 2 + 25);
         sb.append("fuzzycolorhist");
         sb.append(' ');
-        sb.append(descriptorBytes.length);
+        sb.append(descriptorValues.length);
         sb.append(' ');
-        for (double aData : descriptorBytes) {
+        for (double aData : descriptorValues) {
             sb.append((int) aData);
             sb.append(' ');
         }
@@ -106,11 +106,11 @@ public class FuzzyColorHistogram implements LireFeature {
         StringTokenizer st = new StringTokenizer(s);
         if (!st.nextToken().equals("fuzzycolorhist"))
             throw new UnsupportedOperationException("This is not a fuzzycolorhist descriptor.");
-        descriptorBytes = new byte[Integer.parseInt(st.nextToken())];
-        for (int i = 0; i < descriptorBytes.length; i++) {
+        descriptorValues = new int[Integer.parseInt(st.nextToken())];
+        for (int i = 0; i < descriptorValues.length; i++) {
             if (!st.hasMoreTokens())
                 throw new IndexOutOfBoundsException("Too few numbers in string representation.");
-            descriptorBytes[i] = (byte) Integer.parseInt(st.nextToken());
+            descriptorValues[i] = (int) Integer.parseInt(st.nextToken());
         }
 
     }

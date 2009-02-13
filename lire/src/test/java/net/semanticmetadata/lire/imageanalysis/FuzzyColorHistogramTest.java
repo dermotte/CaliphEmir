@@ -38,7 +38,7 @@ public class FuzzyColorHistogramTest extends TestCase {
     private static String testExtensive = "./lire/wang-data-1000";
 
     public void testExtraction() throws IOException {
-        FuzzyColorHistogram acc = new FuzzyColorHistogram();
+        JpegCoefficientHistogram acc = new JpegCoefficientHistogram();
         BufferedImage image = ImageIO.read(new FileInputStream(testFilesPath + testFiles[0]));
         System.out.println("image = " + image.getWidth() + " x " + image.getHeight());
         acc.extract(image);
@@ -51,7 +51,7 @@ public class FuzzyColorHistogramTest extends TestCase {
             int id = sampleQueries[i];
             System.out.println("id = " + id + ": ");
             String file = testExtensive + "/" + id + ".jpg";
-            FuzzyColorHistogram acc = new FuzzyColorHistogram();
+            JpegCoefficientHistogram acc = new JpegCoefficientHistogram();
             BufferedImage image = ImageIO.read(new FileInputStream(file));
             ms = System.currentTimeMillis();
             acc.extract(image);
@@ -69,32 +69,32 @@ public class FuzzyColorHistogramTest extends TestCase {
             int id = sampleQueries[i];
             System.out.println("id = " + id + ": ");
             String file = testExtensive + "/" + id + ".jpg";
-            FuzzyColorHistogram acc = new FuzzyColorHistogram();
+            JpegCoefficientHistogram acc = new JpegCoefficientHistogram();
             BufferedImage image = ImageIO.read(new FileInputStream(file));
             acc.extract(image);
         }
     }
 
     public void testRetrieval() throws Exception {
-        FuzzyColorHistogram[] acc = new FuzzyColorHistogram[testFiles.length];
+        JpegCoefficientHistogram[] acc = new JpegCoefficientHistogram[testFiles.length];
         LinkedList<String> vds = new LinkedList<String>();
         for (int i = 0; i < acc.length; i++) {
             System.out.println("Extracting from number " + i);
-            acc[i] = new FuzzyColorHistogram();
+            acc[i] = new JpegCoefficientHistogram();
             acc[i].extract(ImageIO.read(new FileInputStream(testFilesPath + testFiles[i])));
             vds.add(acc[i].getStringRepresentation());
         }
 
         System.out.println("Calculating distance for " + testFiles[5]);
         for (int i = 0; i < acc.length; i++) {
-            FuzzyColorHistogram FuzzyColorHistogram = acc[i];
+            JpegCoefficientHistogram JpegCoefficientHistogram = acc[i];
             float distance = acc[i].getDistance(acc[5]);
             System.out.println(testFiles[i] + " distance = " + distance);
         }
         int count = 0;
         for (Iterator<String> iterator = vds.iterator(); iterator.hasNext();) {
             String s = iterator.next();
-            FuzzyColorHistogram a = new FuzzyColorHistogram();
+            JpegCoefficientHistogram a = new JpegCoefficientHistogram();
             a.setStringRepresentation(s);
             float distance = acc[count].getDistance(a);
             System.out.println(testFiles[count] + " distance = " + distance);

@@ -143,7 +143,8 @@ public class SimpleColorHistogram implements LireFeature {
         } else if (histogramType == HistogramType.Luminance) {
             return (pixel[0] * histogram.length) / (256);
         } else {
-            return Quantization.quantUniformly(pixel, histogram.length, 256);
+//            return Quantization.quantDistributionBased(pixel, histogram.length, 512);
+            return Quantization.quantUniformly(pixel, histogram.length, DEFAULT_NUMBER_OF_BINS);
         }
     }
 
