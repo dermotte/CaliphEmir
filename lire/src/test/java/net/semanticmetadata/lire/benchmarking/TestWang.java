@@ -119,13 +119,13 @@ public class TestWang extends TestCase {
 //        searcher = ImageSearcherFactory.createFastCorrelogramImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(maxHits);
 //        searcher = new GenericImageSearcher(maxHits, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST");
-        Pattern p = Pattern.compile("\\\\\\d+\\.jpg");
+        Pattern p = Pattern.compile("([0-9]+).jpg");
         double map = 0;
         double errorRate = 0d;
         double precision10 = 0d;
         for (int i = 0; i < sampleQueries.length; i++) {
             int id = sampleQueries[i];
-//            System.out.print("id = " + id + ": ");
+//            System.out.println("id = " + id + ": " + "("+i+")");
             String file = testExtensive + "/" + id + ".jpg";
 //            Document document = builder.createDocument(new FileInputStream(file), file);
             ImageSearchHits hits = searcher.search(findDoc(reader, id + ".jpg"), reader);
@@ -135,9 +135,9 @@ public class TestWang extends TestCase {
             for (int j = 0; j < hits.length(); j++) {
                 Document d = hits.doc(j);
                 String hitsId = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
-                Matcher matcher = p.matcher(hitsId);
+                Matcher matcher = p.matcher(hitsId);                
                 if (matcher.find())
-                    hitsId = hitsId.substring(matcher.start() + 1, hitsId.lastIndexOf("."));
+                	hitsId = matcher.group(1);
                 else
                     fail("Did not get the number ...");
                 int testID = Integer.parseInt(hitsId);
@@ -184,12 +184,12 @@ public class TestWang extends TestCase {
 //        searcher = ImageSearcherFactory.createFastCorrelogramImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(maxHits);
 //        searcher = new GenericImageSearcher(maxHits, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST");
-        Pattern p = Pattern.compile("\\\\\\d+\\.jpg");
+        Pattern p = Pattern.compile("([0-9]+).jpg");
         double map = 0;
         double errorRate = 0d;
         for (int i = 0; i < sampleQueries.length; i++) {
             int id = sampleQueries[i];
-            System.out.print("id = " + id + ": ");
+//            System.out.println("id = " + id + ": " + "("+i+")");
             String file = testExtensive + "/" + id + ".jpg";
             String[] files = {id + ".jpg", (id + 1) + ".jpg", (id + 2) + ".jpg", (id + 3) + ".jpg", (id + 4) + ".jpg"};
             ImageSearchHits[] hits = searcher.search(findDocs(reader, files), reader);
@@ -203,7 +203,7 @@ public class TestWang extends TestCase {
                     String hitsId = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                     Matcher matcher = p.matcher(hitsId);
                     if (matcher.find())
-                        hitsId = hitsId.substring(matcher.start() + 1, hitsId.lastIndexOf("."));
+                        hitsId = matcher.group(1);
                     else
                         fail("Did not get the number ...");
                     int testID = Integer.parseInt(hitsId);
@@ -281,7 +281,7 @@ public class TestWang extends TestCase {
         for (int i = 0; i < reader.numDocs(); i++) {
             Document document = reader.document(i);
             String s = document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
-            if (s.endsWith("\\" + file)) {
+            if (s.endsWith(File.separator + file)) {
 //                System.out.println("s = " + s);
                 return document;
             }
