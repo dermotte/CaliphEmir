@@ -22,11 +22,15 @@
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
-
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.util.StringTokenizer;
+
+import net.semanticmetadata.lire.imageanalysis.correlogram.DynamicProgrammingAutoCorrelogramExtraction;
+import net.semanticmetadata.lire.imageanalysis.correlogram.IAutoCorrelogramFeatureExtractor;
+import net.semanticmetadata.lire.imageanalysis.correlogram.MLuxAutoCorrelogramExtraction;
+import net.semanticmetadata.lire.imageanalysis.correlogram.NaiveAutoCorrelogramExtraction;
+import at.lux.imageanalysis.VisualDescriptor;
 
 /**
  * <p>VisualDescriptor for the AutoCorrelogram based on color as described in
@@ -41,14 +45,18 @@ public class AutoColorCorrelogram implements LireFeature {
     private float quantV;
     private float quantS;
 //    private int[][][] quantTable;
-    private int maxDistance = 4;
     private float[][] correlogram;
-    private Mode mode = Mode.SuperFast;
-    private int numBins = 256;
+    private int[] distanceSet;
+    private int numBins;
     private float quantH_f;
     private float quantS_f;
     private float quantV_f;
 
+    
+    
+    private static final ExtractionMethod DEFAULT_EXTRACTION_METHOD = ExtractionMethod.MluxAlgorithm;   
+    private IAutoCorrelogramFeatureExtractor extractionAlgorithm;
+    
     /**
      * Defines the available analysis modes: Superfast uses the approach described in the paper, Quarterneighbourhood
      * investigates the pixels in down and to the right of the respective pixel and FullNeighbourhood investigates
@@ -59,6 +67,19 @@ public class AutoColorCorrelogram implements LireFeature {
         QuarterNeighbourhood,
         SuperFast
     }
+    
+    /**
+     * Defines which algorithm to use to extract the features vector
+     */
+    public enum ExtractionMethod {
+    	MluxAlgorithm,
+    	NaiveHuangAlgorith,
+    	DynamicProgrammingHuangAlgorithm
+    }
+    
+    public AutoColorCorrelogram() {
+    	this(64,new int[]{1,2,3,4},null);
+    }
 
     /**
      * Creates a new AutoColorCorrelogram, where the distance k is limited to a maximum of
@@ -67,8 +88,43 @@ public class AutoColorCorrelogram implements LireFeature {
      * @param maxDistance upper limit of k
      */
     public AutoColorCorrelogram(int maxDistance) {
-        this.maxDistance = maxDistance;
-        init();
+    	this(maxDistance,Mode.SuperFast);
+    }
+
+    /**
+     * Creates a new AutoColorCorrelogram using a maximum L_inf pixel distance for analysis and given mode
+     * @param maxDistance maximum L_inf pixel distance for analysis
+     * @param mode        the mode of calculation (determines the speed of extraction)
+     */
+    public AutoColorCorrelogram(int maxDistance, Mode mode) {
+        this(64,null,new MLuxAutoCorrelogramExtraction(mode));
+        int[] D = new int[maxDistance];
+        for(int i=0;i<maxDistance;i++) D[i]=i+1;
+        this.distanceSet = D;
+    }
+    /**
+     * Creates a new AutoColorCorrelogram, where the distance k is in distance set
+     * @param distanceSet distance set
+     */
+    public AutoColorCorrelogram(int[] distanceSet) {
+        this(64,distanceSet,null);
+    }
+    /**
+     * Creates a new AutoCorrelogram with specified algorithm of extraction and distance set
+     * @param distanceSet distance set
+     * @param extractionAlgorith the algorithm to extract 
+     */
+    public AutoColorCorrelogram(int[] distanceSet, IAutoCorrelogramFeatureExtractor extractionAlgorith) {
+        this(64,distanceSet,extractionAlgorith);
+    }
+
+    /**
+     * Creates a new AutoCorrelogram with specified algorithm of extraction
+     * Uses distance set {1,2,3,4} which is chosen to be compatible with legacy code
+     * @param extractionAlgorith the algorithm to extract 
+     */
+    public AutoColorCorrelogram(IAutoCorrelogramFeatureExtractor extractionAlgorith) {
+        this(64,new int[]{1,2,3,4},extractionAlgorith);
     }
 
     /**
@@ -77,42 +133,49 @@ public class AutoColorCorrelogram implements LireFeature {
      * @param maxDistance maximum L_inf pixel distance for analysis
      * @param mode        the mode of calculation (determines the speed of extraction)
      */
-    public AutoColorCorrelogram(int maxDistance, Mode mode) {
-        this.maxDistance = maxDistance;
-        this.mode = mode;
-        init();
-    }
+    public AutoColorCorrelogram(int numBins, int[] distanceSet, IAutoCorrelogramFeatureExtractor extractionAlgorith) {
+    	this.numBins = numBins;
+        this.distanceSet = distanceSet;        
 
-    public AutoColorCorrelogram(Mode mode) {
-        this.mode = mode;
-        init();
-    }
-
-    public AutoColorCorrelogram() {
-        init();
-    }
-
-    private void init() {
-        if (numBins < 33) {
+        if(extractionAlgorith == null){
+        	switch(DEFAULT_EXTRACTION_METHOD) {	
+        	case MluxAlgorithm:
+        		this.extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
+        		break;
+        	case NaiveHuangAlgorith:
+        		this.extractionAlgorithm  = new NaiveAutoCorrelogramExtraction();
+        		break;
+        	case DynamicProgrammingHuangAlgorithm:
+        		this.extractionAlgorithm  = DynamicProgrammingAutoCorrelogramExtraction.getInstance();
+        		break;
+        	}
+        } else this.extractionAlgorithm = extractionAlgorith;
+        
+        if (numBins < 17) {
+            quantH_f = 4f;
+            quantS_f = 2f;
+            quantV_f = 2f;
+            this.numBins = 16;
+        } else if (numBins < 33) {
             quantH_f = 8f;
             quantS_f = 2f;
             quantV_f = 2f;
-            numBins = 32;
+            this.numBins = 32;
         } else if (numBins < 65) {
             quantH_f = 8f;
             quantS_f = 4f;
             quantV_f = 2f;
-            numBins = 64;
+            this.numBins = 64;
         } else if (numBins < 129) {
             quantH_f = 8f;
             quantS_f = 4f;
             quantV_f = 4f;
-            numBins = 128;
+            this.numBins = 128;
         } else {
             quantH_f = 16f;
             quantS_f = 4f;
             quantV_f = 4f;
-            numBins = 256;
+            this.numBins = 256;
         }
         quantH = 360f / quantH_f;
         quantS = 256f / quantS_f;
@@ -132,116 +195,39 @@ public class AutoColorCorrelogram implements LireFeature {
 //        }
     }
 
-    public void extract(BufferedImage bi) {
-        Raster r = bi.getRaster();
-        int[] histogram = new int[numBins];
-        for (int i = 0; i < histogram.length; i++) {
-            histogram[i] = 0;
-        }
-        int[][] quantPixels = new int[r.getWidth()][r.getHeight()];
+    private static int[][][] hsvImage(Raster r) {
+        int[][][] pixels = new int[r.getWidth()][r.getHeight()][3];
         // quantize colors for each pixel (done in HSV color space):
         int[] pixel = new int[3];
-        int[] hsv = new int[3];
         for (int x = 0; x < r.getWidth(); x++) {
             for (int y = 0; y < r.getHeight(); y++) {
                 // converting to HSV:
+                int[] hsv = new int[3];
                 convertRgbToHsv(r.getPixel(x, y, pixel), hsv);
                 // quantize the actual pixel:
-                quantPixels[x][y] = quantize(hsv);
-                // for normalization:
-                histogram[quantPixels[x][y]]++;
+                pixels[x][y] = hsv;
             }
         }
-
-        // Find the auto-correlogram.
-        correlogram = new float[256][maxDistance];
-        for (int i1 = 0; i1 < correlogram.length; i1++) {
-            for (int j = 0; j < correlogram[i1].length; j++) {
-                correlogram[i1][j] = 0;
-            }
-        }
-        int[] tmpCorrelogram = new int[maxDistance];
-        for (int x = 0; x < r.getWidth(); x++) {
-            for (int y = 0; y < r.getHeight(); y++) {
-                int color = quantPixels[x][y];
-                getNumPixelsInNeighbourhood(x, y, quantPixels, tmpCorrelogram);
-                for (int i = 0; i < maxDistance; i++) {
-                    // bug fixed based on comments of Rodrigo Carvalho Rezende, rcrezende <at> gmail.com
-                    correlogram[color][i] += tmpCorrelogram[i];
-                }
-            }
-        }
-        // normalize the correlogram:
-        // Note that this is not the common normalization routine described in the paper, but an adapted one.
-        float[] max = new float[maxDistance];
-        for (int i = 0; i < max.length; i++) {
-            max[i] = 0;
-
-        }
-        for (int c = 0; c < numBins; c++) {
-            for (int i = 0; i < maxDistance; i++) {
-                max[i] = Math.max(correlogram[c][i], max[i]);
-            }
-        }
-        for (int c = 0; c < numBins; c++) {
-            for (int i = 0; i < maxDistance; i++) {
-                correlogram[c][i] = correlogram[c][i] / max[i];
-            }
-        }
+        return pixels;
+    	
     }
 
-    private void getNumPixelsInNeighbourhood(int x, int y, int[][] quantPixels, int[] correlogramm) {
-        // set to zero for each color at distance 1:
-        for (int i = 0; i < correlogramm.length; i++) {
-            correlogramm[i] = 0;
-        }
-        for (int d = 1; d <= maxDistance; d++) {
-            // bug fixed based on comments of Rodrigo Carvalho Rezende, rcrezende <at> gmail.com
-            if (d > 1) correlogramm[d - 1] += correlogramm[d - 2]; // -> Wrong! Just the reference
-//            if (d > 1) System.arraycopy(correlogramm[d - 2], 0, correlogramm[d - 1], 0, correlogramm[d - 1].length);
-            int color = quantPixels[x][y];
-            if (mode == Mode.QuarterNeighbourhood) {
-                // TODO: does not work properly (possible) -> check if funnny
-                for (int td = 0; td < d; td++) {
-                    if (isInPicture(x + d, y + td, quantPixels.length, quantPixels[0].length))
-                        if (quantPixels[x + d][y + td] == color) correlogramm[d - 1]++;
-                    if (isInPicture(x + td, y + d, quantPixels.length, quantPixels[0].length))
-                        if (color == quantPixels[x + td][y + d]) correlogramm[d - 1]++;
-                    if (isInPicture(x + d, y + d, quantPixels.length, quantPixels[0].length))
-                        if (color == quantPixels[x + d][y + d]) correlogramm[d - 1]++;
-                }
-            } else if (mode == Mode.FullNeighbourhood) {
-                //if (isInPicture(x + d, y + d, quantPixels.length, quantPixels[0].length))
-                //    correlogramm[quantPixels[x + d][y + d]][d - 1]++;
-                for (int i = -d; i <= d; i++) {
-                    if (isInPicture(x + i, y + d, quantPixels.length, quantPixels[0].length))
-                        if (color == quantPixels[x + i][y + d]) correlogramm[d - 1]++;
-                    if (isInPicture(x + i, y - d, quantPixels.length, quantPixels[0].length))
-                        if (color == quantPixels[x + i][y - d]) correlogramm[d - 1]++;
-                }
-                for (int i = -d + 1; i <= d - 1; i++) {
-                    if (isInPicture(x + d, y + i, quantPixels.length, quantPixels[0].length))
-                        if (color == quantPixels[x + d][y + i]) correlogramm[d - 1]++;
-                    if (isInPicture(x - d, y + i, quantPixels.length, quantPixels[0].length))
-                        if (color == quantPixels[x - d][y + i]) correlogramm[d - 1]++;
-                }
-            } else {
-                if (isInPicture(x + d, y, quantPixels.length, quantPixels[0].length)) {
-                    assert (quantPixels[x + d][y] < numBins);
-                    assert (d - 1 < maxDistance);
-                    if (color == quantPixels[x + d][y]) correlogramm[d - 1]++;
-                }
-                if (isInPicture(x, y + d, quantPixels.length, quantPixels[0].length)) {
-                    assert (quantPixels[x][y + d] < numBins);
-                    if (color == quantPixels[x][y + d]) correlogramm[d - 1]++;
-                }
-            }
-        }
+    public void extract(BufferedImage bi) {
+    	final Raster r = bi.getRaster();
+        int[][][] hsvImage = hsvImage(r);        
+        extract(hsvImage);    	
     }
+    public void extract(int[][][] img) {
+    	final int W = img.length;
+    	final int H = img[0].length;
+    	int[][] quantPixels = new int[W][H];
+    	
+        // quantize colors for each pixel (done in HSV color space):
+        for (int x = 0; x < W; x++)
+            for (int y = 0; y < H; y++) 
+            	quantPixels[x][y] = quantize(img[x][y]);
 
-    private static boolean isInPicture(int x, int y, int maxX, int maxY) {
-        // possibly made faster??
-        return !(x < 0 || y < 0) && !(y >= maxY || x >= maxX);
+        this.correlogram = this.extractionAlgorithm.extract(this.numBins, this.distanceSet, quantPixels);
     }
 
     /**
@@ -400,7 +386,8 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     public String getStringRepresentation() {
-        StringBuilder sb = new StringBuilder(256 * 5);
+    	int maxDistance = this.distanceSet.length;
+        StringBuilder sb = new StringBuilder(numBins * maxDistance);
         sb.append(maxDistance);
         sb.append(' ');
         for (int i = 0; i < correlogram.length; i++) {
@@ -414,7 +401,7 @@ public class AutoColorCorrelogram implements LireFeature {
 
     public void setStringRepresentation(String string) {
         StringTokenizer st = new StringTokenizer(string);
-        correlogram = new float[256][Integer.parseInt(st.nextToken())];
+        correlogram = new float[numBins][Integer.parseInt(st.nextToken())];
         for (int i = 0; i < correlogram.length; i++) {
             for (int j = 0; j < correlogram[i].length; j++) {
                 if (!st.hasMoreTokens())
