@@ -1,13 +1,18 @@
 package net.semanticmetadata.lire.imageanalysis;
 
-import junit.framework.TestCase;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import javax.imageio.ImageIO;
+
+import junit.framework.TestCase;
+import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram.Mode;
+import net.semanticmetadata.lire.imageanalysis.correlogram.DynamicProgrammingAutoCorrelogramExtraction;
+import net.semanticmetadata.lire.imageanalysis.correlogram.MLuxAutoCorrelogramExtraction;
+import net.semanticmetadata.lire.imageanalysis.correlogram.NaiveAutoCorrelogramExtraction;
 
 /*
  * This file is part of Caliph & Emir.
@@ -44,6 +49,38 @@ public class AutoColorCorrelogramTest extends TestCase {
         acc.extract(image);
         System.out.println("acc = " + acc.getStringRepresentation());
     }
+    
+    public void testMethodsPerformance() throws IOException {
+    	AutoColorCorrelogram[] acc = new AutoColorCorrelogram[4];
+    	int[] D = {1,3,5,7};
+    	int C = 64;
+    	acc[0] = new AutoColorCorrelogram(C,D,new MLuxAutoCorrelogramExtraction(AutoColorCorrelogram.Mode.SuperFast));
+    	acc[1] = new AutoColorCorrelogram(C,D,new MLuxAutoCorrelogramExtraction(AutoColorCorrelogram.Mode.FullNeighbourhood));
+    	acc[2] = new AutoColorCorrelogram(C,D,new NaiveAutoCorrelogramExtraction());
+    	acc[3] = new AutoColorCorrelogram(C,D,DynamicProgrammingAutoCorrelogramExtraction.getInstance());
+    	int[] testSet =  {284, 77, 108, 416, 144, 534, 898, 104, 67, 10};
+
+    	//reads all images
+    	BufferedImage[] image = new BufferedImage[testSet.length];
+		for(int j=0;j<testSet.length;j++) {
+			int id = testSet[j];
+	        String file = testExtensive + "/" + id + ".jpg";
+	        image[j] = ImageIO.read(new FileInputStream(file));			
+		}
+    	
+    	
+    	for(int i=0;i<4;i++) {
+    		long t0 = System.currentTimeMillis();
+    		for(int j=0;j<testSet.length;j++) {
+    			acc[i].extract(image[j]);
+    			System.out.print(".");
+    		}
+    		long tf = System.currentTimeMillis();
+    		long dt = tf-t0;
+    		double avt = (double) dt/testSet.length;
+    		System.out.printf("Method %d: total time %d, average %f\n",i,dt,avt);
+    	}
+    }
 
     public void testPerformance() throws IOException {
         long ms, sum = 0;
@@ -51,7 +88,7 @@ public class AutoColorCorrelogramTest extends TestCase {
             int id = sampleQueries[i];
             System.out.println("id = " + id + ": ");
             String file = testExtensive + "/" + id + ".jpg";
-            AutoColorCorrelogram acc = new AutoColorCorrelogram(AutoColorCorrelogram.Mode.SuperFast);
+            AutoColorCorrelogram acc = new AutoColorCorrelogram();
 //            OldColorCorrelogram occ = new OldColorCorrelogram(OldColorCorrelogram.Mode.SuperFast);
             BufferedImage image = ImageIO.read(new FileInputStream(file));
 //            occ.extract(image);
@@ -71,7 +108,7 @@ public class AutoColorCorrelogramTest extends TestCase {
             int id = sampleQueries[i];
             System.out.println("id = " + id + ": ");
             String file = testExtensive + "/" + id + ".jpg";
-            AutoColorCorrelogram acc = new AutoColorCorrelogram(AutoColorCorrelogram.Mode.SuperFast);
+            AutoColorCorrelogram acc = new AutoColorCorrelogram();
 //            OldColorCorrelogram occ = new OldColorCorrelogram(OldColorCorrelogram.Mode.SuperFast);
             BufferedImage image = ImageIO.read(new FileInputStream(file));
 //            occ.extract(image);
@@ -89,7 +126,7 @@ public class AutoColorCorrelogramTest extends TestCase {
         LinkedList<String> vds = new LinkedList<String>();
         for (int i = 0; i < acc.length; i++) {
             System.out.println("Extracting from number " + i);
-            acc[i] = new AutoColorCorrelogram(AutoColorCorrelogram.Mode.SuperFast);
+            acc[i] = new AutoColorCorrelogram();
             acc[i].extract(ImageIO.read(new FileInputStream(testFilesPath + testFiles[i])));
             vds.add(acc[i].getStringRepresentation());
         }
