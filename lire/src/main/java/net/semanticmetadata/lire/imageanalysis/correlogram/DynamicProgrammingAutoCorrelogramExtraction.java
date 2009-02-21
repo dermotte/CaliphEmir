@@ -52,25 +52,31 @@ public class DynamicProgrammingAutoCorrelogramExtraction implements IAutoCorrelo
 		final int H = img[0].length;
 
 		final int MAX_D = distanceSet[distanceSet.length-1];
-
 		//the Autocorrelogram
 		final float[][] A = new float[maxFeatureValue][distanceSet.length];
 		//Histogram
 		final float[] Hi = new float[maxFeatureValue];
-
+		
 		//please, becareful with this buffers in multi-threaded environment
 		//lazy initialization of buffers, this object is reused next extraction without reinitialization of buffers
 		if(Ic == null || ah == null || av == null || NIc == null || maxFeatureValue > MAXC || W > MAXW || H > MAXH || MAX_D > MAXD) {
-			Ic = new int[maxFeatureValue][W*H][2];
-			NIc = new int[maxFeatureValue];
-			ah = new int[MAX_D][W][H][maxFeatureValue];
-			av = new int[MAX_D-1][W][H][maxFeatureValue];
+			Ic = null;
+			NIc = null;
+			ah = null;
+			av = null;
+			System.gc();
 
 			//increase the current bounds
-			MAXC = maxFeatureValue;
-			MAXW = W;
-			MAXD = MAX_D;
-			MAXH = H;
+			MAXC = Math.max(MAXC, maxFeatureValue);
+			MAXW = Math.max(MAXW,W);
+			MAXD = Math.max(MAXD,MAX_D);
+			MAXH = Math.max(MAXH,H);
+			
+			Ic = new int[MAXC][MAXH*MAXW][2];
+			NIc = new int[MAXC];
+			ah = new int[MAXD][MAXW][MAXH][MAXC];
+			av = new int[MAXD-1][MAXW][MAXH][MAXC];
+
 		}
 
 		//build color histogram
@@ -117,7 +123,7 @@ public class DynamicProgrammingAutoCorrelogramExtraction implements IAutoCorrelo
 				final int c = img[x][y];
 				//d=1
 				ah[0][x][y][c] = ah0[x][y][c] + ((x+1<W)?ah0[x+1][y][c]:0);
-				av[0][x][y][c] = av0[x][y][c] + ((y+1<W)?ah0[x][y+1][c]:0);
+				av[0][x][y][c] = av0[x][y][c] + ((y+1<H)?ah0[x][y+1][c]:0);
 				//d=2..MAX_D
 				for(int d = 2; d <= MAX_D; ++d) {
 					ah[d-1][x][y][c] = ah[d-2][x][y][c] + ((x+d<W)?ah0[x+d][y][c]:0);
@@ -183,51 +189,51 @@ public class DynamicProgrammingAutoCorrelogramExtraction implements IAutoCorrelo
 		return A;
 	}
 
-//	public static void main(String[] args) {
-//		int[][] I = new int[200][200];
-//		float[][] A = null;
-//		long t0,tf;
-//		int C = 16;
-//		int[] D = {1,3,5,7};
-//
-//		for(int i=0;i<I.length; i++)
-//			for(int j=0;j<I[i].length; j++)
-//				I[i][j] = ((i+1)*(j*j+1))%C;
-//
-//		tf = System.currentTimeMillis();
-//
-//		DynamicProgrammingAutoCorrelogramExtraction dynACorrExt = new DynamicProgrammingAutoCorrelogramExtraction();
-//		for(int i=0;i<10;i++) {
-//			t0 = tf;
-//			A = dynACorrExt.extract(C, D, I);
-//			tf = System.currentTimeMillis();
-//			System.out.println("Exctraction "+(i+1)+" time: "+(tf-t0)+"ms");
-//		}
-//		System.out.println("Please, ignore the first exctraction (buffers initialization)!");
-//		print(A);
-//
-//
-//	}
-//
-//
-//	static void print(float[][] M) {
-//		System.out.println();
-//		for(int i=0;i<M.length;i++) {
-//			for(int j=0;j<M[i].length;j++) {
-//				System.out.print(M[i][j]+" ");
-//			}
-//			System.out.println();
-//		}
-//	}
-//	static void print(int[][] M) {
-//		System.out.println();
-//		for(int i=0;i<M.length;i++) {
-//			for(int j=0;j<M[i].length;j++) {
-//				System.out.print(M[i][j]+" ");
-//			}
-//			System.out.println();
-//		}
-//	}
+	public static void main(String[] args) {
+		int[][] I = new int[384][256];
+		float[][] A = null;
+		long t0,tf;
+		int C = 64;
+		int[] D = {1,3,5,7};
+
+		for(int i=0;i<I.length; i++)
+			for(int j=0;j<I[i].length; j++)
+				I[i][j] = ((i+1)*(j*j+1))%C;
+
+		tf = System.currentTimeMillis();
+
+		DynamicProgrammingAutoCorrelogramExtraction dynACorrExt = new DynamicProgrammingAutoCorrelogramExtraction();
+		for(int i=0;i<10;i++) {
+			t0 = tf;
+			A = dynACorrExt.extract(C, D, I);
+			tf = System.currentTimeMillis();
+			System.out.println("Exctraction "+(i+1)+" time: "+(tf-t0)+"ms");
+		}
+		System.out.println("Please, ignore the first exctraction (buffers initialization)!");
+		print(A);
+
+
+	}
+
+
+	static void print(float[][] M) {
+		System.out.println();
+		for(int i=0;i<M.length;i++) {
+			for(int j=0;j<M[i].length;j++) {
+				System.out.print(M[i][j]+" ");
+			}
+			System.out.println();
+		}
+	}
+	static void print(int[][] M) {
+		System.out.println();
+		for(int i=0;i<M.length;i++) {
+			for(int j=0;j<M[i].length;j++) {
+				System.out.print(M[i][j]+" ");
+			}
+			System.out.println();
+		}
+	}
 
 }
 
