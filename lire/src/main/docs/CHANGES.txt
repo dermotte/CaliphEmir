@@ -1,6 +1,18 @@
 CHANGES for LIRE
 ================
 
+2009-05-14
+==========
+General:
+  - Integrated index strategy of G. Amato (metric spaces)
+  - Created performance test class for this index strategy
+
+2009-05-12
+==========
+General:
+  - Updated Lucene to 2.4.1
+  - Started tests with index strategy of G. Amato (metric spaces)
+
 2009-02-10
 ==========
 General:

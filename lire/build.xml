@@ -76,7 +76,7 @@
             <entry key="build-number" type="int" value="1" operation="+"/>
         </propertyfile>
         <property file="${config}/build.properties"/>
-        <echo file="default.mf" append="false">Class-Path: lib/lucene-core-2.0.0.jar lib/caliph-emir-cbir.jar
+        <echo file="default.mf" append="false">Class-Path: lib/lucene-core-2.4.1.jar lib/caliph-emir-cbir.jar
             Build-Date: ${touch.time}
             Build-Number: ${build-number}
         </echo>

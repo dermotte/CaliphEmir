@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 /*
  * This file is part of LIRe.
  *
@@ -45,7 +48,8 @@ public class CreateIndexTest extends TestCase {
             "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg", "Páginas de 060305_b_Página_1_Imagem_0004_Página_08_Imagem_0002.jpg"};
     private String testFilesPath = "./lire/src/test/resources/images/";
     private String indexPath = "test-index";
-    private String testExtensive = "./lire/wang-data-1000";
+    private String testExtensive = "C:\\Temp\\images";
+//    private String testExtensive = "./lire/wang-data-1000";
 
     public void testCreateIndex() throws IOException {
         DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
@@ -77,6 +81,7 @@ public class CreateIndexTest extends TestCase {
 
     public void testCreateCEDDIndex() throws IOException {
         String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
+//        String testFilesPath = "./lire/wang-data-1000";
         String testFilesPath = "./lire/src/test/resources/small/";
 
         DocumentBuilder builder = DocumentBuilderFactory.getCEDDDocumentBuilder();
@@ -105,7 +110,8 @@ public class CreateIndexTest extends TestCase {
 //        indexFiles(images, DocumentBuilderFactory.getDefaultDocumentBuilder(), indexPath + "-default");
 //        System.out.println(">> Extensive DocumentBuilder:");
 //        indexFiles(images, DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder(), indexPath + "-extensive");
-        indexFiles(images, DocumentBuilderFactory.getFullDocumentBuilder(), indexPath + "-extensive");
+        indexFiles(images, DocumentBuilderFactory.getCEDDDocumentBuilder(), indexPath + "-cedd-flickr");
+//        indexFiles(images, DocumentBuilderFactory.getFullDocumentBuilder(), indexPath + "-extensive");
     }
 
     private void indexFiles(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
@@ -116,11 +122,22 @@ public class CreateIndexTest extends TestCase {
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {
-            Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
-            iw.addDocument(doc);
+            try {
+                Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
+                iw.addDocument(doc);
+            } catch (Exception e) {
+                System.err.println("Error indexing file: " + identifier + "(" + e.getMessage() + ")");
+                // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
             count++;
-            if (count % 25 == 0) System.out.println(count + " files indexed.");
-            if (count == 200) break;
+            if (count % 100 == 0) {
+                System.out.print(count + " files indexed. ");
+                float pct = (float) count / (float) images.size();
+                float tmp = (float) (System.currentTimeMillis() - time) / 1000;
+                float remain = (tmp / pct) * (1f - pct);
+                System.out.println("Remining: <" + ((int) (remain / 60) + 1) + " minutes of <" + ((int) ((tmp / pct) / 60) + 1) + " minutes");
+            }
+            // if (count == 200) break;
         }
         long timeTaken = (System.currentTimeMillis() - time);
         float sec = ((float) timeTaken) / 1000f;
@@ -128,5 +145,69 @@ public class CreateIndexTest extends TestCase {
         System.out.println(sec + " seconds taken, " + (timeTaken / count) + " ms per image.");
         iw.optimize();
         iw.close();
+    }
+
+    private void indexFilesMultithreaded(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
+        System.out.println(">> Indexing " + images.size() + " files.");
+//        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
+//        DocumentBuilder builder = DocumentBuilderFactory.getFastDocumentBuilder();
+        IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(), true);
+        SynchronizedWriter sw = new SynchronizedWriter(iw);
+        ExecutorService pool = Executors.newFixedThreadPool(4);
+
+        int count = 0;
+        long time = System.currentTimeMillis();
+        for (String identifier : images) {
+            pool.execute(new IndexingThread(identifier, sw));
+            count++;
+            if (count % 1000 == 0) System.out.println(count + " files added.");
+            // if (count == 200) break;
+        }
+        while (!pool.isTerminated()) {
+            try {
+                pool.awaitTermination(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            System.out.println("indexed: " + iw.maxDoc());
+        }
+        long timeTaken = (System.currentTimeMillis() - time);
+        float sec = ((float) timeTaken) / 1000f;
+
+        System.out.println(sec + " seconds taken, " + (timeTaken / count) + " ms per image.");
+        iw.optimize();
+        iw.close();
+    }
+
+    class SynchronizedWriter {
+        IndexWriter iw;
+
+        SynchronizedWriter(IndexWriter iw) {
+            this.iw = iw;
+        }
+
+        public synchronized void addDocument(Document d) throws IOException {
+            iw.addDocument(d);
+        }
+    }
+
+    class IndexingThread implements Runnable {
+        DocumentBuilder builder = DocumentBuilderFactory.getCEDDDocumentBuilder();
+        String file = null;
+        private SynchronizedWriter synchronizedWriter;
+
+        IndexingThread(String img, SynchronizedWriter sw) {
+            this.file = img;
+            synchronizedWriter = sw;
+        }
+
+        public void run() {
+            try {
+                Document doc = builder.createDocument(new FileInputStream(file), file);
+                synchronizedWriter.addDocument(doc);
+            } catch (Exception e) {
+                System.err.println("Error indexing file: " + file + "(" + e.getMessage() + ")");
+            }
+        }
     }
 }
