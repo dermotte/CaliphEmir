@@ -69,6 +69,16 @@
             </Property>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="fileMenuApproxIndex">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Create approximate search index"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fileMenuApproxIndexActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JSeparator" name="jSeparator1">
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="fileMenuExit">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
@@ -171,6 +181,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -497,6 +508,7 @@
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="checkBoxAddToExisintgIndex">
                       <Properties>
+                        <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="add to existing index"/>
                         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="Bundle.properties" key="index.addToExistingIndex" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
@@ -532,7 +544,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="progressSearch" alignment="0" pref="678" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="textfieldSearchImage" pref="565" max="32767" attributes="0"/>
+                                      <Component id="textfieldSearchImage" pref="567" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="buttonOpenImage" min="-2" max="-2" attributes="1"/>
                                   </Group>
@@ -562,7 +574,7 @@
                               <Component id="buttonStartSearch" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="283" max="32767" attributes="0"/>
+                              <EmptySpace pref="288" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -651,7 +663,7 @@
                                       <Component id="buttonSearchFromBrowse" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="407" max="32767" attributes="0"/>
+                              <EmptySpace pref="409" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -669,7 +681,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="imageLabel" min="-2" pref="266" max="-2" attributes="0"/>
-                              <EmptySpace pref="135" max="32767" attributes="0"/>
+                              <EmptySpace pref="136" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -781,7 +793,7 @@
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="textfieldMosaicImage" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="mosaicImageLable" pref="381" max="32767" attributes="0"/>
+                                      <Component id="mosaicImageLable" pref="382" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="1">
                                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
@@ -802,7 +814,7 @@
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="checkboxMosaicAdvanceOptions" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="mosaicAdvanceOptionsPanel" pref="185" max="32767" attributes="0"/>
+                                      <Component id="mosaicAdvanceOptionsPanel" pref="191" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="buttonMosaicSave" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -940,7 +952,7 @@
                             </DimensionLayout>
                             <DimensionLayout dim="1">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="185" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="191" max="32767" attributes="0"/>
                               </Group>
                             </DimensionLayout>
                           </Layout>
@@ -983,7 +995,7 @@
                                       <Component id="mosaicOptionsAutocolorcorrelogram" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="mosaicOptionsCedd" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="103" max="32767" attributes="0"/>
+                                      <EmptySpace pref="109" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                             </DimensionLayout>
@@ -1088,13 +1100,10 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="textfieldNumSearchResults" alignment="0" pref="550" max="32767" attributes="0"/>
-                                          <Component id="selectboxDocumentBuilder" pref="550" max="32767" attributes="0"/>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="textfieldIndexName" pref="550" max="32767" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                          </Group>
-                                          <Component id="textFieldFlickrDownloadMax" alignment="0" pref="550" max="32767" attributes="0"/>
+                                          <Component id="textfieldNumSearchResults" alignment="0" pref="540" max="32767" attributes="0"/>
+                                          <Component id="selectboxDocumentBuilder" pref="540" max="32767" attributes="0"/>
+                                          <Component id="textfieldIndexName" alignment="0" pref="540" max="32767" attributes="0"/>
+                                          <Component id="textFieldFlickrDownloadMax" alignment="0" pref="540" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -1126,7 +1135,7 @@
                                   <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="textFieldFlickrDownloadMax" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="330" max="32767" attributes="0"/>
+                              <EmptySpace pref="333" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1140,7 +1149,7 @@
                     <Component class="javax.swing.JComboBox" name="selectboxDocumentBuilder">
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="10">
+                          <StringArray count="11">
                             <StringItem index="0" value="All MPEG-7 Descriptors"/>
                             <StringItem index="1" value="Scalable Color (MPEG-7)"/>
                             <StringItem index="2" value="Edge Histogram (MPEG-7)"/>
@@ -1151,6 +1160,7 @@
                             <StringItem index="7" value="RGB Color Histogram"/>
                             <StringItem index="8" value="Tamura"/>
                             <StringItem index="9" value="Gabor"/>
+                            <StringItem index="10" value="Metric Spaces (approximate CEDD)"/>
                           </StringArray>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">

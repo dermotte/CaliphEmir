@@ -3,7 +3,9 @@ package liredemo.flickr;
 import liredemo.LireDemoFrame;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilderFactory;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.xml.sax.SAXException;
@@ -54,7 +56,9 @@ public class FlickrIndexingThread extends Thread {
     public static final String cacheDirectory = "./flickrphotos/";
     private int numberOfPhotosToIndex = 100;
 
-    /** Creates a new instance of FlickrIndexingThread
+    /**
+     * Creates a new instance of FlickrIndexingThread
+     *
      * @param parent
      */
     public FlickrIndexingThread(LireDemoFrame parent) {
@@ -84,8 +88,8 @@ public class FlickrIndexingThread extends Thread {
                         // check if it is already there:
                         if (!titles.contains(photo.url)) {
                             titles.add(photo.url);
-                            if (images.size()<numberOfPhotosToIndex) images.add(photo);
-                        }  else {
+                            if (images.size() < numberOfPhotosToIndex) images.add(photo);
+                        } else {
                             try {
                                 Thread.sleep(150);
                             } catch (InterruptedException e) {
@@ -100,7 +104,12 @@ public class FlickrIndexingThread extends Thread {
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
             }
-            IndexWriter iw = new IndexWriter(parent.textfieldIndexName.getText(), new SimpleAnalyzer(), !parent.checkBoxAddToExisintgIndex.isSelected());
+            PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(new SimpleAnalyzer());
+            wrapper.addAnalyzer("tags", new WhitespaceAnalyzer());
+
+//        iw = new IndexWriter(indexPath + "-new", wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
+
+            IndexWriter iw = new IndexWriter(parent.textfieldIndexName.getText(), wrapper, !parent.checkBoxAddToExisintgIndex.isSelected());
             int builderIdx = parent.selectboxDocumentBuilder.getSelectedIndex();
             DocumentBuilder builder = DocumentBuilderFactory.getFullDocumentBuilder();
             int count = 0;
@@ -108,7 +117,7 @@ public class FlickrIndexingThread extends Thread {
             FlickrDownloadThread downloader = new FlickrDownloadThread(images, builder);
             new Thread(downloader).start();
             Document doc = null;
-            while ((doc = downloader.getCurrentDoc())!=null) {
+            while ((doc = downloader.getCurrentDoc()) != null) {
                 try {
                     iw.addDocument(doc);
                 } catch (Exception e) {
@@ -116,13 +125,13 @@ public class FlickrIndexingThread extends Thread {
                     // e.printStackTrace();
                 }
                 count++;
-                float percentage = (float) count/ (float) images.size();
-                parent.progressBarIndexing.setValue((int) Math.floor(100f*percentage));
+                float percentage = (float) count / (float) images.size();
+                parent.progressBarIndexing.setValue((int) Math.floor(100f * percentage));
                 float msleft = (float) (System.currentTimeMillis() - time) / percentage;
                 float secLeft = msleft * (1 - percentage) / 1000f;
                 String toPaint;
-                if (secLeft>60) toPaint = "~ " + Math.ceil(secLeft/60) + " min. left";
-                else if (secLeft>30) toPaint = "< 1 min. left";
+                if (secLeft > 60) toPaint = "~ " + Math.ceil(secLeft / 60) + " min. left";
+                else if (secLeft > 30) toPaint = "< 1 min. left";
                 else toPaint = "< 30 sec. left";
                 parent.progressBarIndexing.setString(toPaint);
             }

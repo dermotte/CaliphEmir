@@ -104,9 +104,12 @@ class SinglePhotoThread implements Runnable {
             Document doc = fdt.getDocumentBuilder().createDocument(image, cachedImage.getAbsolutePath());
             doc.add(new Field("FlickrURL", photo.url, Field.Store.YES, Field.Index.UN_TOKENIZED));
             doc.add(new Field("FlickrTitle", photo.title, Field.Store.YES, Field.Index.UN_TOKENIZED));
+            StringBuilder sb = new StringBuilder(256);
             for (String tag : photo.tags) {
-                doc.add(new Field("FlickrTag", tag, Field.Store.YES, Field.Index.UN_TOKENIZED));
+                sb.append(tag);
+                sb.append(' ');
             }
+            doc.add(new Field("tags", sb.toString(), Field.Store.YES, Field.Index.TOKENIZED));
             fdt.addDocumentToFinished(doc);
         } catch (IOException e) {
             System.out.println("Warning: Exception reading & indexing image " + photo.photourl + ": " + e.getMessage());

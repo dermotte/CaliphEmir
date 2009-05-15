@@ -1,6 +1,13 @@
 CHANGES for LIRE
 ================
 
+2009-05-14
+==========
+General:
+  - Added indexing of tags based on a whitespaceanalyzer
+  - Changed initial state of "add to existing index" to "checked"
+  - Added menu item for approximate search index
+
 2008-07-08
 ==========
 General:
