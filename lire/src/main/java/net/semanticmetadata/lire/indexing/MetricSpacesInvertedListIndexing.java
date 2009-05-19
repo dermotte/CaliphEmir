@@ -69,7 +69,7 @@ public class MetricSpacesInvertedListIndexing {
 
     private ProgressIndicator progress;
 
-    enum State {
+    public enum State {
         RoSelection, RoIndexing, Indexing, Idle
     }
 
@@ -101,6 +101,10 @@ public class MetricSpacesInvertedListIndexing {
     public void createIndex(String indexPath) throws IOException {
         IndexReader reader = IndexReader.open(indexPath);
         int numDocs = reader.numDocs();
+
+        if (numDocs < numReferenceObjects) {
+            throw new UnsupportedOperationException("Too few documents in index.");
+        }
 
         // progress report
         progress.setNumDocsAll(numDocs);
@@ -146,7 +150,7 @@ public class MetricSpacesInvertedListIndexing {
                 new PerFieldAnalyzerWrapper(new SimpleAnalyzer());
         aWrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer());
 
-        iw = new IndexWriter(indexPath + "-ms", aWrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
+        iw = new IndexWriter(indexPath, aWrapper, false, IndexWriter.MaxFieldLength.UNLIMITED);
         StringBuilder sb = new StringBuilder(256);
         for (int i = 0; i < numDocs; i++) {
             if (hasDeletions && reader.isDeleted(i)) {
@@ -161,7 +165,7 @@ public class MetricSpacesInvertedListIndexing {
             }
             // System.out.println(sb.toString());
             document.add(new Field("ro-order", sb.toString(), Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS_OFFSETS));
-            iw.addDocument(document);
+            iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), document);
 
             // progress report
             progress.setNumDocsProcessed(progress.getNumDocsProcessed() + 1);
@@ -173,6 +177,56 @@ public class MetricSpacesInvertedListIndexing {
         // progress report
         progress.setCurrentState(State.Idle);
 
+    }
+
+    /**
+     * We assume that the initial indexing has been done and a set of reference objects has been
+     * found and indexed in the sepaarete directory. However further documents were added and they
+     * now need to get a ranked list of reference objects. So we (i) get all these new documents
+     * missing the field "ro-order" and (ii) add this field.
+     * @param indexPath the index to update
+     * @throws IOException
+     */
+    public void updateIndex(String indexPath) throws IOException {
+        IndexReader reader = IndexReader.open(indexPath);
+        int numDocs = reader.numDocs();
+        boolean hasDeletions = reader.hasDeletions();
+        int countUpdated = 0;
+
+        IndexReader readerRo = IndexReader.open(indexPath + "-ro");
+        ImageSearcher searcher = new GenericImageSearcher(numReferenceObjectsUsed, featureClass, featureFieldName);
+        PerFieldAnalyzerWrapper aWrapper =
+                new PerFieldAnalyzerWrapper(new SimpleAnalyzer());
+        aWrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer());
+
+        IndexWriter iw = new IndexWriter(indexPath, aWrapper, false, IndexWriter.MaxFieldLength.UNLIMITED);
+        StringBuilder sb = new StringBuilder(256);
+        for (int i = 0; i < numDocs; i++) {
+            if (hasDeletions && reader.isDeleted(i)) {
+                continue;
+            }
+            Document document = reader.document(i);
+            if (document.getField("ro-order") == null) {  // if the field is not here we create it.
+                ImageSearchHits hits = searcher.search(document, readerRo);
+                sb.delete(0, sb.length());
+                for (int j = 0; j < numReferenceObjectsUsed; j++) {
+                    sb.append(hits.doc(j).getValues("ro-id")[0]);
+                    sb.append(' ');
+                }
+                // System.out.println(sb.toString());
+                document.add(new Field("ro-order", sb.toString(), Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS_OFFSETS));
+                iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), document);
+                countUpdated++;
+            }
+
+            // progress report
+            progress.setNumDocsProcessed(progress.getNumDocsProcessed() + 1);
+
+            // debug:
+            System.out.println("countUpdated = " + countUpdated);
+        }
+        iw.optimize();
+        iw.close();
     }
 
     /**
@@ -191,7 +245,7 @@ public class MetricSpacesInvertedListIndexing {
             sb.append(hits.doc(j).getValues("ro-id")[0]);
             sb.append(' ');
         }
-        return scoreDocs(sb.toString(), IndexReader.open(indexPath + "-ms"));
+        return scoreDocs(sb.toString(), IndexReader.open(indexPath));
     }
 
     /**
@@ -204,7 +258,7 @@ public class MetricSpacesInvertedListIndexing {
      */
     public TopDocs search(Document d, String indexPath) throws IOException {
         if (d.getField("ro-order") != null) // if the document already contains the information on reference object neighbourhood
-            return scoreDocs(d.getValues("ro-order")[0], IndexReader.open(indexPath + "-ms"));
+            return scoreDocs(d.getValues("ro-order")[0], IndexReader.open(indexPath));
         else { // if not we just create it :)
             ImageSearcher searcher = new GenericImageSearcher(numReferenceObjectsUsed, featureClass, featureFieldName);
             ImageSearchHits hits = searcher.search(d, IndexReader.open(indexPath + "-ro"));
@@ -213,7 +267,7 @@ public class MetricSpacesInvertedListIndexing {
                 sb.append(hits.doc(j).getValues("ro-id")[0]);
                 sb.append(' ');
             }
-            return scoreDocs(sb.toString(), IndexReader.open(indexPath + "-ms"));
+            return scoreDocs(sb.toString(), IndexReader.open(indexPath));
         }
     }
 
@@ -252,10 +306,15 @@ public class MetricSpacesInvertedListIndexing {
         TopFieldDocCollector col = new TopFieldDocCollector(reader, Sort.RELEVANCE, numHits);
         for (Iterator<Integer> iterator = doc2count.keySet().iterator(); iterator.hasNext();) {
             currDoc = iterator.next();
-            if (doc2count.get(currDoc) < numReferenceObjectsUsed) { // at least half of the objects should be there ...
+//            if (doc2count.get(currDoc) < position) {
 //                doc2score.put(currDoc, doc2score.get(currDoc) + (numRefObjs-doc2count.get(currDoc))*position);
-                col.collect(currDoc, numReferenceObjectsUsed * position - (doc2score.get(currDoc) + (numReferenceObjectsUsed - doc2count.get(currDoc)) * position));
-            }
+                // high score: relevant
+                col.collect(currDoc, (position + 1) * position - (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
+                // low score: relevant
+                // col.collect(currDoc, (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
+//            } else {
+//                col.collect(currDoc, (position + 1) * position - (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
+//            }
         }
         return col.topDocs();
     }
@@ -276,7 +335,7 @@ public class MetricSpacesInvertedListIndexing {
      * @throws IOException
      */
     public IndexReader getIndexReader(String indexPath) throws IOException {
-        return IndexReader.open(indexPath + "-ms");
+        return IndexReader.open(indexPath);
     }
 
     public ProgressIndicator getProgress() {

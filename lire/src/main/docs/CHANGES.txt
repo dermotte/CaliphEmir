@@ -1,6 +1,18 @@
 CHANGES for LIRE
 ================
 
+2009-05-19
+==========
+General:
+  - Fixed bug in scoring (metric spaces)
+  - Added further tests.
+
+2009-05-18
+==========
+General:
+  - Changed the "metric spaces" index strategy to modify the existing index
+  - Added "update" method to "metric spaces".
+
 2009-05-14
 ==========
 General:

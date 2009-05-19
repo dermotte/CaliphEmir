@@ -81,17 +81,20 @@ public class CreateIndexTest extends TestCase {
 
     public void testCreateCEDDIndex() throws IOException {
         String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
-//        String testFilesPath = "./lire/wang-data-1000";
-        String testFilesPath = "./lire/src/test/resources/small/";
-
+        String testFilesPath = "./lire/wang-data-1000";
+//        String testFilesPath = "./lire/src/test/resources/small/";
+        ArrayList<String> images = FileUtils.getAllImages(new File(testFilesPath), true);
         DocumentBuilder builder = DocumentBuilderFactory.getCEDDDocumentBuilder();
-        IndexWriter iw = new IndexWriter(indexPath + "-cedd", new SimpleAnalyzer(), true);
+//        IndexWriter iw = new IndexWriter("wang-cedd", new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter("wang-cedd", new SimpleAnalyzer(), false, IndexWriter.MaxFieldLength.UNLIMITED);
+//        IndexWriter iw = new IndexWriter(indexPath + "-cedd", new SimpleAnalyzer(), true);
         long ms = System.currentTimeMillis();
-        for (String identifier : testFiles) {
-            Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
+        int count = 0;
+        for (String identifier : images) {
+            Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
             iw.addDocument(doc);
+            if (++count>250) break;
         }
-        System.out.println("Time taken: " + ((System.currentTimeMillis() - ms) / testFiles.length) + " ms");
         iw.optimize();
         iw.close();
     }
