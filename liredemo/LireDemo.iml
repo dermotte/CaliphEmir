@@ -36,9 +36,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library>
+      <library name="Lucene">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/lucene-core-2.1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/lucene-core-2.9.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

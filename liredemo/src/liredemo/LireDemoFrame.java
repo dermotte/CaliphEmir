@@ -1367,7 +1367,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
     private void helpMenuAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuAboutActionPerformed
         JOptionPane.showMessageDialog(this, "<html><center><b>Simple demo for Lucene Image Retrieval (LIRe) library.</b><br>" +
                 "<br>Visit http://www.semanticmetadata.net/lire for more information.<br>" +
-                "<br>&copy; 2007-2009 by Mathias Lux<br>" +
+                "<br>&copy; 2007-2010 by Mathias Lux<br>" +
                 "mathias@juggle.at<br></center></html>",
                 "About LIRe demo", JOptionPane.PLAIN_MESSAGE);
     }//GEN-LAST:event_helpMenuAboutActionPerformed
@@ -1375,7 +1375,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
     private void showAbout() {
         JOptionPane.showMessageDialog(this, "<html><center><b>Simple demo for<br>Lucene Image Retrieval (LIRe) library.</b><br>" +
                 "<br>Visit http://www.semanticmetadata.net/lire<br>for more information.<br>" +
-                "<br>&copy; 2007-2009 by Mathias Lux<br>" +
+                "<br>&copy; 2007-2010 by Mathias Lux<br>" +
                 "mathias@juggle.at<br></center></html>",
                 "About LIRe demo", JOptionPane.PLAIN_MESSAGE);
     }

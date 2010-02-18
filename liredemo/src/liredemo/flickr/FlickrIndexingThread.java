@@ -1,8 +1,8 @@
 package liredemo.flickr;
 
 import liredemo.LireDemoFrame;
+import liredemo.indexing.MetadataBuilder;
 import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.DocumentBuilderFactory;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
@@ -109,9 +109,10 @@ public class FlickrIndexingThread extends Thread {
 
 //        iw = new IndexWriter(indexPath + "-new", wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
 
-            IndexWriter iw = new IndexWriter(parent.textfieldIndexName.getText(), wrapper, !parent.checkBoxAddToExisintgIndex.isSelected());
+            boolean create = !parent.checkBoxAddToExisintgIndex.isSelected() && new File(parent.textfieldIndexName.getText()).exists();
+            IndexWriter iw = new IndexWriter(parent.textfieldIndexName.getText(), wrapper, create, IndexWriter.MaxFieldLength.UNLIMITED);
             int builderIdx = parent.selectboxDocumentBuilder.getSelectedIndex();
-            DocumentBuilder builder = DocumentBuilderFactory.getFullDocumentBuilder();
+            DocumentBuilder builder = new MetadataBuilder();
             int count = 0;
             long time = System.currentTimeMillis();
             FlickrDownloadThread downloader = new FlickrDownloadThread(images, builder);

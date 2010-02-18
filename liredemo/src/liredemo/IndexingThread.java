@@ -1,30 +1,28 @@
 package liredemo;
 
+import com.drew.imaging.jpeg.JpegProcessingException;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.MetadataException;
+import com.drew.metadata.exif.ExifDirectory;
+import com.drew.metadata.exif.ExifReader;
+import liredemo.indexing.MetadataBuilder;
+import liredemo.indexing.ParallelIndexer;
+import net.semanticmetadata.lire.DocumentBuilder;
+import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexWriter;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ByteArrayInputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.awt.image.BufferedImage;
-
-import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.DocumentBuilderFactory;
-import org.apache.lucene.analysis.SimpleAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexWriter;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.MetadataException;
-import com.drew.metadata.exif.ExifReader;
-import com.drew.metadata.exif.ExifDirectory;
-import com.drew.imaging.jpeg.JpegProcessingException;
-
-import javax.imageio.ImageIO;
-
-import javax.swing.JOptionPane;
-import liredemo.indexing.ParallelIndexer;
 
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
@@ -56,7 +54,10 @@ import liredemo.indexing.ParallelIndexer;
  */
 public class IndexingThread extends Thread {
     LireDemoFrame parent;
-    /** Creates a new instance of FlickrIndexingThread
+
+    /**
+     * Creates a new instance of FlickrIndexingThread
+     *
      * @param parent
      */
     public IndexingThread(LireDemoFrame parent) {
@@ -64,6 +65,7 @@ public class IndexingThread extends Thread {
     }
 
     // TODO: make parallel
+
     public void run() {
         DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance();
         df.setMaximumFractionDigits(0);
@@ -72,20 +74,21 @@ public class IndexingThread extends Thread {
             parent.progressBarIndexing.setValue(0);
             java.util.ArrayList<java.lang.String> images =
                     getAllImages(
-                    new java.io.File(parent.textfieldIndexDir.getText()), true);
-            if (images==null) {
+                            new java.io.File(parent.textfieldIndexDir.getText()), true);
+            if (images == null) {
                 JOptionPane.showMessageDialog(parent, "Could not find any files in " + parent.textfieldIndexDir.getText(), "No files found", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            IndexWriter iw = new IndexWriter(parent.textfieldIndexName.getText(), new SimpleAnalyzer(), !parent.checkBoxAddToExisintgIndex.isSelected());
+            boolean create = !parent.checkBoxAddToExisintgIndex.isSelected() && new File(parent.textfieldIndexName.getText()).exists();
+            IndexWriter iw = new IndexWriter(parent.textfieldIndexName.getText(), new SimpleAnalyzer(), create);
             int builderIdx = parent.selectboxDocumentBuilder.getSelectedIndex();
-            DocumentBuilder builder = DocumentBuilderFactory.getFullDocumentBuilder();
+            DocumentBuilder builder = new MetadataBuilder();
             int count = 0;
             long time = System.currentTimeMillis();
             Document doc;
             ParallelIndexer indexer = new ParallelIndexer(images, builder);
             new Thread(indexer).start();
-            while ((doc = indexer.getNext())!=null) {
+            while ((doc = indexer.getNext()) != null) {
                 try {
                     iw.addDocument(doc);
                 } catch (Exception e) {
@@ -94,11 +97,11 @@ public class IndexingThread extends Thread {
                 }
                 count++;
                 float percentage = (float) count / (float) images.size();
-                parent.progressBarIndexing.setValue((int) Math.floor(100f*percentage));
+                parent.progressBarIndexing.setValue((int) Math.floor(100f * percentage));
                 float msleft = (float) (System.currentTimeMillis() - time) / percentage;
                 float secLeft = msleft * (1 - percentage) / 1000f;
                 String toPaint = "~ " + df.format(secLeft) + " sec. left";
-                if (secLeft>90) toPaint = "~ " + Math.ceil(secLeft/60) + " min. left";
+                if (secLeft > 90) toPaint = "~ " + Math.ceil(secLeft / 60) + " min. left";
                 parent.progressBarIndexing.setString(toPaint);
             }
             long timeTaken = (System.currentTimeMillis() - time);
@@ -109,7 +112,7 @@ public class IndexingThread extends Thread {
             parent.progressBarIndexing.setValue(100);
             iw.optimize();
             iw.close();
-            
+
         } catch (IOException ex) {
             Logger.getLogger("global").log(Level.SEVERE, null, ex);
         }
@@ -119,7 +122,7 @@ public class IndexingThread extends Thread {
         ArrayList<String> resultList = new ArrayList<String>(256);
         File[] f = directory.listFiles();
         for (File file : f) {
-            if (file != null && (file.getName().toLowerCase().endsWith(".jpg") || file.getName().toLowerCase().endsWith(".png"))&& !file.getName().startsWith("tn_")) {
+            if (file != null && (file.getName().toLowerCase().endsWith(".jpg") || file.getName().toLowerCase().endsWith(".png")) && !file.getName().startsWith("tn_")) {
                 resultList.add(file.getCanonicalPath());
             }
             if (descendIntoSubDirectories && file.isDirectory()) {
@@ -142,7 +145,7 @@ public class IndexingThread extends Thread {
         try {
             new ExifReader(jpegFile).extract(metadata);
             byte[] thumb = ((ExifDirectory) metadata.getDirectory(ExifDirectory.class)).getThumbnailData();
-            if (thumb!=null) image = ImageIO.read(new ByteArrayInputStream(thumb));
+            if (thumb != null) image = ImageIO.read(new ByteArrayInputStream(thumb));
 //            System.out.print("Read from thumbnail data ... ");
 //            System.out.println(image.getWidth() + " x " + image.getHeight());
         } catch (JpegProcessingException e) {
