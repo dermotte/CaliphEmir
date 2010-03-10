@@ -4,10 +4,12 @@ import junit.framework.TestCase;
 import net.semanticmetadata.lire.impl.DocumentFactory;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.store.FSDirectory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 /*
@@ -48,7 +50,7 @@ public class TestImageSearcher extends TestCase {
     private int numsearches = 5;
 
     public void testSearch() throws IOException {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         ImageSearcher searcher = ImageSearcherFactory.createDefaultSearcher();
@@ -88,7 +90,7 @@ public class TestImageSearcher extends TestCase {
     }
 
     public void testSearchWithDuplicates() throws Exception {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         ImageSearcher searcher = ImageSearcherFactory.createDefaultSearcher();
@@ -102,7 +104,7 @@ public class TestImageSearcher extends TestCase {
     }
 
     public void testFindDuplicates() throws Exception {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         ImageSearcher searcher = ImageSearcherFactory.createDefaultSearcher();
@@ -125,7 +127,7 @@ public class TestImageSearcher extends TestCase {
      * @throws Exception in case of exceptions *gg*
      */
     public void testColorSearch() throws Exception {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         // PLEASE NOTE: The index has to be built with a DocumentBuilder
@@ -147,7 +149,7 @@ public class TestImageSearcher extends TestCase {
     }
 
     public void testCorrelationSearch() throws IOException {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         ImageSearcher searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(10);
@@ -177,7 +179,7 @@ public class TestImageSearcher extends TestCase {
     }
 
     public void testCEDDSearch() throws IOException {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(30);
@@ -207,7 +209,7 @@ public class TestImageSearcher extends TestCase {
     }
 
     public void testSimpleColorHistogramSearch() throws IOException {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         ImageSearcher searcher = ImageSearcherFactory.createColorHistogramImageSearcher(30);

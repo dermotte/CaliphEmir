@@ -6,6 +6,12 @@ CHANGES for LIRE
 General:
   - Checked in GeneralColorLayout and HSVColorHistogram, inferior performing features ;)
   - added MetricsUtils, a class, where metrics are provided statically
+  - Updated sources and libs to Lucene 3.0.1
+  - Bugfixes in Tamura based on comments of shen72@users.sourceforge.net
+  - rewrite of metric spaces indexing to work with Lucene 3.0.1
+
+LireDemo:
+  - Updated sources and libs to Lucene 3.0.1
 
 2010-02-18
 ==========

@@ -116,7 +116,7 @@ public class SiftFeatureHistogramBuilder {
             reader.deleteDocument(documentIterator.next());
         }
         // add new ones ...
-        IndexWriter iw = new IndexWriter(reader.directory(), new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(reader.directory(), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (Iterator<Document> documentIterator = toAdd.iterator(); documentIterator.hasNext();) {
             iw.addDocument(documentIterator.next());
         }

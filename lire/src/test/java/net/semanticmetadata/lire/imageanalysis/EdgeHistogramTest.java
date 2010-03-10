@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 public class EdgeHistogramTest extends TestCase {
     public void testExtraction() throws IOException {
-        BufferedImage image = ImageIO.read(new File("C:\\Java\\Projects\\Lire\\src\\test\\resources\\images\\Páginas de 060305_b_Página_1_Imagem_0004_Página_08_Imagem_0002.jpg"));
+        BufferedImage image = ImageIO.read(new File("C:\\Java\\Projects\\Lire\\src\\test\\resources\\images\\Pginas de 060305_b_Pgina_1_Imagem_0004_Pgina_08_Imagem_0002.jpg"));
         EdgeHistogramImplementation eh = new EdgeHistogramImplementation(image);
         System.out.println("eh = " + eh.getStringRepresentation());
     }

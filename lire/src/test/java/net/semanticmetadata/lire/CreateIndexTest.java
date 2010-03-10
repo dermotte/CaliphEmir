@@ -5,6 +5,7 @@ import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class CreateIndexTest extends TestCase {
     private String[] testFiles = new String[]{"img01.JPG", "img02.JPG", "img03.JPG", "img04.JPG", "img05.JPG",
-            "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg", "Páginas de 060305_b_Página_1_Imagem_0004_Página_08_Imagem_0002.jpg"};
+            "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg", "Pï¿½ginas de 060305_b_Pï¿½gina_1_Imagem_0004_Pï¿½gina_08_Imagem_0002.jpg"};
     private String testFilesPath = "./lire/src/test/resources/images/";
     private String indexPath = "test-index";
     private String testExtensive = "C:\\Temp\\images";
@@ -53,7 +54,7 @@ public class CreateIndexTest extends TestCase {
 
     public void testCreateIndex() throws IOException {
         DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
-        IndexWriter iw = new IndexWriter(indexPath + "-small", new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (String identifier : testFiles) {
             System.out.println("Indexing file " + identifier);
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -68,7 +69,7 @@ public class CreateIndexTest extends TestCase {
         String testFilesPath = "./lire/src/test/resources/small/";
 
         DocumentBuilder builder = DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder();
-        IndexWriter iw = new IndexWriter(indexPath + "-small", new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         long ms = System.currentTimeMillis();
         for (String identifier : testFiles) {
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -81,19 +82,19 @@ public class CreateIndexTest extends TestCase {
 
     public void testCreateCEDDIndex() throws IOException {
         String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
-        String testFilesPath = "./lire/wang-data-1000";
+        String testFilesPath = "wang-data-1000";
 //        String testFilesPath = "./lire/src/test/resources/small/";
         ArrayList<String> images = FileUtils.getAllImages(new File(testFilesPath), true);
         DocumentBuilder builder = DocumentBuilderFactory.getCEDDDocumentBuilder();
 //        IndexWriter iw = new IndexWriter("wang-cedd", new SimpleAnalyzer(), true);
-        IndexWriter iw = new IndexWriter("wang-cedd", new SimpleAnalyzer(), false, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("wang-cedd")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
 //        IndexWriter iw = new IndexWriter(indexPath + "-cedd", new SimpleAnalyzer(), true);
         long ms = System.currentTimeMillis();
         int count = 0;
         for (String identifier : images) {
             Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
             iw.addDocument(doc);
-            if (++count>250) break;
+            // if (++count>250) break;
         }
         iw.optimize();
         iw.close();
@@ -121,7 +122,7 @@ public class CreateIndexTest extends TestCase {
         System.out.println(">> Indexing " + images.size() + " files.");
 //        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
 //        DocumentBuilder builder = DocumentBuilderFactory.getFastDocumentBuilder();
-        IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {
@@ -154,7 +155,7 @@ public class CreateIndexTest extends TestCase {
         System.out.println(">> Indexing " + images.size() + " files.");
 //        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
 //        DocumentBuilder builder = DocumentBuilderFactory.getFastDocumentBuilder();
-        IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         SynchronizedWriter sw = new SynchronizedWriter(iw);
         ExecutorService pool = Executors.newFixedThreadPool(4);
 

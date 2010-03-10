@@ -29,7 +29,6 @@ public class CorrelogramDocumentBuilder extends AbstractDocumentBuilder {
      *
      * @param mode defines the extraction mode. See
      * @see net.semanticmetadata.lire.DocumentBuilderFactory
-     * @see net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram#AutoColorCorrelogram(net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram.Mode)
      */
     public CorrelogramDocumentBuilder(AutoColorCorrelogram.Mode mode) {
         this.mode = mode;
@@ -54,7 +53,7 @@ public class CorrelogramDocumentBuilder extends AbstractDocumentBuilder {
         Document doc = new Document();
         doc.add(new Field(DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM, featureString, Field.Store.YES, Field.Index.NO));
         if (identifier != null)
-            doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.UN_TOKENIZED));
+            doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
         return doc;
     }
 }

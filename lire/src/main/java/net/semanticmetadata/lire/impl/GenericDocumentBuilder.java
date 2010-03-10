@@ -59,7 +59,7 @@ public class GenericDocumentBuilder  extends AbstractDocumentBuilder {
             doc = new Document();
             doc.add(new Field(fieldName, featureString, Field.Store.YES, Field.Index.NO));
             if (identifier != null)
-                doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.UN_TOKENIZED));
+                doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
 
         } catch (InstantiationException e) {
             logger.log(Level.SEVERE, "Error instantiating class for generic document builder: " + e.getMessage());

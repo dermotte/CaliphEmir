@@ -39,6 +39,7 @@ import java.util.StringTokenizer;
  * Changes by
  * <ul>
  * <li> Ankit Jain (jankit87@gmail.com): histogram length in set string
+ * <li> shen72@users.sourceforge.net: bugfixes in math (casting and brackets)
  * </ul>
  * Date: 28.05.2008
  * Time: 11:52:03
@@ -61,7 +62,8 @@ public class Tamura implements LireFeature {
 				result = result + Math.pow(2, this.sizeLeadDiffValue(i, j));
 			}
 		}
-		result = (1.0/n0*n1)*result;
+        // fixed based on the patch by shen72@users.sourceforge.net
+		result = (1.0/(n0*n1))*result;
 		return result;
 	}
 
@@ -155,7 +157,8 @@ public class Tamura implements LireFeature {
 			}
 		}
 		alpha4 = my4/(Math.pow(sigma, 4));
-		result = sigma/(Math.pow(alpha4, 1/4));
+        // fixed based on the patches of shen72@users.sourceforge.net
+		result = sigma/(Math.pow(alpha4, 0.25));
 		return result;
 	}
 

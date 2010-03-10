@@ -5,6 +5,7 @@ import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,14 +44,14 @@ import java.util.ArrayList;
  */
 public class RuntimeTest extends TestCase {
     private String[] testFiles = new String[]{"img01.JPG", "img02.JPG", "img03.JPG", "img04.JPG", "img05.JPG",
-            "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg", "Páginas de 060305_b_Página_1_Imagem_0004_Página_08_Imagem_0002.jpg"};
+            "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg", "Pï¿½ginas de 060305_b_Pï¿½gina_1_Imagem_0004_Pï¿½gina_08_Imagem_0002.jpg"};
     private String testFilesPath = "./lire/src/test/resources/images/";
     private String indexPath = "test-index";
     private String testExtensive = "./lire/wang-data-1000";
 
     public void testCreateIndex() throws IOException {
         DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
-        IndexWriter iw = new IndexWriter(indexPath + "-small", new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (String identifier : testFiles) {
             System.out.println("Indexing file " + identifier);
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -65,7 +66,7 @@ public class RuntimeTest extends TestCase {
         String testFilesPath = "./lire/src/test/resources/small/";
 
         DocumentBuilder builder = DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder();
-        IndexWriter iw = new IndexWriter(indexPath + "-small", new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         long ms = System.currentTimeMillis();
         for (String identifier : testFiles) {
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -81,7 +82,7 @@ public class RuntimeTest extends TestCase {
         String testFilesPath = "./lire/src/test/resources/small/";
 
         DocumentBuilder builder = DocumentBuilderFactory.getCEDDDocumentBuilder();
-        IndexWriter iw = new IndexWriter(indexPath + "-cedd", new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-cedd")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         long ms = System.currentTimeMillis();
         for (String identifier : testFiles) {
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -117,7 +118,7 @@ public class RuntimeTest extends TestCase {
 
     private void indexFiles(String prefix, ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         System.out.println(">> Indexing " + images.size() + " files.");
-        IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {

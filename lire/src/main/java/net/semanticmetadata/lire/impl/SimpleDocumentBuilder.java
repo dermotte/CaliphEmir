@@ -97,7 +97,7 @@ public class SimpleDocumentBuilder extends AbstractDocumentBuilder {
         if (eh != null)
             doc.add(new Field(DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM, eh, Field.Store.YES, Field.Index.NO));
         if (identifier != null)
-            doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.UN_TOKENIZED));
+            doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
         return doc;
     }
 }

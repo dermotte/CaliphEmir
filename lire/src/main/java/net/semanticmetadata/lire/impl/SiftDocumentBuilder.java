@@ -67,7 +67,7 @@ public class SiftDocumentBuilder extends AbstractDocumentBuilder {
                 doc.add(new Field(DocumentBuilder.FIELD_NAME_SIFT, f.getStringRepresentation(), Field.Store.YES, Field.Index.NO));
             }
             if (identifier != null)
-                doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.UN_TOKENIZED));
+                doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
         } catch (IOException e) {
             logger.severe(e.getMessage());
         }

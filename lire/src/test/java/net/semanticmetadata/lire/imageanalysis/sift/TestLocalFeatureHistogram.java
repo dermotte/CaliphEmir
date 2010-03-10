@@ -36,6 +36,7 @@ import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -121,7 +122,7 @@ public class TestLocalFeatureHistogram extends TestCase {
 
     public void testSiftIndexing() throws IOException {
         SiftDocumentBuilder builder = new SiftDocumentBuilder();
-        IndexWriter iw = new IndexWriter("sift-idx", new SimpleAnalyzer(), true);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("sift-idx")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (int i = 0; i < sampleQueries.length; i++) {
             int sampleQuery = sampleQueries[i];
             String s = testExtensive + "/" + sampleQuery + ".jpg";
@@ -134,12 +135,12 @@ public class TestLocalFeatureHistogram extends TestCase {
     }
 
     public void testCreateLocalFeatureHistogram() throws IOException {
-        SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open("sift-idx"));
+        SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File("sift-idx"))));
         sh.index();
     }
 
     public void testFindimages() throws IOException {
-        IndexReader reader = IndexReader.open("sift-idx");
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File("sift-idx")));
 
         SiftLocalFeatureHistogramImageSearcher searcher = new SiftLocalFeatureHistogramImageSearcher(10);
         ImageSearchHits searchHits = searcher.search(reader.document(0), reader);

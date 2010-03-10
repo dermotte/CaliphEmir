@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module relativePaths="true" type="JAVA_MODULE" version="4">
+<module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -20,19 +20,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/lucene-core-2.4.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="file://$MODULE_DIR$/../../../Libs/lucene-2.4.1/docs/api" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../Libs/lucene-2.4.1/lucene-2.4.1-src.zip!/lucene-2.4.1/src/java" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/Jama-1.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -40,16 +27,25 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="JUnit 4.1">
+      <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../Libs/junit4.1/junit-4.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/lucene-core-3.0.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="file://$MODULE_DIR$/../../../Libs/junit4.1/javadoc" />
+          <root url="file://$MODULE_DIR$/../../JavaLibs/lucene-3.0.1/docs/api" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../Libs/junit4.1/junit-4.1-src.jar!/" />
+          <root url="file://$MODULE_DIR$/../../JavaLibs/lucene-3.0.1/src/java" />
         </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../JavaLibs/junit4.8.1/junit-4.8.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
   </component>

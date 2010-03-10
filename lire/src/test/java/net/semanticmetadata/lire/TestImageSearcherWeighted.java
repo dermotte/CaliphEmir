@@ -2,12 +2,14 @@ package net.semanticmetadata.lire;
 
 import junit.framework.TestCase;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.awt.image.BufferedImage;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.store.FSDirectory;
 
 import javax.imageio.ImageIO;
 /*
@@ -47,7 +49,7 @@ public class TestImageSearcherWeighted extends TestCase {
     private int numsearches = 5;
 
     public void testSearch() throws IOException {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         ImageSearcher searcher1 = ImageSearcherFactory.createWeightedSearcher(10, 0.2f, 0.8f, 1.0f);

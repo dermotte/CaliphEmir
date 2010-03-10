@@ -36,7 +36,7 @@ public class ChainedDocumentBuilder extends AbstractDocumentBuilder {
         docsCreated = true;
         Document doc = new Document();
         if (identifier != null)
-            doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.UN_TOKENIZED));
+            doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
         // this is unfortunately rather slow, but however it works :)
         if (builders.size() >= 1) {
             for (DocumentBuilder builder : builders) {
