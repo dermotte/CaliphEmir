@@ -431,7 +431,6 @@ public class LireDemoFrame extends javax.swing.JFrame {
 
         jLabel8.setText("<html><b>Hints:</b>\n<ul>\n<li> Only images in the selected directory but also all <i>subdirectories</i> will be indexed.\n<li> If you don't specify a directory images are downloaded from <i>Flickr</i>. Configure in options panel the actual number\n</ul>");
 
-        checkBoxAddToExisintgIndex.setSelected(true);
         checkBoxAddToExisintgIndex.setText("add to existing index");
         checkBoxAddToExisintgIndex.setToolTipText(bundle.getString("index.addToExistingIndex")); // NOI18N
         checkBoxAddToExisintgIndex.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -457,7 +456,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
                                 .addContainerGap())
                         .addGroup(indexPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel8)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(100, Short.MAX_VALUE))
         );
         indexPanelLayout.setVerticalGroup(
@@ -475,7 +474,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
                                 .addComponent(buttonStartIndexing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(checkBoxAddToExisintgIndex))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(507, 507, 507))
         );
 
@@ -523,7 +522,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
                                 .addContainerGap())
                         .addGroup(searchPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel7)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(158, Short.MAX_VALUE))
         );
         searchPanelLayout.setVerticalGroup(
@@ -539,7 +538,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonStartSearch)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel7)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(288, Short.MAX_VALUE))
         );
 
@@ -678,7 +677,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         );
         panelMosaicOptionsHiddenLayout.setVerticalGroup(
                 panelMosaicOptionsHiddenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 191, Short.MAX_VALUE)
+                        .addGap(0, 190, Short.MAX_VALUE)
         );
 
         mosaicAdvanceOptionsPanel.add(panelMosaicOptionsHidden, "card2");
@@ -724,7 +723,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
                         .addComponent(mosaicOptionsAutocolorcorrelogram)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(mosaicOptionsCedd)
-                        .addContainerGap(109, Short.MAX_VALUE))
+                        .addContainerGap(108, Short.MAX_VALUE))
         );
 
         mosaicAdvanceOptionsPanel.add(panelMosaicOptionsShown, "card3");
@@ -790,7 +789,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(textfieldMosaicImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(mosaicImageLable, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
+                                        .addComponent(mosaicImageLable, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE))
                                 .addGroup(mosaicPanelLayout.createSequentialGroup()
                                 .addGap(28, 28, 28)
                                 .addComponent(buttonOpenMosaicImage)
@@ -809,7 +808,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(checkboxMosaicAdvanceOptions)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mosaicAdvanceOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                                .addComponent(mosaicAdvanceOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(buttonMosaicSave)))
                         .addGap(6, 6, 6)
@@ -838,7 +837,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         textfieldNumSearchResults.setText("25");
         textfieldNumSearchResults.setToolTipText(bundle.getString("options.tooltip.numsearchresults")); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18));
         jLabel4.setText("Options:");
 
         jLabel17.setText("Flickr download maximum:");
