@@ -23,7 +23,6 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 import at.lux.imageanalysis.VisualDescriptor;
-import net.semanticmetadata.lire.imageanalysis.utils.Quantization;
 
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
@@ -40,16 +39,13 @@ import java.util.StringTokenizer;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class SimpleColorHistogram implements LireFeature {
-    public static final int DEFAULT_NUMBER_OF_BINS = 512;
-    public static HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.RGB;
-    public static DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.L1;
-
-    private static final int[] quantTable = {1, 32, 4, 8, 16, 4, 16, 4, 16, 4,             // Hue, Sum - subspace 0,1,2,3,4 for 256 levels
-            1, 16, 4, 4, 8, 4, 8, 4, 8, 4,            // Hue, Sum - subspace 0,1,2,3,4 for 128 levels
-            1, 8, 4, 4, 4, 4, 8, 2, 8, 1,            // Hue, Sum - subspace 0,1,2,3,4 for  64 levels
-            1, 8, 4, 4, 4, 4, 4, 1, 4, 1};        // Hue, Sum - subspace 0,1,2,3,4 for  32 levels
-
+public class HSVColorHistogram implements LireFeature {
+    private static float q_h = 32;
+    private static float q_s = 8;
+    private static float q_v = 1;
+    public static final int DEFAULT_NUMBER_OF_BINS = (int) (q_h * q_s * q_v);
+    public static HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.HSV;
+    public static DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.L2;
 
     /**
      * Lists possible types for the histogram class
@@ -76,7 +72,7 @@ public class SimpleColorHistogram implements LireFeature {
     /**
      * Default constructor
      */
-    public SimpleColorHistogram() {
+    public HSVColorHistogram() {
         histogramType = DEFAULT_HISTOGRAM_TYPE;
         histogram = new int[DEFAULT_NUMBER_OF_BINS];
         distFunc = DEFAULT_DISTANCE_FUNCTION;
@@ -89,7 +85,7 @@ public class SimpleColorHistogram implements LireFeature {
      * @param histogramType
      * @param distFunction
      */
-    public SimpleColorHistogram(HistogramType histogramType, DistanceFunction distFunction) {
+    public HSVColorHistogram(HistogramType histogramType, DistanceFunction distFunction) {
         this.histogramType = histogramType;
         distFunc = distFunction;
         histogram = new int[DEFAULT_NUMBER_OF_BINS];
@@ -104,57 +100,49 @@ public class SimpleColorHistogram implements LireFeature {
         if (image.getColorModel().getColorSpace().getType() != ColorSpace.TYPE_RGB)
             throw new UnsupportedOperationException("Color space not supported. Only RGB.");
         WritableRaster raster = image.getRaster();
-        for (int x = 0; x < image.getWidth(); x++) {
+        int count = 0;
+        for (int x = 0; x < image.getWidth() - 40; x++) {
             for (int y = 0; y < image.getHeight(); y++) {
                 raster.getPixel(x, y, pixel);
-                if (histogramType == HistogramType.HSV) {
-                    rgb2hsv(pixel[0], pixel[1], pixel[2], pixel);
-                } else if (histogramType == HistogramType.Luminance) {
-                    rgb2yuv(pixel[0], pixel[1], pixel[2], pixel);
-                } else if (histogramType == HistogramType.HMMD) {
-                    histogram[quantHmmd(rgb2hmmd(pixel[0], pixel[1], pixel[2]), DEFAULT_NUMBER_OF_BINS)]++;
-                }
-                if (histogramType != HistogramType.HMMD) histogram[quant(pixel)]++;
+                rgb2hsv(pixel[0], pixel[1], pixel[2], pixel);
+                histogram[quant(pixel)]++;
+                count++;
             }
         }
-        normalize(histogram, image.getWidth() * image.getHeight());
+        // normalize(histogram, count);
     }
 
     private void normalize(int[] histogram, int numPixels) {
         // find max:
         int max = 0;
-//        for (int i = 0; i < histogram.length; i++) {
-//            max = Math.max(histogram[i], max);
-//        }
         for (int i = 0; i < histogram.length; i++) {
-            histogram[i] = (histogram[i] * 1024) / numPixels;
+            max = Math.max(histogram[i], max);
+        }
+        for (int i = 0; i < histogram.length; i++) {
+            histogram[i] = (histogram[i] * 1024) / max;
         }
     }
 
     private int quant(int[] pixel) {
-        int quantRgb = (256 * 256 * 256) / histogram.length;
-        if (histogramType == HistogramType.HSV) {
-            // Todo: tune this one ...
-            int qH = (pixel[0] * 8) / 360;    // more granularity in color
-            int qS = (pixel[2] * 4) / 100;
-            return qH * qS + qS;
-        } else if (histogramType == HistogramType.HMMD) {
-            return quantHmmd(rgb2hmmd(pixel[0], pixel[1], pixel[2]), 256);
-        } else if (histogramType == HistogramType.Luminance) {
-            return (pixel[0] * histogram.length) / (256);
-        } else {
-//            return Quantization.quantDistributionBased(pixel, histogram.length, 512);
-            return Quantization.quantUniformly(pixel, histogram.length, DEFAULT_NUMBER_OF_BINS);
-        }
+//            int qH = (int) Math.floor((pixel[0] * 64f) / 360f);    // more granularity in color
+//            int qS = (int) Math.floor((pixel[2] * 8f) / 100f);
+//            return qH * 7 + qS;
+        int qH = (int) Math.floor((pixel[0] * q_h) / 360f);    // more granularity in color
+        int qS = (int) Math.floor((pixel[2] * q_s) / 100f);
+        int qV = (int) Math.floor((pixel[1] * q_v) / 100f);
+        if (qH == q_h) qH = (int) (q_h - 1);
+        if (qS == q_s) qS = (int) (q_s - 1);
+        if (qV == q_v) qV = (int) (q_v - 1);
+        return (qH) * (int) (q_v * q_s) + qS * (int) q_v + qV;
     }
 
     public float getDistance(VisualDescriptor vd) {
         // Check if instance of the right class ...
-        if (!(vd instanceof SimpleColorHistogram))
+        if (!(vd instanceof HSVColorHistogram))
             throw new UnsupportedOperationException("Wrong descriptor.");
 
         // casting ...
-        SimpleColorHistogram ch = (SimpleColorHistogram) vd;
+        HSVColorHistogram ch = (HSVColorHistogram) vd;
 
         // check if parameters are fitting ...
         if ((ch.histogram.length != histogram.length) || (ch.histogramType != histogramType))
@@ -374,48 +362,5 @@ public class SimpleColorHistogram implements LireFeature {
         hmmd[4] = (int) (sum);
 
         return (hmmd);
-    }
-
-    /**
-     * Quantize hmmd values based on the MPEG-7 standard.
-     *
-     * @param hmmd               the HMMD color value
-     * @param quantizationLevels only 256, 128, 64 and 32 are allowed.
-     * @return the actual bin
-     */
-    private int quantHmmd(int[] hmmd, int quantizationLevels) {
-        int h = 0;
-        int offset = 0;    // offset position in the quantization table
-        int subspace = 0;
-        int q = 0;
-
-        // define the subspace along the Diff axis
-
-        if (hmmd[3] < 7) subspace = 0;
-        else if ((hmmd[3] > 6) && (hmmd[3] < 21)) subspace = 1;
-        else if ((hmmd[3] > 19) && (hmmd[3] < 61)) subspace = 2;
-        else if ((hmmd[3] > 59) && (hmmd[3] < 111)) subspace = 3;
-        else if ((hmmd[3] > 109) && (hmmd[3] < 256)) subspace = 4;
-
-        // HMMD Color Space quantization
-        // see MPEG7-CSD.pdf
-
-        if (quantizationLevels == 256) {
-            offset = 0;
-            h = (int) ((hmmd[0] / quantizationLevels) * quantTable[offset + subspace] + (hmmd[4] / quantizationLevels) * quantTable[offset + subspace + 1]);
-        } else if (quantizationLevels == 128) {
-            offset = 10;
-            h = (int) ((hmmd[0] / quantizationLevels) * quantTable[offset + subspace] + (hmmd[4] / quantizationLevels) * quantTable[offset + subspace + 1]);
-        } else if (quantizationLevels == 64) {
-            offset = 20;
-            h = (int) ((hmmd[0] / quantizationLevels) * quantTable[offset + subspace] + (hmmd[4] / quantizationLevels) * quantTable[offset + subspace + 1]);
-
-        } else if (quantizationLevels == 32) {
-            offset = 30;
-            h = (int) ((hmmd[0] / quantizationLevels) * quantTable[offset + subspace] + (hmmd[4] / quantizationLevels) * quantTable[offset + subspace + 1]);
-        }
-
-
-        return h;
     }
 }

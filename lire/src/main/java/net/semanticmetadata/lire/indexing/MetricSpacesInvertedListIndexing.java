@@ -184,6 +184,7 @@ public class MetricSpacesInvertedListIndexing {
      * found and indexed in the sepaarete directory. However further documents were added and they
      * now need to get a ranked list of reference objects. So we (i) get all these new documents
      * missing the field "ro-order" and (ii) add this field.
+     *
      * @param indexPath the index to update
      * @throws IOException
      */
@@ -308,10 +309,10 @@ public class MetricSpacesInvertedListIndexing {
             currDoc = iterator.next();
 //            if (doc2count.get(currDoc) < position) {
 //                doc2score.put(currDoc, doc2score.get(currDoc) + (numRefObjs-doc2count.get(currDoc))*position);
-                // high score: relevant
-                col.collect(currDoc, (position + 1) * position - (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
-                // low score: relevant
-                // col.collect(currDoc, (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
+            // high score: relevant
+            col.collect(currDoc, (position + 1) * position - (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
+            // low score: relevant
+            // col.collect(currDoc, (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
 //            } else {
 //                col.collect(currDoc, (position + 1) * position - (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
 //            }

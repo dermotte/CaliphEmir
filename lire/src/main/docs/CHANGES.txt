@@ -1,6 +1,12 @@
 CHANGES for LIRE
 ================
 
+2010-03-10
+==========
+General:
+  - Checked in GeneralColorLayout and HSVColorHistogram, inferior performing features ;)
+  - added MetricsUtils, a class, where metrics are provided statically
+
 2010-02-18
 ==========
 General:

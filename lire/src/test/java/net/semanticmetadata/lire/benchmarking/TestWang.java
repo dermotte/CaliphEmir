@@ -2,8 +2,13 @@ package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.*;
-import net.semanticmetadata.lire.imageanalysis.*;
-import net.semanticmetadata.lire.impl.*;
+import net.semanticmetadata.lire.imageanalysis.CEDD;
+import net.semanticmetadata.lire.imageanalysis.FCTH;
+import net.semanticmetadata.lire.imageanalysis.JCD;
+import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
+import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
+import net.semanticmetadata.lire.impl.ParallelImageSearcher;
+import net.semanticmetadata.lire.impl.SiftLocalFeatureHistogramImageSearcher;
 import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
@@ -98,10 +103,10 @@ public class TestWang extends TestCase {
         computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L1");
         SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L2;
         computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
-//        computeMAP(new GenericImageSearcher(1000, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"), "FuzzyColorHistogram");
-//        computeMAP(new GenericImageSearcher(1000, JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"), "JpegCoefficientHistogram");
-//        computeMAP(ImageSearcherFactory.createCEDDImageSearcher(1000), "CEDD");
-//        computeMAP(ImageSearcherFactory.createFCTHImageSearcher(1000), "FCTH");
+//        computeErrorRate(new GenericImageSearcher(1000, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"), "FuzzyColorHistogram");
+//        computeErrorRate(new GenericImageSearcher(1000, JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"), "JpegCoefficientHistogram");
+//        computeErrorRate(ImageSearcherFactory.createCEDDImageSearcher(1000), "CEDD");
+//        computeErrorRate(ImageSearcherFactory.createFCTHImageSearcher(1000), "FCTH");
 
     }
 
@@ -131,13 +136,13 @@ public class TestWang extends TestCase {
             ImageSearchHits hits = searcher.search(findDoc(reader, id + ".jpg"), reader);
             int goodOnes = 0;
             double avgPrecision = 0;
-            double precision10temp =0d;
+            double precision10temp = 0d;
             for (int j = 0; j < hits.length(); j++) {
                 Document d = hits.doc(j);
                 String hitsId = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
-                Matcher matcher = p.matcher(hitsId);                
+                Matcher matcher = p.matcher(hitsId);
                 if (matcher.find())
-                	hitsId = matcher.group(1);
+                    hitsId = matcher.group(1);
                 else
                     fail("Did not get the number ...");
                 int testID = Integer.parseInt(hitsId);
@@ -146,8 +151,8 @@ public class TestWang extends TestCase {
                     // Only if there is a change in recall
                     avgPrecision += (double) goodOnes / (double) (j + 1);
 //                    System.out.print("x");
-                    if (j<=10) {
-                        precision10temp +=1.0;
+                    if (j <= 10) {
+                        precision10temp += 1.0;
                     }
                 } else {
                     if (j == 1) { // error rate
