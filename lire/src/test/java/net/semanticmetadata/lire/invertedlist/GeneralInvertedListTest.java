@@ -11,7 +11,9 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
+import org.apache.lucene.store.FSDirectory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -21,7 +23,7 @@ public class GeneralInvertedListTest extends TestCase {
     private int numRefObjs = 500;
 
     public void testIndexing() throws IOException {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
         int docs = reader.numDocs();
@@ -32,7 +34,7 @@ public class GeneralInvertedListTest extends TestCase {
         System.out.println("numRefObjs = " + numRefObjs);
 
         // init reference objects:
-        IndexWriter iw = new IndexWriter(indexPath + "-ro", new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-ro")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         HashSet<Integer> referenceObjsIds = new HashSet<Integer>(numRefObjs);
 
         double numDocsDouble = (double) numDocs;
@@ -51,13 +53,13 @@ public class GeneralInvertedListTest extends TestCase {
         iw.close();
 
         // now find the reference objects for each entry ;)
-        IndexReader readerRo = IndexReader.open(indexPath + "-ro");
+        IndexReader readerRo = IndexReader.open(FSDirectory.open(new File(indexPath + "-ro")));
         ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(numRefObjsReferenced);
         PerFieldAnalyzerWrapper wrapper =
                 new PerFieldAnalyzerWrapper(new SimpleAnalyzer());
         wrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer());
 
-        iw = new IndexWriter(indexPath + "-new", wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
+        iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-new")), wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
         StringBuilder sb = new StringBuilder(256);
         for (int i = 0; i < docs; i++) {
             if (hasDeletions && reader.isDeleted(i)) {
@@ -81,7 +83,7 @@ public class GeneralInvertedListTest extends TestCase {
 
 
     public void testExplicitSearch() throws IOException {
-        IndexReader reader = IndexReader.open(indexPath + "-new");
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath + "-new")));
         int numSearches = 50;
 
         String query = reader.document(2).getValues("ro-order")[0];
@@ -131,6 +133,8 @@ public class GeneralInvertedListTest extends TestCase {
             position++;
         }
         // fill up all the remaining doc scores,
+        /*
+        // TODO: Fix for Lucene 3.0!
         TopFieldDocCollector col = new TopFieldDocCollector(reader, Sort.RELEVANCE, 100);
         for (Iterator<Integer> iterator = doc2count.keySet().iterator(); iterator.hasNext();) {
             currDoc = iterator.next();
@@ -140,6 +144,8 @@ public class GeneralInvertedListTest extends TestCase {
             }
         }
         return col.topDocs();
+        */
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     public static Query getQuery(String queryString) {
@@ -338,7 +344,7 @@ class PlainSimilarity extends Similarity {
         return 1f;
     }
 
-    @Override
+
     public float idf(Collection collection, Searcher searcher) throws IOException {
         return 1f;
     }

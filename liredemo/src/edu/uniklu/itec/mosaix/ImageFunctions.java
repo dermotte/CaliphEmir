@@ -13,6 +13,7 @@ import edu.uniklu.itec.mosaix.engine.Engine;
 import edu.uniklu.itec.mosaix.engine.LeastUsedWeightingStrategy;
 import edu.uniklu.itec.mosaix.engine.ProportionWeightingStrategy;
 import liredemo.ProgressMonitor;
+import org.apache.lucene.store.FSDirectory;
 
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
@@ -133,7 +134,7 @@ public class ImageFunctions {
         ImageSearchHits hits = null;
         try {
             if (reader == null) {
-                reader = IndexReader.open(path);
+                reader = IndexReader.open(FSDirectory.open(new File(path)));
             }
             if (searcher == null) {
                 if (colorHist > 0f) {
@@ -165,13 +166,17 @@ public class ImageFunctions {
         IndexReader ir;
         boolean hasIndex = false;
 
-        hasIndex = IndexReader.indexExists(path);
+        try {
+            hasIndex = IndexReader.indexExists(FSDirectory.open(new File(path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         if (force || (hasIndex == false)) {
             try {
                 java.util.ArrayList<java.lang.String> images = getAllImages(new java.io.File(path), true);
-                IndexWriter iw = new IndexWriter(path, new SimpleAnalyzer(), true);
+                IndexWriter iw = new IndexWriter(FSDirectory.open(new File(path)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
                 DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder(); //.getFullDocumentBuilder();
                 for (String identifier : images) {
                     Document doc = builder.createDocument(new FileInputStream(identifier), identifier);

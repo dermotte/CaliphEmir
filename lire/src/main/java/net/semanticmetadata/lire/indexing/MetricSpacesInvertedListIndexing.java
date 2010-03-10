@@ -36,16 +36,13 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermPositions;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.TopFieldDocCollector;
+import org.apache.lucene.search.*;
+import org.apache.lucene.store.FSDirectory;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.*;
 
 
 /**
@@ -59,7 +56,7 @@ import java.util.StringTokenizer;
  */
 public class MetricSpacesInvertedListIndexing {
     public static int numReferenceObjects = 500;
-    public static int numReferenceObjectsUsed = 100;
+    public static int numReferenceObjectsUsed = 50;
 
     private static MetricSpacesInvertedListIndexing msili = new MetricSpacesInvertedListIndexing(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
 
@@ -99,7 +96,7 @@ public class MetricSpacesInvertedListIndexing {
      * @throws IOException
      */
     public void createIndex(String indexPath) throws IOException {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
 
         if (numDocs < numReferenceObjects) {
@@ -113,7 +110,7 @@ public class MetricSpacesInvertedListIndexing {
         boolean hasDeletions = reader.hasDeletions();
 
         // init reference objects:
-        IndexWriter iw = new IndexWriter(indexPath + "-ro", new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-ro")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         HashSet<Integer> referenceObjsIds = new HashSet<Integer>(numReferenceObjects);
 
         double numDocsDouble = (double) numDocs;
@@ -144,13 +141,13 @@ public class MetricSpacesInvertedListIndexing {
         progress.setCurrentState(State.Indexing);
 
         // now find the reference objects for each entry ;)
-        IndexReader readerRo = IndexReader.open(indexPath + "-ro");
+        IndexReader readerRo = IndexReader.open(FSDirectory.open(new File(indexPath + "-ro")));
         ImageSearcher searcher = new GenericImageSearcher(numReferenceObjectsUsed, featureClass, featureFieldName);
         PerFieldAnalyzerWrapper aWrapper =
                 new PerFieldAnalyzerWrapper(new SimpleAnalyzer());
         aWrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer());
 
-        iw = new IndexWriter(indexPath, aWrapper, false, IndexWriter.MaxFieldLength.UNLIMITED);
+        iw = new IndexWriter(FSDirectory.open(new File(indexPath)), aWrapper, false, IndexWriter.MaxFieldLength.UNLIMITED);
         StringBuilder sb = new StringBuilder(256);
         for (int i = 0; i < numDocs; i++) {
             if (hasDeletions && reader.isDeleted(i)) {
@@ -189,18 +186,18 @@ public class MetricSpacesInvertedListIndexing {
      * @throws IOException
      */
     public void updateIndex(String indexPath) throws IOException {
-        IndexReader reader = IndexReader.open(indexPath);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         boolean hasDeletions = reader.hasDeletions();
         int countUpdated = 0;
 
-        IndexReader readerRo = IndexReader.open(indexPath + "-ro");
+        IndexReader readerRo = IndexReader.open(FSDirectory.open(new File(indexPath + "-ro")));
         ImageSearcher searcher = new GenericImageSearcher(numReferenceObjectsUsed, featureClass, featureFieldName);
         PerFieldAnalyzerWrapper aWrapper =
                 new PerFieldAnalyzerWrapper(new SimpleAnalyzer());
         aWrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer());
 
-        IndexWriter iw = new IndexWriter(indexPath, aWrapper, false, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), aWrapper, false, IndexWriter.MaxFieldLength.UNLIMITED);
         StringBuilder sb = new StringBuilder(256);
         for (int i = 0; i < numDocs; i++) {
             if (hasDeletions && reader.isDeleted(i)) {
@@ -240,13 +237,13 @@ public class MetricSpacesInvertedListIndexing {
      */
     public TopDocs search(BufferedImage img, String indexPath) throws IOException {
         ImageSearcher searcher = new GenericImageSearcher(numReferenceObjectsUsed, featureClass, featureFieldName);
-        ImageSearchHits hits = searcher.search(img, IndexReader.open(indexPath + "-ro"));
+        ImageSearchHits hits = searcher.search(img, IndexReader.open(FSDirectory.open(new File(indexPath + "-ro"))));
         StringBuilder sb = new StringBuilder(numReferenceObjectsUsed * 4);
         for (int j = 0; j < numReferenceObjectsUsed; j++) {
             sb.append(hits.doc(j).getValues("ro-id")[0]);
             sb.append(' ');
         }
-        return scoreDocs(sb.toString(), IndexReader.open(indexPath));
+        return scoreDocs(sb.toString(), IndexReader.open(FSDirectory.open(new File(indexPath))));
     }
 
     /**
@@ -259,16 +256,16 @@ public class MetricSpacesInvertedListIndexing {
      */
     public TopDocs search(Document d, String indexPath) throws IOException {
         if (d.getField("ro-order") != null) // if the document already contains the information on reference object neighbourhood
-            return scoreDocs(d.getValues("ro-order")[0], IndexReader.open(indexPath));
+            return scoreDocs(d.getValues("ro-order")[0], IndexReader.open(FSDirectory.open(new File(indexPath))));
         else { // if not we just create it :)
             ImageSearcher searcher = new GenericImageSearcher(numReferenceObjectsUsed, featureClass, featureFieldName);
-            ImageSearchHits hits = searcher.search(d, IndexReader.open(indexPath + "-ro"));
+            ImageSearchHits hits = searcher.search(d, IndexReader.open(FSDirectory.open(new File(indexPath + "-ro"))));
             StringBuilder sb = new StringBuilder(numReferenceObjectsUsed * 4);
             for (int j = 0; j < numReferenceObjectsUsed; j++) {
                 sb.append(hits.doc(j).getValues("ro-id")[0]);
                 sb.append(' ');
             }
-            return scoreDocs(sb.toString(), IndexReader.open(indexPath));
+            return scoreDocs(sb.toString(), IndexReader.open(FSDirectory.open(new File(indexPath))));
         }
     }
 
@@ -303,21 +300,21 @@ public class MetricSpacesInvertedListIndexing {
             }
             position++;
         }
-        // fill up all the remaining doc scores,
-        TopFieldDocCollector col = new TopFieldDocCollector(reader, Sort.RELEVANCE, numHits);
+        int currdocscore = 0;
+        int maxScore = 0, minScore = (position -1) * position;
+        TreeSet<ScoreDoc> results = new TreeSet<ScoreDoc>(new ScoreDocComparator());
         for (Iterator<Integer> iterator = doc2count.keySet().iterator(); iterator.hasNext();) {
             currDoc = iterator.next();
-//            if (doc2count.get(currDoc) < position) {
-//                doc2score.put(currDoc, doc2score.get(currDoc) + (numRefObjs-doc2count.get(currDoc))*position);
-            // high score: relevant
-            col.collect(currDoc, (position + 1) * position - (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
-            // low score: relevant
-            // col.collect(currDoc, (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
-//            } else {
-//                col.collect(currDoc, (position + 1) * position - (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * position));
-//            }
+            currdocscore = (position -1) * position -  // max score ... minus actual distance.
+                    (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * (position-1));
+            maxScore = Math.max(maxScore, currdocscore);
+            minScore = Math.min(minScore, currdocscore);
+            if (results.size()< numHits || currdocscore >=minScore) {
+                results.add(new ScoreDoc(currDoc, currdocscore));
+            }
         }
-        return col.topDocs();
+        while(results.size()>numHits) results.pollLast();
+        return new TopDocs(Math.min(results.size(), numHits), (ScoreDoc[]) results.toArray(new ScoreDoc[results.size()]), maxScore);
     }
 
     public int getNumHits() {
@@ -336,7 +333,7 @@ public class MetricSpacesInvertedListIndexing {
      * @throws IOException
      */
     public IndexReader getIndexReader(String indexPath) throws IOException {
-        return IndexReader.open(indexPath);
+        return IndexReader.open(FSDirectory.open(new File(indexPath)));
     }
 
     public ProgressIndicator getProgress() {
@@ -352,4 +349,9 @@ public class MetricSpacesInvertedListIndexing {
     // ** Inner class ...
     // ******************************************************************************
 
+    private static class ScoreDocComparator implements Comparator<ScoreDoc> {
+        public int compare(ScoreDoc o1, ScoreDoc o2) {
+            return (int) Math.signum(o2.score - o1.score);
+        }
+    }
 }

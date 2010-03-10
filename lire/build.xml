@@ -19,9 +19,9 @@
  *
  * Copyright statement:
  * ********************
- * (c) 2002-2006 by Mathias Lux (mathias@juggle.at)
- * Inffeldgasse 21a, 8010 Graz, Austria
- * http://www.know-center.at
+ * (c) 2002-2010 by Mathias Lux (mathias@juggle.at)
+ * Palmengasse 20, 9020 Klagenfurt, Austria
+ * http://www.semanticmetadata.net
  */
 
     -->
@@ -45,7 +45,7 @@
     <property name="config" value="src/main/config"/>
     <property name="build" value="classes"/>
     <property name="dist" value="dist"/>
-    <property name="versionstring" value="0.7"/>
+    <property name="versionstring" value="0.8"/>
     <!-- path to test files -->
     <property name="test" value="test"/>
     <!-- path to documentation like README or CHANGES -->
@@ -76,7 +76,7 @@
             <entry key="build-number" type="int" value="1" operation="+"/>
         </propertyfile>
         <property file="${config}/build.properties"/>
-        <echo file="default.mf" append="false">Class-Path: lib/lucene-core-2.4.1.jar lib/caliph-emir-cbir.jar
+        <echo file="default.mf" append="false">Class-Path: lib/lucene-core-3.0.1.jar lib/caliph-emir-cbir.jar
             Build-Date: ${touch.time}
             Build-Number: ${build-number}
         </echo>

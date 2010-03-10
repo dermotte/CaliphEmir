@@ -102,14 +102,14 @@ class SinglePhotoThread implements Runnable {
             File cachedImage = new File(FlickrIndexingThread.cacheDirectory + photo.photourl.substring(photo.photourl.lastIndexOf("/") + 1, photo.photourl.length()));
             ImageIO.write(image, "jpg", cachedImage);
             Document doc = fdt.getDocumentBuilder().createDocument(image, cachedImage.getAbsolutePath());
-            doc.add(new Field("FlickrURL", photo.url, Field.Store.YES, Field.Index.UN_TOKENIZED));
-            doc.add(new Field("FlickrTitle", photo.title, Field.Store.YES, Field.Index.UN_TOKENIZED));
+            doc.add(new Field("FlickrURL", photo.url, Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.add(new Field("FlickrTitle", photo.title, Field.Store.YES, Field.Index.NOT_ANALYZED));
             StringBuilder sb = new StringBuilder(256);
             for (String tag : photo.tags) {
                 sb.append(tag);
                 sb.append(' ');
             }
-            doc.add(new Field("tags", sb.toString(), Field.Store.YES, Field.Index.TOKENIZED));
+            doc.add(new Field("tags", sb.toString(), Field.Store.YES, Field.Index.ANALYZED));
             fdt.addDocumentToFinished(doc);
         } catch (IOException e) {
             System.out.println("Warning: Exception reading & indexing image " + photo.photourl + ": " + e.getMessage());

@@ -11,6 +11,7 @@ import net.semanticmetadata.lire.DocumentBuilder;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -79,8 +80,8 @@ public class IndexingThread extends Thread {
                 JOptionPane.showMessageDialog(parent, "Could not find any files in " + parent.textfieldIndexDir.getText(), "No files found", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            boolean create = !parent.checkBoxAddToExisintgIndex.isSelected() && new File(parent.textfieldIndexName.getText()).exists();
-            IndexWriter iw = new IndexWriter(parent.textfieldIndexName.getText(), new SimpleAnalyzer(), create);
+            boolean create = !parent.checkBoxAddToExisintgIndex.isSelected();
+            IndexWriter iw = new IndexWriter(FSDirectory.open(new File(parent.textfieldIndexName.getText())), new SimpleAnalyzer(), create, IndexWriter.MaxFieldLength.UNLIMITED);
             int builderIdx = parent.selectboxDocumentBuilder.getSelectedIndex();
             DocumentBuilder builder = new MetadataBuilder();
             int count = 0;

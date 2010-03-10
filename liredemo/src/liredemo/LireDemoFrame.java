@@ -15,6 +15,7 @@ import net.semanticmetadata.lire.ImageSearcherFactory;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.store.FSDirectory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,13 +25,12 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.apache.lucene.store.FSDirectory.*;
 
 /**
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
@@ -1060,14 +1060,18 @@ public class LireDemoFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonMosaicSaveActionPerformed
 
     private void buttonStartMosaicingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartMosaicingActionPerformed
-        if (!org.apache.lucene.index.IndexReader.indexExists(textfieldIndexName.getText()))
-            JOptionPane.showMessageDialog(this, "Did not find exisintg index!\n" +
-                    "Use the \"Index\" function to create a new one.", "Error", JOptionPane.ERROR_MESSAGE);
-        else if (textfieldMosaicImage.getText().length() > 4) {
-            mosaicImage();
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select an image to create mosaic first.\n" +
-                    "Use the \"Open image ...\" button to do this.", "Error", JOptionPane.ERROR_MESSAGE);
+        try {
+            if (!IndexReader.indexExists(open(new File(textfieldIndexName.getText()))))
+                JOptionPane.showMessageDialog(this, "Did not find existing index!\n" +
+                        "Use the \"Index\" function to create a new one.", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (textfieldMosaicImage.getText().length() > 4) {
+                mosaicImage();
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select an image to create mosaic first.\n" +
+                        "Use the \"Open image ...\" button to do this.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }//GEN-LAST:event_buttonStartMosaicingActionPerformed
 
@@ -1164,10 +1168,10 @@ public class LireDemoFrame extends javax.swing.JFrame {
     private void initReader() {
         try {
             if (browseReader == null)
-                browseReader = org.apache.lucene.index.IndexReader.open(textfieldIndexName.getText());
+                browseReader = org.apache.lucene.index.IndexReader.open(FSDirectory.open(new File(textfieldIndexName.getText())));
             else {
                 browseReader.close();
-                browseReader = org.apache.lucene.index.IndexReader.open(textfieldIndexName.getText());
+                browseReader = org.apache.lucene.index.IndexReader.open(FSDirectory.open(new File(textfieldIndexName.getText())));
             }
             spinnerMaxDocCount.setValue(browseReader.maxDoc());
             setDocumentImageIcon(((Integer) spinnerCurrentDocNum.getValue()).intValue());
@@ -1286,7 +1290,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
             public void run() {
                 try {
                     progressSearch.setValue(0);
-                    IndexReader reader = IndexReader.open(textfieldIndexName.getText());
+                    IndexReader reader = IndexReader.open(FSDirectory.open(new File(textfieldIndexName.getText())));
                     ImageSearcher searcher = getSearcher();
                     // System.out.println(searcher.getClass().getName() + " " + searcher.toString());
                     progressSearch.setString("Searching for matching images: " + searcher.getClass().getName());
@@ -1444,7 +1448,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         Thread t = new Thread() {
             public void run() {
                 try {
-                    IndexReader reader = IndexReader.open(textfieldIndexName.getText());
+                    IndexReader reader = IndexReader.open(FSDirectory.open(new File(textfieldIndexName.getText())));
                     int numDocs = reader.numDocs();
                     System.out.println("numDocs = " + numDocs);
                     ImageSearcher searcher = getSearcher();

@@ -8,6 +8,7 @@ import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
@@ -110,7 +111,7 @@ public class FlickrIndexingThread extends Thread {
 //        iw = new IndexWriter(indexPath + "-new", wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
 
             boolean create = !parent.checkBoxAddToExisintgIndex.isSelected() && new File(parent.textfieldIndexName.getText()).exists();
-            IndexWriter iw = new IndexWriter(parent.textfieldIndexName.getText(), wrapper, create, IndexWriter.MaxFieldLength.UNLIMITED);
+            IndexWriter iw = new IndexWriter(FSDirectory.open(new File(parent.textfieldIndexName.getText())), wrapper, create, IndexWriter.MaxFieldLength.UNLIMITED);
             int builderIdx = parent.selectboxDocumentBuilder.getSelectedIndex();
             DocumentBuilder builder = new MetadataBuilder();
             int count = 0;
