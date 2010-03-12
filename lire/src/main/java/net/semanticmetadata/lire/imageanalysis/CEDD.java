@@ -360,4 +360,29 @@ public class CEDD implements LireFeature {
         }
 
     }
+
+    /**
+     * Provides a much faster way of serialization.
+     * @return a byte array that can be read with the corresponding method.
+     * @see net.semanticmetadata.lire.imageanalysis.CEDD#setByteArrayRepresentation(byte[])
+     */
+    public byte[] getByteArrayRepresentation() {
+        byte[] result = new byte[data.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (byte) data[i];
+        }
+        return result;
+    }
+
+    /**
+     * Reads descriptor from a byte array. Much faster than the String based method.
+     * @see net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation
+     * @param in byte array from corresponding method
+     */
+    public void setByteArrayRepresentation(byte[] in) {
+        data = new double[in.length];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = in[i];
+        }
+    }
 }

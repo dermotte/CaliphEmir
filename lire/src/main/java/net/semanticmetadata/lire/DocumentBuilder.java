@@ -77,6 +77,8 @@ public interface DocumentBuilder {
     public static final String FIELD_NAME_SIFT = "featureSift";
     public static final String FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM = "featureSiftHistogram";
     public static final String FIELD_NAME_IDENTIFIER = "descriptorImageIdentifier";
+    public static final String FIELD_NAME_CEDD_FAST = "featureCEDDfast";
+
 
     /**
      * Creates a new Lucene document from a BufferedImage. The identifier can be used like an id

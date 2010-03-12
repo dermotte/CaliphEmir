@@ -1,6 +1,18 @@
 CHANGES for LIRE
 ================
 
+2010-03-11
+==========
+General:
+  - Added a byte[] serialization to CEDD and implemented DocumentBuilder and searcher for it.
+    Results in a 30% faster search for 1000 images.
+
+2010-03-11
+==========
+General:
+  - Minor changes to sources to get them release ready.
+  - Release 0.8
+
 2010-03-10
 ==========
 General:

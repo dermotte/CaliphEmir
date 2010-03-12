@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  *
  * Copyright statement:
  * --------------------
- * (c) 2002-2008 by Mathias Lux (mathias@juggle.at)
+ * (c) 2002-2010 by Mathias Lux (mathias@juggle.at)
  * http://www.juggle.at, http://www.SemanticMetadata.net
  */
 

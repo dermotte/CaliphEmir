@@ -33,7 +33,7 @@ import java.util.LinkedList;
  */
 public class CEDDTest extends TestCase {
     private String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
-    private String testFilesPath = "./lire/src/test/resources/small/";
+    private String testFilesPath = "../lire/src/test/resources/small/";
 
     public void testExtraction() throws IOException {
         CEDD sch = new CEDD();
@@ -44,11 +44,11 @@ public class CEDDTest extends TestCase {
     }
 
     public void testRetrieval() throws Exception {
-        SimpleColorHistogram[] acc = new SimpleColorHistogram[testFiles.length];
+        CEDD[] acc = new CEDD[testFiles.length];
         LinkedList<String> vds = new LinkedList<String>();
         for (int i = 0; i < acc.length; i++) {
             System.out.println("Extracting from number " + i);
-            acc[i] = new SimpleColorHistogram();
+            acc[i] = new CEDD();
             acc[i].extract(ImageIO.read(new FileInputStream(testFilesPath + testFiles[i])));
             vds.add(acc[i].getStringRepresentation());
         }
@@ -69,5 +69,24 @@ public class CEDDTest extends TestCase {
         }
     }
 
+    public void testSerialization() throws IOException {
+        CEDD[] c = new CEDD[testFiles.length];
+        LinkedList<String > vds = new LinkedList<String>();
+        LinkedList<byte[] > vdb = new LinkedList<byte[]>();
+        for (int i = 0; i < c.length; i++) {
+            System.out.println("Extracting from number " + i);
+            c[i] = new CEDD();
+            c[i].extract(ImageIO.read(new FileInputStream(testFilesPath + testFiles[i])));
+            vds.add(c[i].getStringRepresentation());
+            vdb.add(c[i].getByteArrayRepresentation());
+        }
+
+        for (int i = 0; i < c.length; i++) {
+            CEDD a = new CEDD(), b= new CEDD();
+            a.setByteArrayRepresentation(vdb.get(i));
+            b.setStringRepresentation(vds.get(i));
+            assertTrue(a.getDistance(b)==0);
+        }
+    }
 
 }

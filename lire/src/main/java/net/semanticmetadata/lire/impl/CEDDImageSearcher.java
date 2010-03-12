@@ -22,130 +22,48 @@
  */
 package net.semanticmetadata.lire.impl;
 
-import net.semanticmetadata.lire.AbstractImageSearcher;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
+import net.semanticmetadata.lire.imageanalysis.CEDD;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
-import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 
-import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeSet;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 01.02.2006
- * <br>Time: 00:17:02
- *
- * @author Mathias Lux, mathias@juggle.at
+ * Provides a faster way of searching based on byte arrays instead of Strings. The method
+ * {@link net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation()} is used
+ * to generate the signature of the descriptor much faster. First tests have shown that this
+ * implementation is up to 4 times faster than the implementation based on strings
+ * (for 120,000 images) 
+ * 
+ * User: Mathias Lux, mathias@juggle.at
+ * Date: 12.03.2010
+ * Time: 13:21:50
  */
-public class GenericImageSearcher extends AbstractImageSearcher {
-    protected Logger logger = Logger.getLogger(getClass().getName());
-    Class descriptorClass;
-    String fieldName;
-
-    private int maxHits = 10;
-    protected TreeSet<SimpleResult> docs;
-
-    public GenericImageSearcher(int maxHits, Class descriptorClass, String fieldName) {
-        this.maxHits = maxHits;
-        docs = new TreeSet<SimpleResult>();
-        this.descriptorClass = descriptorClass;
-        this.fieldName = fieldName;
-    }
-
-    public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {
-        logger.finer("Starting extraction.");
-        LireFeature lireFeature = null;
-        SimpleImageSearchHits searchHits = null;
-        try {
-            lireFeature = (LireFeature) descriptorClass.newInstance();
-            // Scaling image is especially with the correlogram features very important!
-            BufferedImage bimg = image;
-            if (Math.max(image.getHeight(), image.getWidth()) > GenericDocumentBuilder.MAX_IMAGE_DIMENSION) {
-                bimg = ImageUtils.scaleImage(image, GenericDocumentBuilder.MAX_IMAGE_DIMENSION);
-            }
-            lireFeature.extract(bimg);
-            logger.fine("Extraction from image finished");
-
-            float maxDistance = findSimilar(reader, lireFeature);
-            searchHits = new SimpleImageSearchHits(this.docs, maxDistance);
-        } catch (InstantiationException e) {
-            logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
-        } catch (IllegalAccessException e) {
-            logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
-        }
-        return searchHits;
-    }
-
-    /**
-     * @param reader
-     * @param lireFeature
-     * @return the maximum distance found for normalizing.
-     * @throws java.io.IOException
-     */
-    protected float findSimilar(IndexReader reader, LireFeature lireFeature) throws IOException {
-        float maxDistance = -1f, overallMaxDistance = -1f;
-        boolean hasDeletions = reader.hasDeletions();
-
-        // clear result set ...
-        docs.clear();
-
-        int docs = reader.numDocs();
-        for (int i = 0; i < docs; i++) {
-            // bugfix by Roman Kern
-            if (hasDeletions && reader.isDeleted(i)) {
-                continue;
-            }
-
-            Document d = reader.document(i);
-            float distance = getDistance(d, lireFeature);
-            assert (distance >= 0);
-            // calculate the overall max distance to normalize score afterwards
-            if (overallMaxDistance < distance) {
-                overallMaxDistance = distance;
-            }
-            // if it is the first document:
-            if (maxDistance < 0) {
-                maxDistance = distance;
-            }
-            // if the array is not full yet:
-            if (this.docs.size() < maxHits) {
-                this.docs.add(new SimpleResult(distance, d));
-                if (distance > maxDistance) maxDistance = distance;
-            } else if (distance < maxDistance) {
-                // if it is nearer to the sample than at least on of the current set:
-                // remove the last one ...
-                this.docs.remove(this.docs.last());
-                // add the new one ...
-                this.docs.add(new SimpleResult(distance, d));
-                // and set our new distance border ...
-                maxDistance = this.docs.last().getDistance();
-            }
-        }
-        return maxDistance;
+public class CEDDImageSearcher extends GenericImageSearcher {
+    public CEDDImageSearcher(int maxHits) {
+        super(maxHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD_FAST);
     }
 
     protected float getDistance(Document d, LireFeature lireFeature) {
         float distance = 0f;
-        LireFeature lf;
+        CEDD lf;
         try {
-            lf = (LireFeature) descriptorClass.newInstance();
-            String[] cls = d.getValues(fieldName);
+            lf = (CEDD) descriptorClass.newInstance();
+            byte[] cls = d.getBinaryValue(fieldName);
             if (cls != null && cls.length > 0) {
-                lf.setStringRepresentation(cls[0]);
+                lf.setByteArrayRepresentation(cls);
                 distance = lireFeature.getDistance(lf);
             } else {
-                logger.warning("No feature stored in this document!");
+                logger.warning("No feature stored in this document ...");
             }
         } catch (InstantiationException e) {
             logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
@@ -159,11 +77,11 @@ public class GenericImageSearcher extends AbstractImageSearcher {
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
         SimpleImageSearchHits searchHits = null;
         try {
-            LireFeature lireFeature = (LireFeature) descriptorClass.newInstance();
+            CEDD lireFeature = (CEDD) descriptorClass.newInstance();
 
-            String[] cls = doc.getValues(fieldName);
+            byte[] cls = doc.getBinaryValue(fieldName);
             if (cls != null && cls.length > 0)
-                lireFeature.setStringRepresentation(cls[0]);
+                lireFeature.setByteArrayRepresentation(cls);
             float maxDistance = findSimilar(reader, lireFeature);
 
             searchHits = new SimpleImageSearchHits(this.docs, maxDistance);
@@ -183,10 +101,10 @@ public class GenericImageSearcher extends AbstractImageSearcher {
                 throw new FileNotFoundException("No index found at this specific location.");
             Document doc = reader.document(0);
 
-            LireFeature lireFeature = (LireFeature) descriptorClass.newInstance();
-            String[] cls = doc.getValues(fieldName);
+            CEDD lireFeature = (CEDD) descriptorClass.newInstance();
+            byte[] cls = doc.getBinaryValue(fieldName);
             if (cls != null && cls.length > 0)
-                lireFeature.setStringRepresentation(cls[0]);
+                lireFeature.setByteArrayRepresentation(cls);
 
             HashMap<Float, List<String>> duplicates = new HashMap<Float, List<String>>();
 
@@ -227,9 +145,4 @@ public class GenericImageSearcher extends AbstractImageSearcher {
         return simpleImageDuplicates;
 
     }
-
-    public String toString() {
-        return "GenericSearcher using " + descriptorClass.getName();
-    }
-
 }

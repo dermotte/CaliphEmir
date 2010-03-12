@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  *
  * Copyright statement:
  * --------------------
- * (c) 2002-2006 by Mathias Lux (mathias@juggle.at)
+ * (c) 2002-2010 by Mathias Lux (mathias@juggle.at)
  * http://www.juggle.at, http://www.SemanticMetadata.net
  */
 

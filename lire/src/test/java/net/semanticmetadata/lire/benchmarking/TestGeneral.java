@@ -1,7 +1,7 @@
 package net.semanticmetadata.lire.benchmarking;
 
-import Jama.Matrix;
-import Jama.SingularValueDecomposition;
+//import Jama.Matrix;
+//import Jama.SingularValueDecomposition;
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageSearchHits;
@@ -31,8 +31,8 @@ import java.util.*;
 public class TestGeneral extends TestCase {
     // check if this directory exists!!
     public String testIndex = "./temp/generaltestindex";
-    //    public String testFiles = "C:\\Temp\\RGA\\images\\indexsrc\\default\\original";
-    public String testFiles = "C:\\Temp\\RGA\\images\\indexsrc\\nikestore";
+    //    public String testFiles = "C:\\Temp\\...\\images\\indexsrc\\default\\original";
+    public String testFiles = "C:\\Temp\\...\\images\\indexsrc\\...";
 
     public HashMap<String, String> testcases = new HashMap<String, String>(12);
 
@@ -145,7 +145,7 @@ public class TestGeneral extends TestCase {
         System.out.println("> ColorLayout");
         computeErrorRate(new SimpleImageSearcher(maxHits, 0f, 1f, 0f), "ColorLayout");
         System.out.println("> ColorLayout (LSA)");
-        computeErrorRateLsa(new SimpleImageSearcher(maxHits, 0f, 1f, 0f), "ColorLayout-Lsa");
+//        computeErrorRateLsa(new SimpleImageSearcher(maxHits, 0f, 1f, 0f), "ColorLayout-Lsa");
 //        System.out.println("> Edgehist");
 //        computeErrorRate(new SimpleImageSearcher(maxHits, 0f, 0f, 1f), "EdgeHist");
     }
@@ -171,7 +171,7 @@ public class TestGeneral extends TestCase {
             // saveToHtml(queryImage.substring(queryImage.lastIndexOf('\\') + 1) + "-" + prefix, hits, queryImage);
         }
     }
-
+       /*
     public void computeErrorRateLsa(ImageSearcher searcher, String prefix) throws IOException, InstantiationException, IllegalAccessException {
 //        int maxHits = 10;
         IndexReader reader = IndexReader.open(SimpleFSDirectory.open(new File(testIndex)), true);
@@ -190,7 +190,7 @@ public class TestGeneral extends TestCase {
             }
 //            saveToHtml(queryImage.substring(queryImage.lastIndexOf('\\') + 1) + "-" + prefix, hits, queryImage);
         }
-    }
+    }  */
 
     private ImageSearchHits rerank(ImageSearchHits hits, Document query, Class descriptorClass, String fieldName) throws IllegalAccessException, InstantiationException {
         ArrayList<SimpleResult> results = new ArrayList<SimpleResult>(hits.length());
@@ -232,6 +232,7 @@ public class TestGeneral extends TestCase {
         bw.close();
     }
 
+    /*
     private ImageSearchHits lsa(IndexReader reader, ColorLayout query, int numDims) {
         ArrayList<double[]> list = new ArrayList<double[]>(reader.numDocs());
         index = new ArrayList<Document>(reader.numDocs());
@@ -322,6 +323,6 @@ public class TestGeneral extends TestCase {
         ImageSearchHits hits = new SimpleImageSearchHits(results, (float) maxDistance);
         return hits;
     }
-
+          */
 
 }

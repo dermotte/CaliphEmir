@@ -1,12 +1,18 @@
 package net.semanticmetadata.lire;
 
 import junit.framework.TestCase;
+import net.semanticmetadata.lire.impl.CEDDDocumentBuilder;
+import net.semanticmetadata.lire.impl.CEDDImageSearcher;
+import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
 import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -78,19 +84,63 @@ public class RuntimeTest extends TestCase {
     }
 
     public void testCreateCEDDIndex() throws IOException {
-        String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
-        String testFilesPath = "./lire/src/test/resources/small/";
+        ArrayList<String> images = FileUtils.getAllImages(new File("c:/temp/flickrphotos"), true);
 
-        DocumentBuilder builder = DocumentBuilderFactory.getCEDDDocumentBuilder();
+        ChainedDocumentBuilder builder = new ChainedDocumentBuilder();
+        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+        builder.addBuilder(new CEDDDocumentBuilder());
         IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-cedd")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        int count = 0;
         long ms = System.currentTimeMillis();
-        for (String identifier : testFiles) {
-            Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
-            iw.addDocument(doc);
+        for (String identifier : images) {
+            try {
+                Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
+                iw.addDocument(doc);
+            } catch (Exception e) {
+                System.err.print("\n ;-( ");//e.printStackTrace();
+            }
+            count++;
+            if (count % 100 == 0) System.out.print((100 * count) / images.size() + "% ");
         }
         System.out.println("Time taken: " + ((System.currentTimeMillis() - ms) / testFiles.length) + " ms");
         iw.optimize();
         iw.close();
+    }
+
+    public void testCEDDSearch() throws IOException {
+        int numsearches = 10;
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File("test-index-cedd")));
+        int numDocs = reader.numDocs();
+        System.out.println("numDocs = " + numDocs);
+
+        // This is the new, shiny and fast one ...
+        ImageSearcher searcher = new CEDDImageSearcher(30);
+
+        // This is the old and slow one.
+//        ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(30);
+        FileInputStream imageStream = new FileInputStream("wang-1000/0.jpg");
+        BufferedImage bimg = ImageIO.read(imageStream);
+        ImageSearchHits hits = null;
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < numsearches; i++) {
+            hits = searcher.search(bimg, reader);
+        }
+        time = System.currentTimeMillis() - time;
+        System.out.println(((float) time / (float) numsearches) + " ms per search with image, averaged on " + numsearches);
+        for (int i = 0; i < hits.length(); i++) {
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+        }
+        Document document = hits.doc(4);
+        time = System.currentTimeMillis();
+        for (int i = 0; i < numsearches; i++) {
+            hits = searcher.search(document, reader);
+        }
+        time = System.currentTimeMillis() - time;
+        System.out.println(((float) time / (float) numsearches) + " ms per search with document, averaged on " + numsearches);
+        for (int i = 0; i < hits.length(); i++) {
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+        }
+
     }
 
 //    public void testCreateExtensiveIndex() throws IOException {

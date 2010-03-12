@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/lire.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/Jama-1.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -28,7 +28,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/Jama-1.0.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/lire.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

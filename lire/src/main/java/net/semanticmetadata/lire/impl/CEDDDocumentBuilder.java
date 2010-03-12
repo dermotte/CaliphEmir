@@ -31,38 +31,22 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
 import java.awt.image.BufferedImage;
-import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-
-import at.lux.imageanalysis.VisualDescriptor;
+import java.util.logging.Logger;
 
 /**
- * This class allows to create a DocumentBuilder based on a class implementing LireFeature.
- * Date: 28.05.2008
- * Time: 14:32:15
- *
- * @author Mathias Lux, mathias@juggle.at
+ * Provides a faster way of searching based on byte arrays instead of Strings. The method
+ * {@link net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation()} is used
+ * to generate the signature of the descriptor much faster.
+ * User: Mathias Lux, mathias@juggle.at
+ * Date: 12.03.2010
+ * Time: 13:21:35
  */
-public class GenericDocumentBuilder  extends AbstractDocumentBuilder {
+public class CEDDDocumentBuilder extends AbstractDocumentBuilder {
     private Logger logger = Logger.getLogger(getClass().getName());
     public static final int MAX_IMAGE_DIMENSION = 1024;
-    Class descriptorClass;
-    String fieldName;
-
-    /**
-     * Creating a new DocumentBuilder based on a class based on the interface {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
-     * @param descriptorClass has to implement {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
-     * @param fieldName the field name in the index.
-     */
-    public GenericDocumentBuilder(Class descriptorClass, String fieldName) {
-        this.descriptorClass = descriptorClass;
-        this.fieldName = fieldName;
-    }
-
+    
     public Document createDocument(BufferedImage image, String identifier) {
-        String featureString = "";
         assert (image != null);
         BufferedImage bimg = image;
         // Scaling image is especially with the correlogram features very important!
@@ -71,23 +55,16 @@ public class GenericDocumentBuilder  extends AbstractDocumentBuilder {
             bimg = ImageUtils.scaleImage(image, MAX_IMAGE_DIMENSION);
         }
         Document doc = null;
-        logger.finer("Starting extraction from image [" + descriptorClass.getName() + "].");
-        try {
-            LireFeature vd = (LireFeature) descriptorClass.newInstance();
-            vd.extract(bimg);
-            featureString = vd.getStringRepresentation();
-            logger.fine("Extraction finished [" + descriptorClass.getName() + "].");
+        logger.finer("Starting extraction from image [CEDD - fast].");
+        CEDD vd = new CEDD();
+        vd.extract(bimg);
+        logger.fine("Extraction finished [CEDD - fast].");
 
-            doc = new Document();
-            doc.add(new Field(fieldName, featureString, Field.Store.YES, Field.Index.NO));
-            if (identifier != null)
-                doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc = new Document();
+        doc.add(new Field(DocumentBuilder.FIELD_NAME_CEDD_FAST, vd.getByteArrayRepresentation(), Field.Store.YES));
+        if (identifier != null)
+            doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
 
-        } catch (InstantiationException e) {
-            logger.log(Level.SEVERE, "Error instantiating class for generic document builder: " + e.getMessage());
-        } catch (IllegalAccessException e) {
-            logger.log(Level.SEVERE, "Error instantiating class for generic document builder: " + e.getMessage());
-        }
         return doc;
     }
 }
