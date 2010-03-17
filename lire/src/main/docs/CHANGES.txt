@@ -1,6 +1,16 @@
 CHANGES for LIRE
 ================
 
+2010-03-17
+==========
+VisualWords:
+  - Added another field, now SiftFeatureHistogramBuilder also writes a
+    string of visual words into the index.
+  - Changed number of clusters for SiftFeatureHistogramBuilder to 256
+  - Changed quant value for normalization of histograms to 256
+  - Removed quantization for visual words.
+  - Test classes: Updated to reflect changes.
+
 2010-03-11
 ==========
 General:

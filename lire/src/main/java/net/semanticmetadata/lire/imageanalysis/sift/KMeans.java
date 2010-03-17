@@ -37,7 +37,7 @@ import java.util.*;
  */
 public class KMeans {
     private List<Image> images = new LinkedList<Image>();
-    private int count = 0, numClusters = 32;
+    private int count = 0, numClusters = 256;
     private ArrayList<Feature> features = null;
     private Cluster[] clusters = null;
     private HashMap<Feature, Integer> featureIndex = null;
@@ -221,7 +221,7 @@ class Image {
     public List<Feature> features;
     public String identifier;
     public int[] localFeatureHistogram = null;
-    private final int QUANT_MAX_HISTOGRAM = 64;
+    private final int QUANT_MAX_HISTOGRAM = 256;
 
     Image(String identifier, List<Feature> features) {
         this.features = features;

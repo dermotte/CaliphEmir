@@ -33,10 +33,17 @@ import net.semanticmetadata.lire.impl.SiftDocumentBuilder;
 import net.semanticmetadata.lire.impl.SiftLocalFeatureHistogramImageSearcher;
 import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -56,7 +63,7 @@ import java.util.List;
 public class TestLocalFeatureHistogram extends TestCase {
     private Extractor extractor;
     private String indexPath = "wang-index";
-    private String testExtensive = "./lire/wang-data-1000";
+    private String testExtensive = "./wang-1000";
     private int[] sampleQueries = {284, 77, 108, 416, 144, 534, 898, 104, 67, 10, 607, 165, 343, 973, 591, 659, 812, 231, 261, 224, 227, 914, 427, 810, 979, 716, 253, 708, 751, 269, 531, 699, 835, 370, 642, 504, 297, 970, 929, 20, 669, 434, 201, 9, 575, 631, 730, 7, 546, 816, 431, 235, 289, 111, 862, 184, 857, 624, 323, 393, 465, 905, 581, 626, 212, 459, 722, 322, 584, 540, 194, 704, 410, 267, 349, 371, 909, 403, 724, 573, 539, 812, 831, 600, 667, 672, 454, 873, 452, 48, 322, 424, 952, 277, 565, 388, 149, 966, 524, 36, 528, 75, 337, 655, 836, 698, 230, 259, 897, 652, 590, 757, 673, 937, 676, 650, 297, 434, 358, 789, 484, 975, 318, 12, 506, 38, 979, 732, 957, 904, 852, 635, 620, 28, 59, 732, 84, 788, 562, 913, 173, 508, 32, 16, 882, 847, 320, 185, 268, 230, 259, 931, 653, 968, 838, 906, 596, 140, 880, 847, 297, 77, 983, 536, 494, 530, 870, 922, 467, 186, 254, 727, 439, 241, 12, 947, 561, 160, 740, 705, 619, 571, 745, 774, 845, 507, 156, 936, 473, 830, 88, 66, 204, 737, 770, 445, 358, 707, 95, 349};
 
 
@@ -76,7 +83,7 @@ public class TestLocalFeatureHistogram extends TestCase {
             System.out.println("s = " + s);
             List<Feature> features = extractor.computeSiftFeatures(ImageIO.read(new File(s)));
             k.addImage(s, features);
-            if (count > 20) break;
+//            if (count > 20) break;
             count++;
         }
         System.out.println("Init clustering");
@@ -121,13 +128,16 @@ public class TestLocalFeatureHistogram extends TestCase {
     }
 
     public void testSiftIndexing() throws IOException {
+        ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
         SiftDocumentBuilder builder = new SiftDocumentBuilder();
         IndexWriter iw = new IndexWriter(FSDirectory.open(new File("sift-idx")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
-        for (int i = 0; i < sampleQueries.length; i++) {
-            int sampleQuery = sampleQueries[i];
-            String s = testExtensive + "/" + sampleQuery + ".jpg";
-            iw.addDocument(builder.createDocument(new FileInputStream(s), s));
+        for (int i = 0; i < images.size(); i++) {
+//            int sampleQuery = sampleQueries[i];
+//            String s = testExtensive + "/" + sampleQuery + ".jpg";
+            iw.addDocument(builder.createDocument(new FileInputStream(images.get(i)), images.get(i)));
             if (i % 10 == 0) System.out.print(".");
+            if (i % 100 == 0) System.out.print("\n");
+//            if (i > 200) break;
         }
         System.out.println("");
         iw.optimize();
@@ -135,19 +145,37 @@ public class TestLocalFeatureHistogram extends TestCase {
     }
 
     public void testCreateLocalFeatureHistogram() throws IOException {
-        SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File("sift-idx"))));
+        testSiftIndexing();
+        SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File("sift-idx")), false));
         sh.index();
+        testFindimages();
     }
 
     public void testFindimages() throws IOException {
         IndexReader reader = IndexReader.open(FSDirectory.open(new File("sift-idx")));
-
+        int docID = 2;
+        // test with plain L1:
         SiftLocalFeatureHistogramImageSearcher searcher = new SiftLocalFeatureHistogramImageSearcher(10);
-        ImageSearchHits searchHits = searcher.search(reader.document(0), reader);
+        ImageSearchHits searchHits = searcher.search(reader.document(docID), reader);
         for (int i = 0; i < searchHits.length(); i++) {
             Document document = searchHits.doc(i);
             String file = document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
             System.out.println(searchHits.score(i) + ": " + file);
+        }
+        System.out.println("----");
+        // test based on the Lucene scoring function:
+        String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
+        System.out.println("query = " + query);
+        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer());
+        IndexSearcher isearcher = new IndexSearcher(reader);
+        try {
+            TopDocs docs = isearcher.search(qp.parse(query), 10);
+            for (int i = 0; i < docs.scoreDocs.length; i++) {
+                System.out.println(docs.scoreDocs[i].score + ": " + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]);
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 }

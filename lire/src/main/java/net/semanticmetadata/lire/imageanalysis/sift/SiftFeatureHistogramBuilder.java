@@ -27,7 +27,9 @@
 package net.semanticmetadata.lire.imageanalysis.sift;
 
 import net.semanticmetadata.lire.DocumentBuilder;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
@@ -71,7 +73,7 @@ public class SiftFeatureHistogramBuilder {
             }
         }
         // do the clustering:
-        System.out.println("Start clustering.");
+        System.out.println("Starting clustering ...");
         k.init();
         double laststress = k.clusteringStep();
         double newstress = k.clusteringStep();
@@ -79,8 +81,8 @@ public class SiftFeatureHistogramBuilder {
             laststress = newstress;
             newstress = k.clusteringStep();
         }
-        //  ccreate histograms:
-        System.out.println("Create histogram.");
+        //  create histograms:
+        System.out.println("Creating histograms ...");
         List<Image> imgs = k.getImages();
         for (Iterator<Image> imageIterator = imgs.iterator(); imageIterator.hasNext();) {
             Image image = imageIterator.next();
@@ -88,9 +90,11 @@ public class SiftFeatureHistogramBuilder {
             for (Iterator<Feature> iterator = image.features.iterator(); iterator.hasNext();) {
                 Feature feat = iterator.next();
                 image.getLocalFeatureHistogram()[k.getClusterOfFeature(feat)]++;
-                image.normalizeFeatureHistogram();
+                // we might cut this out here ... no quantization needed:
+                // image.normalizeFeatureHistogram();
             }
         }
+        System.out.println("Finished, now writing into index ...");
         // store histograms in index:
         LinkedList<Integer> toDelete = new LinkedList<Integer>();
         LinkedList<Document> toAdd = new LinkedList<Document>();
@@ -105,6 +109,8 @@ public class SiftFeatureHistogramBuilder {
                 }
                 if (hist != null) {
                     d.add(new Field(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM, arrayToString(hist), Field.Store.YES, Field.Index.NO));
+                    // stores visual words, something like "v0 v0 v1 v3 v4 ..."
+                    d.add(new Field(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(hist), Field.Store.YES, Field.Index.ANALYZED));
                     toAdd.add(d);
                     toDelete.add(i);
                 } else
@@ -115,13 +121,28 @@ public class SiftFeatureHistogramBuilder {
         for (Iterator<Integer> documentIterator = toDelete.iterator(); documentIterator.hasNext();) {
             reader.deleteDocument(documentIterator.next());
         }
+        // close reader to let IndexWriter work.
+        reader.close(); 
         // add new ones ...
-        IndexWriter iw = new IndexWriter(reader.directory(), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(reader.directory(), new WhitespaceAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (Iterator<Document> documentIterator = toAdd.iterator(); documentIterator.hasNext();) {
-            iw.addDocument(documentIterator.next());
+            iw.addDocument( documentIterator.next());
         }
         iw.optimize();
         iw.close();
+    }
+
+    private String arrayToVisualWordString(int[] hist) {
+        StringBuilder sb = new StringBuilder(1024);
+        for (int i = 0; i < hist.length; i++) {
+            int visualWordIndex = hist[i];
+            for (int j=0;j<visualWordIndex;j++) {
+                sb.append('v');
+                sb.append(i);
+                sb.append(' ');
+            }
+        }
+        return sb.toString();
     }
 
     private String arrayToString(int[] hist) {
