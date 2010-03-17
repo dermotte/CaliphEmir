@@ -43,6 +43,11 @@ public class KMeans {
     private HashMap<Feature, Integer> featureIndex = null;
 
     public KMeans() {
+
+    }
+
+    public KMeans(int numClusters) {
+        this.numClusters = numClusters;
     }
 
     public void addImage(String identifier, List<Feature> features) {
@@ -172,6 +177,13 @@ public class KMeans {
         return featureIndex;
     }
 
+    /**
+     * Used to find the cluster of a feature actually used in the clustering process (so
+     * it is known by the k-means class).
+     *
+     * @param f the feature to search for
+     * @return the index of the Cluster
+     */
     public int getClusterOfFeature(Feature f) {
         if (featureIndex == null) createIndex();
         return featureIndex.get(f);
