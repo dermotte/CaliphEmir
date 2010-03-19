@@ -110,8 +110,12 @@ public class FlickrIndexingThread extends Thread {
 
 //        iw = new IndexWriter(indexPath + "-new", wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
 
-            boolean create = !parent.checkBoxAddToExisintgIndex.isSelected() && new File(parent.textfieldIndexName.getText()).exists();
-            IndexWriter iw = new IndexWriter(FSDirectory.open(new File(parent.textfieldIndexName.getText())), wrapper, create, IndexWriter.MaxFieldLength.UNLIMITED);
+            boolean create = !parent.checkBoxAddToExisintgIndex.isSelected();
+            IndexWriter iw;
+            if (create)
+                iw = new IndexWriter(FSDirectory.open(new File(parent.textfieldIndexName.getText())), new SimpleAnalyzer(), create, IndexWriter.MaxFieldLength.UNLIMITED);
+            else
+                iw = new IndexWriter(FSDirectory.open(new File(parent.textfieldIndexName.getText())), new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
             int builderIdx = parent.selectboxDocumentBuilder.getSelectedIndex();
             DocumentBuilder builder = new MetadataBuilder();
             int count = 0;

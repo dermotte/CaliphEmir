@@ -81,7 +81,11 @@ public class IndexingThread extends Thread {
                 return;
             }
             boolean create = !parent.checkBoxAddToExisintgIndex.isSelected();
-            IndexWriter iw = new IndexWriter(FSDirectory.open(new File(parent.textfieldIndexName.getText())), new SimpleAnalyzer(), create, IndexWriter.MaxFieldLength.UNLIMITED);
+            IndexWriter iw;
+            if (create)
+                iw = new IndexWriter(FSDirectory.open(new File(parent.textfieldIndexName.getText())), new SimpleAnalyzer(), create, IndexWriter.MaxFieldLength.UNLIMITED);
+            else
+                iw = new IndexWriter(FSDirectory.open(new File(parent.textfieldIndexName.getText())), new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
             int builderIdx = parent.selectboxDocumentBuilder.getSelectedIndex();
             DocumentBuilder builder = new MetadataBuilder();
             int count = 0;
