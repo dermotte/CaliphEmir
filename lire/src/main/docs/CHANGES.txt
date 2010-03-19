@@ -1,6 +1,14 @@
 CHANGES for LIRE
 ================
 
+2010-03-19
+==========
+General:
+  - Fixed index creation bug in liredemo (policies for automatic index creation
+    by the index writer were changed in Lucene 3.0, so the original ways didn't
+    work any more)
+  - Added utility methods for byte array <-> primitives conversion.
+  
 2010-03-17
 ==========
 VisualWords:
