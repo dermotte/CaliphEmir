@@ -28,7 +28,7 @@ import java.util.LinkedList;
  *
  * Copyright statement:
  * --------------------
- * (c) 2002-2007 by Mathias Lux (mathias@juggle.at)
+ * (c) 2002-2010 by Mathias Lux (mathias@juggle.at)
  * http://www.juggle.at, http://caliph-emir.sourceforge.net
  */
 public class CEDDTest extends TestCase {
