@@ -53,6 +53,24 @@ public class StentifordModel {
     static int[][] possibleNeighbours;
     private int[][] attentionModel;
 
+    /**
+     * Constructor for advance use. Instead of using the default values they can be set.
+     * @param neighbourhoodSize number of pixels selected from the neighbourhood
+     * @param maxChecks number of random checks for each pixels, according to the paper 100 should work fine.
+     * @param maxDist the maximum distance between colors to be deemed similar
+     */
+    public StentifordModel(int neighbourhoodSize, int maxChecks, int maxDist) {
+        this.neighbourhoodSize = neighbourhoodSize;
+        this.maxChecks = maxChecks;
+        this.maxDist = maxDist;
+    }
+
+    /**
+     * Default constructor with default values.
+     */
+    public StentifordModel() {
+    }
+
     static {
         int side = 2*radius+1;
         possibleNeighbours = new int[side*side-1][2];

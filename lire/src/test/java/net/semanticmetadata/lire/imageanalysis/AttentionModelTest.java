@@ -24,9 +24,11 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 import junit.framework.TestCase;
+import net.semanticmetadata.lire.imageanalysis.visualattention.ParallelStentifordModel;
 import net.semanticmetadata.lire.imageanalysis.visualattention.StentifordModel;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -42,4 +44,38 @@ public class AttentionModelTest extends TestCase {
         sm.extract(ImageIO.read(new File("wang-1000/103.jpg")));
         ImageIO.write(sm.getAttentionVisualization(), "png", new File("out.png"));
     }
+
+    public void testParameters() throws IOException {
+        for (int i = 50; i< 250; i+=10)
+            compute(5, i, 40);
+    }
+
+    private void compute(int neighbourhoodSize, int maxChecks, int maxDist) throws IOException {
+        StentifordModel sm = new StentifordModel(neighbourhoodSize, maxChecks, maxDist);
+        StringBuilder sb = new StringBuilder(256);
+        sb.append('_');
+        sb.append(neighbourhoodSize);
+        sb.append('_');
+        sb.append(maxChecks);
+        sb.append('_');
+        sb.append(maxDist);
+        sb.append('_');
+
+        sm.extract(ImageIO.read(new File("wang-1000/103.jpg")));
+        ImageIO.write(sm.getAttentionVisualization(), "png", new File("out" + sb.toString() + ".png"));
+
+    }
+
+    public void testPerformance() throws IOException {
+        StentifordModel sm = new ParallelStentifordModel(3, 100, 40);
+        int runs = 5;
+        BufferedImage img = ImageIO.read(new File("wang-1000/103.jpg"));
+        long t = System.currentTimeMillis();
+        for (int i = 0; i< runs; i++) {
+            sm.extract(img);
+        }
+        t = System.currentTimeMillis()-t;
+        System.out.println("t = " + t/runs);
+    }
+
 }

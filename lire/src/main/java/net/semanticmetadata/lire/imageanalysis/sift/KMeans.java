@@ -22,7 +22,7 @@
  * locating an object in an image" by the University of British Columbia. That is, for
  * commercial applications the permission of the author is required.
  *
- * (c) 2008 by Mathias Lux, mathias@juggle.at
+ * (c) 2008-2010 by Mathias Lux, mathias@juggle.at
  */
 package net.semanticmetadata.lire.imageanalysis.sift;
 
@@ -188,45 +188,6 @@ public class KMeans {
         if (featureIndex == null) createIndex();
         return featureIndex.get(f);
     }
-}
-
-class Cluster implements Comparable {
-    float[] mean;
-    HashSet<Integer> members = new HashSet<Integer>();
-
-    Cluster() {
-        this.mean = new float[4 * 4 * 8];
-    }
-
-    public String toString() {
-        StringBuilder sb = new StringBuilder(512);
-//        sb.append(median).append(": \t");
-//        for (int i = 0; i < mean.length; i++) {
-//            sb.append(mean[i]);
-//            sb.append(", ");
-//        }
-//        sb.append(" | ");
-        for (Integer integer : members) {
-            sb.append(integer);
-            sb.append(", ");
-        }
-        return sb.toString();
-    }
-
-    public int compareTo(Object o) {
-        return ((Cluster) o).members.size() - members.size();
-    }
-
-    public double getDistance(Feature f) {
-        double d = 0;
-        for (int i = 0; i < mean.length; i++) {
-            double a = mean[i] - f.descriptor[i];
-            d += a * a;
-        }
-        return Math.sqrt(d);
-    }
-
-
 }
 
 class Image {
