@@ -22,10 +22,9 @@ public class NaiveAutoCorrelogramExtraction implements IAutoCorrelogramFeatureEx
 	*/
 	public float[][] extract(int maxFeatureValue, int[] distanceSet, int[][] img) {
 		long totalComplexity = 0;
-		final int maxDistance = distanceSet[distanceSet.length-1];
 		
 		int[] histogram = new int[maxFeatureValue];
-		final float[][] correlogram = new float[maxFeatureValue][maxDistance];
+		final float[][] correlogram = new float[maxFeatureValue][distanceSet.length];
 		
 		final int W = img.length;
 		final int H = img[0].length;
@@ -84,48 +83,48 @@ public class NaiveAutoCorrelogramExtraction implements IAutoCorrelogramFeatureEx
 		return correlogram;
     }
 
-//	public static void main(String[] args) {
-//		int[][] I = new int[200][200];
-//		float[][] A = null;
-//		long t0,tf;
-//		int C = 16;
-//		int[] D = {1,3,5,7};
-//
-//		for(int i=0;i<I.length; i++)
-//			for(int j=0;j<I[i].length; j++)
-//				I[i][j] = ((i+1)*(j*j+1))%C;
-//
-//		tf = System.currentTimeMillis();
-//		NaiveAutoCorrelogramExtraction naivACorrExt = new NaiveAutoCorrelogramExtraction();
-//		for(int i=0;i<10;i++) {
-//			t0 = tf;
-//			A = naivACorrExt.extract(C, D, I);
-//			tf = System.currentTimeMillis();
-//			System.out.println("Exctraction "+(i+1)+" time: "+(tf-t0)+"ms");
-//		}
-//		print(A);
-//
-//
-//	}
+	public static void main(String[] args) {
+		int[][] I = new int[200][200];
+		float[][] A = null;
+		long t0,tf;
+		int C = 16;
+		int[] D = {1,3,5,7,10};
 
-//	static void print(float[][] M) {
-//		System.out.println();
-//		for(int i=0;i<M.length;i++) {
-//			for(int j=0;j<M[i].length;j++) {
-//				System.out.print(M[i][j]+" ");
-//			}
-//			System.out.println();
-//		}
-//	}
-//	static void print(int[][] M) {
-//		System.out.println();
-//		for(int i=0;i<M.length;i++) {
-//			for(int j=0;j<M[i].length;j++) {
-//				System.out.print(M[i][j]+" ");
-//			}
-//			System.out.println();
-//		}
-//	}
+		for(int i=0;i<I.length; i++)
+			for(int j=0;j<I[i].length; j++)
+				I[i][j] = ((i+1)*(j*j+1))%C;
+
+		tf = System.currentTimeMillis();
+		NaiveAutoCorrelogramExtraction naivACorrExt = new NaiveAutoCorrelogramExtraction();
+		for(int i=0;i<10;i++) {
+			t0 = tf;
+			A = naivACorrExt.extract(C, D, I);
+			tf = System.currentTimeMillis();
+			System.out.println("Exctraction "+(i+1)+" time: "+(tf-t0)+"ms");
+		}
+		print(A);
+
+
+	}
+
+	static void print(float[][] M) {
+		System.out.println();
+		for(int i=0;i<M.length;i++) {
+			for(int j=0;j<M[i].length;j++) {
+				System.out.print(M[i][j]+" ");
+			}
+			System.out.println();
+		}
+	}
+	static void print(int[][] M) {
+		System.out.println();
+		for(int i=0;i<M.length;i++) {
+			for(int j=0;j<M[i].length;j++) {
+				System.out.print(M[i][j]+" ");
+			}
+			System.out.println();
+		}
+	}
 }
 
 
