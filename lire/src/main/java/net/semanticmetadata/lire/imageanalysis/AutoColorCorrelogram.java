@@ -41,7 +41,9 @@ import at.lux.imageanalysis.VisualDescriptor;
  * Todo: Change the 2-dim array to a one dim array, as this is much faster in Java.
  */
 public class AutoColorCorrelogram implements LireFeature {
-    private float quantH;
+    private static final int DEFAULT_NUMBER_COLORS = 256;
+    
+	private float quantH;
     private float quantV;
     private float quantS;
 //    private int[][][] quantTable;
@@ -78,7 +80,7 @@ public class AutoColorCorrelogram implements LireFeature {
     }
     
     public AutoColorCorrelogram() {
-    	this(64,new int[]{1,2,3,4},null);
+    	this(DEFAULT_NUMBER_COLORS,new int[]{1,2,3,4},null);
     }
 
     /**
@@ -97,7 +99,7 @@ public class AutoColorCorrelogram implements LireFeature {
      * @param mode        the mode of calculation (determines the speed of extraction)
      */
     public AutoColorCorrelogram(int maxDistance, Mode mode) {
-        this(64,null,new MLuxAutoCorrelogramExtraction(mode));
+        this(DEFAULT_NUMBER_COLORS,null,new MLuxAutoCorrelogramExtraction(mode));
         int[] D = new int[maxDistance];
         for(int i=0;i<maxDistance;i++) D[i]=i+1;
         this.distanceSet = D;
@@ -107,7 +109,7 @@ public class AutoColorCorrelogram implements LireFeature {
      * @param distanceSet distance set
      */
     public AutoColorCorrelogram(int[] distanceSet) {
-        this(64,distanceSet,null);
+        this(DEFAULT_NUMBER_COLORS,distanceSet,null);
     }
     /**
      * Creates a new AutoCorrelogram with specified algorithm of extraction and distance set
@@ -115,7 +117,7 @@ public class AutoColorCorrelogram implements LireFeature {
      * @param extractionAlgorith the algorithm to extract 
      */
     public AutoColorCorrelogram(int[] distanceSet, IAutoCorrelogramFeatureExtractor extractionAlgorith) {
-        this(64,distanceSet,extractionAlgorith);
+        this(DEFAULT_NUMBER_COLORS,distanceSet,extractionAlgorith);
     }
 
     /**
@@ -124,7 +126,7 @@ public class AutoColorCorrelogram implements LireFeature {
      * @param extractionAlgorith the algorithm to extract 
      */
     public AutoColorCorrelogram(IAutoCorrelogramFeatureExtractor extractionAlgorith) {
-        this(64,new int[]{1,2,3,4},extractionAlgorith);
+        this(DEFAULT_NUMBER_COLORS,new int[]{1,2,3,4},extractionAlgorith);
     }
 
     /**
