@@ -24,7 +24,7 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 import junit.framework.TestCase;
-import net.semanticmetadata.lire.imageanalysis.visualattention.ParallelStentifordModel;
+//import net.semanticmetadata.lire.imageanalysis.visualattention.ParallelStentifordModel;
 import net.semanticmetadata.lire.imageanalysis.visualattention.StentifordModel;
 
 import javax.imageio.ImageIO;
@@ -67,7 +67,7 @@ public class AttentionModelTest extends TestCase {
     }
 
     public void testPerformance() throws IOException {
-        StentifordModel sm = new ParallelStentifordModel(3, 100, 40);
+        StentifordModel sm = new StentifordModel(3, 100, 40);
         int runs = 5;
         BufferedImage img = ImageIO.read(new File("wang-1000/103.jpg"));
         long t = System.currentTimeMillis();
