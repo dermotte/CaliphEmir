@@ -43,7 +43,11 @@ import java.util.logging.Logger;
  * SIFT feature container
  */
 public class Feature implements Comparable<Feature>, Serializable, VisualDescriptor {
-    private Logger logger = Logger.getLogger(getClass().getName());
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Logger logger = Logger.getLogger(getClass().getName());
     public float scale;
     public float orientation;
     public float[] location;

@@ -43,6 +43,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import net.semanticmetadata.lire.imageanalysis.LireFeature;
 
 
 /**
@@ -60,7 +61,7 @@ public class MetricSpacesInvertedListIndexing {
 
     private static MetricSpacesInvertedListIndexing msili = new MetricSpacesInvertedListIndexing(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
 
-    private Class featureClass;
+    private Class<? extends LireFeature> featureClass;
     private String featureFieldName;
     private int numHits = 100;
 
@@ -76,7 +77,7 @@ public class MetricSpacesInvertedListIndexing {
      * @param featureClass     the feature being used for this new index (e.g. CEDD)
      * @param featureFieldName the field name where to find the feature.
      */
-    public MetricSpacesInvertedListIndexing(Class featureClass, String featureFieldName) {
+    public MetricSpacesInvertedListIndexing(Class<? extends LireFeature> featureClass, String featureFieldName) {
         this.featureClass = featureClass;
         this.featureFieldName = featureFieldName;
         progress = new ProgressIndicator();

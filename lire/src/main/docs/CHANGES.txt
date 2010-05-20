@@ -1,5 +1,9 @@
 CHANGES for LIRE
 ================
+2010-05-20
+==========
+General:
+  - Applied tidy up patch (partially) from Dan Hanley <hanley.dan@gmail.xxx>
 
 2010-03-19
 ==========

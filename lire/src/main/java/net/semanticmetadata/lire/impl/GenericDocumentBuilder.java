@@ -24,7 +24,6 @@ package net.semanticmetadata.lire.impl;
 
 import net.semanticmetadata.lire.AbstractDocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.imageanalysis.CEDD;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
@@ -33,10 +32,6 @@ import org.apache.lucene.document.Field;
 import java.awt.image.BufferedImage;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-
-import at.lux.imageanalysis.VisualDescriptor;
 
 /**
  * This class allows to create a DocumentBuilder based on a class implementing LireFeature.
@@ -48,7 +43,7 @@ import at.lux.imageanalysis.VisualDescriptor;
 public class GenericDocumentBuilder  extends AbstractDocumentBuilder {
     private Logger logger = Logger.getLogger(getClass().getName());
     public static final int MAX_IMAGE_DIMENSION = 1024;
-    Class descriptorClass;
+    Class<? extends LireFeature> descriptorClass;
     String fieldName;
 
     /**
@@ -56,7 +51,7 @@ public class GenericDocumentBuilder  extends AbstractDocumentBuilder {
      * @param descriptorClass has to implement {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
      * @param fieldName the field name in the index.
      */
-    public GenericDocumentBuilder(Class descriptorClass, String fieldName) {
+    public GenericDocumentBuilder(Class<? extends LireFeature> descriptorClass, String fieldName) {
         this.descriptorClass = descriptorClass;
         this.fieldName = fieldName;
     }

@@ -19,7 +19,7 @@ import java.util.List;
 public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
 //    private double[][] distance;
     //    protected HashMap<Integer, HashMap> distance;
-    private ArrayList objects;
+    private ArrayList<?> objects;
     private HashMap<Object, Integer> objects2position;
     private DistanceCalculator distanceFct;
     private int dimension;
@@ -32,7 +32,8 @@ public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
      * @param userObjects      gives the collection of object to be processed
      * @param distanceFunction allows the distance calculation  or -1 if objects distance cannot be computes, has to be a metric
      */
-    public NocacheFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction) {
+    @SuppressWarnings("unchecked")
+	public NocacheFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction) {
         init(distanceFunction, userObjects);
     }
 
@@ -44,12 +45,14 @@ public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
      * @param distanceFunction allows the distance calculation  or -1 if objects distance cannot be computes, has to be a metric
      * @param userObjects      select true if you want to distribute not equal but zero distance objects.
      */
-    public NocacheFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction, boolean distributeObjects) {
+    @SuppressWarnings("unchecked")
+	public NocacheFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction, boolean distributeObjects) {
         init(distanceFunction, userObjects);
         this.distributeObjects = distributeObjects;
     }
 
-    private void init(DistanceCalculator distanceFunction, List userObjects) {
+    @SuppressWarnings("unchecked")
+	private void init(DistanceCalculator distanceFunction, List userObjects) {
         distanceFct = distanceFunction;
         // this might be a problem for collections > INT_MAXSIZE
         this.objects = new ArrayList(userObjects.size());
@@ -227,19 +230,6 @@ public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
      */
     public void normalize() {
         throw new UnsupportedOperationException("There is no internal data structure to normalize.");
-//        double maximumDistance = 0f;
-//        for (int i = 0; i < getDimension(); i++) {
-//            int maxDist = getMaximumDistance(i);
-//            double distance = getDistance(i, maxDist);
-//            if (distance > maximumDistance) maximumDistance = distance;
-//        }
-//        double[][] newDistances = new double[dimension][dimension];
-//        for (int i = 0; i < newDistances.length; i++) {
-//            for (int j = 0; j < newDistances[i].length; j++) {
-//                newDistances[i][j] = (getDistance(i, j) / maximumDistance);
-//            }
-//        }
-//        distance = newDistances;
     }
 
 }

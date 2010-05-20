@@ -4,11 +4,11 @@ import net.semanticmetadata.lire.AbstractDocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilder;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
 
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,7 +18,6 @@ import java.util.logging.Logger;
  * To change this template use File | Settings | File Templates.
  */
 public class ChainedDocumentBuilder extends AbstractDocumentBuilder {
-    private Logger logger = Logger.getLogger(ChainedDocumentBuilder.class.getName());
     private LinkedList<DocumentBuilder> builders;
     private boolean docsCreated = false;
 
@@ -41,7 +40,7 @@ public class ChainedDocumentBuilder extends AbstractDocumentBuilder {
         if (builders.size() >= 1) {
             for (DocumentBuilder builder : builders) {
                 Document d = builder.createDocument(image, identifier);
-                for (Iterator iterator = d.getFields().iterator(); iterator.hasNext();) {
+                for (Iterator<Fieldable> iterator = d.getFields().iterator(); iterator.hasNext();) {
                     Field f = (Field) iterator.next();
                     if (!f.name().equals(DocumentBuilder.FIELD_NAME_IDENTIFIER)) {
                         doc.add(f);

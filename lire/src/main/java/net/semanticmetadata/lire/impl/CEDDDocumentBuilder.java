@@ -25,13 +25,11 @@ package net.semanticmetadata.lire.impl;
 import net.semanticmetadata.lire.AbstractDocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.imageanalysis.CEDD;
-import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
 import java.awt.image.BufferedImage;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**

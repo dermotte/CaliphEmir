@@ -19,8 +19,6 @@
  */
 package net.semanticmetadata.lire.imageanalysis.sift;
 
-import net.semanticmetadata.lire.utils.SerializationUtils;
-
 import java.util.HashSet;
 
 /**
@@ -29,7 +27,7 @@ import java.util.HashSet;
  * Date: 26.03.2010
  * Time: 12:10:19
  */
-class Cluster implements Comparable {
+class Cluster implements Comparable<Object> {
     float[] mean;
     HashSet<Integer> members = new HashSet<Integer>();
 
@@ -64,10 +62,8 @@ class Cluster implements Comparable {
      * @return the clusters mean as byte array.
      */
     public byte[] getByteRepresentation() {
-        byte[] tmp;
         byte[] data = new byte[4*4*4*8];
         for (int i = 0; i < mean.length; i++) {
-            tmp = SerializationUtils.toBytes(mean[i]);
             for (int j = 0; j < data.length; j++) {
                 data[i*4+j] = data[j];
             }

@@ -44,13 +44,12 @@ public class Extractor {
 
     }
 
-    private void align(BufferedImage img1, BufferedImage img2) {
+	private void align(BufferedImage img1, BufferedImage img2) {
         try {
             List<Feature> fs1 = computeSiftFeatures(img1);
             List<Feature> fs2 = computeSiftFeatures(img2);
 
             // find the best matching features:
-            Iterator<Feature> it = fs1.iterator();
             LinkedList<Found> res = new LinkedList<Found>();
             for (int i = 0; i < fs1.size(); i++) {
                 Feature f1 = fs1.get(i);
@@ -132,7 +131,7 @@ public class Extractor {
 
 }
 
-class Found implements Comparable {
+class Found implements Comparable<Object> {
     Feature f1, f2;
     float d;
 

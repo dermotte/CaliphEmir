@@ -14,7 +14,11 @@ import java.util.List;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SavedPivots implements Serializable {
-    String[][] pivots;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String[][] pivots;
 
     public SavedPivots(int[][] piv, List<VisualDescriptor> objs) {
         // create a String array holding the two pivots per dimension.
@@ -34,7 +38,7 @@ public class SavedPivots implements Serializable {
      * @param descriptor the actual descriptor class of the VisualDescriptor
      * @return
      */
-    public int[][] getPivots(List<VisualDescriptor> objs, Class descriptor) throws IllegalAccessException, InstantiationException {
+    public int[][] getPivots(List<VisualDescriptor> objs, Class<? extends VisualDescriptor> descriptor) throws IllegalAccessException, InstantiationException {
         int[][] retVal = new int[2][pivots[0].length];
         List<VisualDescriptor> pivs = new LinkedList<VisualDescriptor>();
         int countIndex = 0;

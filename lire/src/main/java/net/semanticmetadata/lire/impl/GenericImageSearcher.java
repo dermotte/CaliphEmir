@@ -50,13 +50,13 @@ import java.util.logging.Logger;
  */
 public class GenericImageSearcher extends AbstractImageSearcher {
     protected Logger logger = Logger.getLogger(getClass().getName());
-    Class descriptorClass;
+    Class<?> descriptorClass;
     String fieldName;
 
     private int maxHits = 10;
     protected TreeSet<SimpleResult> docs;
 
-    public GenericImageSearcher(int maxHits, Class descriptorClass, String fieldName) {
+    public GenericImageSearcher(int maxHits, Class<?> descriptorClass, String fieldName) {
         this.maxHits = maxHits;
         docs = new TreeSet<SimpleResult>();
         this.descriptorClass = descriptorClass;

@@ -23,7 +23,6 @@
 
 package net.semanticmetadata.lire.imageanalysis.visualattention;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.HashSet;

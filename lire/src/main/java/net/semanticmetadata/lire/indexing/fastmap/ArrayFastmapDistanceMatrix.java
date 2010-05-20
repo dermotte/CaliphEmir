@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
     private double[][] distance;
-    private ArrayList objects;
+    private ArrayList<?> objects;
     private HashMap<Object, Integer> objects2position;
     private DistanceCalculator distanceFct;
     private int dimension;
@@ -50,7 +50,8 @@ public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
      * @param userObjects      gives the collection of object to be processed
      * @param distanceFunction allows the distance calculation  or -1 if objects distance cannot be computes, has to be a metric
      */
-    public ArrayFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction) {
+    @SuppressWarnings("unchecked")
+	public ArrayFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction) {
         init(distanceFunction, userObjects);
     }
 
@@ -62,12 +63,13 @@ public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
      * @param distanceFunction allows the distance calculation  or -1 if objects distance cannot be computes, has to be a metric
      * @param userObjects      select true if you want to distribute not equal but zero distance objects.
      */
-    public ArrayFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction, boolean distributeObjects) {
+    public ArrayFastmapDistanceMatrix(List<?> userObjects, DistanceCalculator distanceFunction, boolean distributeObjects) {
         init(distanceFunction, userObjects);
         this.distributeObjects = distributeObjects;
     }
 
-    private void init(DistanceCalculator distanceFunction, List userObjects) {
+    @SuppressWarnings("unchecked")
+	private void init(DistanceCalculator distanceFunction, List userObjects) {
         distanceFct = distanceFunction;
         // this might be a problem for collections > INT_MAXSIZE
         this.objects = new ArrayList(userObjects.size());

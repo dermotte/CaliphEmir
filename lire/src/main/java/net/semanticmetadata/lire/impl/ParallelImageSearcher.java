@@ -24,15 +24,13 @@ import java.util.logging.Logger;
 public class ParallelImageSearcher extends AbstractImageSearcher {
 
     private Logger logger = Logger.getLogger(getClass().getName());
-    Class descriptorClass;
+    Class<?> descriptorClass;
     String fieldName;
     private int maxHits = 10;
-    // private TreeSet<SimpleResult> docs;
     private TreeSet<SimpleResult>[] parDocs;
 
-    public ParallelImageSearcher(int maxHits, Class descriptorClass, String fieldName) {
+    public ParallelImageSearcher(int maxHits, Class<?> descriptorClass, String fieldName) {
         this.maxHits = maxHits;
-//        docs = new TreeSet<SimpleResult>();
         this.descriptorClass = descriptorClass;
         this.fieldName = fieldName;
     }
@@ -102,7 +100,8 @@ public class ParallelImageSearcher extends AbstractImageSearcher {
      * @return the maximum distance found for normalizing.
      * @throws java.io.IOException
      */
-    private float[] findSimilar(IndexReader reader, LireFeature[] lireFeature) throws IOException {
+    @SuppressWarnings("unchecked")
+	private float[] findSimilar(IndexReader reader, LireFeature[] lireFeature) throws IOException {
         float[] maxDistance = new float[lireFeature.length];
         float[] overallMaxDistance = new float[lireFeature.length];
 
@@ -114,7 +113,6 @@ public class ParallelImageSearcher extends AbstractImageSearcher {
         parDocs = new TreeSet[lireFeature.length];
         for (int i = 0; i < parDocs.length; i++) {
             parDocs[i] = new TreeSet<SimpleResult>();
-
         }
 
         boolean hasDeletions = reader.hasDeletions();

@@ -31,7 +31,7 @@ import org.apache.lucene.document.Document;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class SimpleResult implements Comparable {
+public class SimpleResult implements Comparable<SimpleResult> {
     private float distance;
     private Document document;
 
@@ -57,15 +57,11 @@ public class SimpleResult implements Comparable {
         this.document = document;
     }
 
-    public int compareTo(Object o) {
-        if (!(o instanceof SimpleResult)) {
-            return 0;
-        } else {
-            int compareValue = (int) Math.signum(distance - ((SimpleResult) o).distance);
-            // Bugfix after hint from Kai Jauslin
-            if (compareValue == 0 && !(document.equals(((SimpleResult) o).document)))
-                compareValue = document.hashCode() - ((SimpleResult) o).document.hashCode();
-            return compareValue;
-        }
+    public int compareTo(SimpleResult o) {
+        int compareValue = (int) Math.signum(distance - ((SimpleResult) o).distance);
+        // Bugfix after hint from Kai Jauslin
+        if (compareValue == 0 && !(document.equals(((SimpleResult) o).document)))
+             compareValue = document.hashCode() - ((SimpleResult) o).document.hashCode();
+        return compareValue;
     }
 }

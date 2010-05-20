@@ -4,14 +4,12 @@ import net.semanticmetadata.lire.AbstractImageSearcher;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.imageanalysis.sift.Feature;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 
 /**
  * ...
@@ -21,7 +19,6 @@ import java.util.logging.Logger;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SiftLocalFeatureHistogramImageSearcher extends AbstractImageSearcher {
-    private Logger logger = Logger.getLogger(getClass().getName());
     private TreeSet<SimpleResult> docs;
     private int maxHits;
 
@@ -36,7 +33,6 @@ public class SiftLocalFeatureHistogramImageSearcher extends AbstractImageSearche
 
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
         SimpleImageSearchHits searchHits = null;
-        Feature f = new Feature();
 
         String[] cls = doc.getValues(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM);
         int[] hist = createHistogram(cls[0]);

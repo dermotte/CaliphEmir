@@ -44,7 +44,6 @@ public class Gabor implements LireFeature {
     private static final int S = 4, T = 4; // filter mask size
     private static final int M = 5, N = 6; // scale & orientation
 
-    private static final int MAX_IMG_WIDTH = 64;
     private static final int MAX_IMG_HEIGHT = 64;
 
     private static final double A = Math.pow((U_H / U_L), 1. / (M - 1));
