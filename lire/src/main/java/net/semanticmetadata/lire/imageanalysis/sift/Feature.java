@@ -33,6 +33,7 @@ package net.semanticmetadata.lire.imageanalysis.sift;
 
 
 import at.lux.imageanalysis.VisualDescriptor;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -44,10 +45,10 @@ import java.util.logging.Logger;
  */
 public class Feature implements Comparable<Feature>, Serializable, VisualDescriptor {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private Logger logger = Logger.getLogger(getClass().getName());
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private Logger logger = Logger.getLogger(getClass().getName());
     public float scale;
     public float orientation;
     public float[] location;
@@ -140,6 +141,59 @@ public class Feature implements Comparable<Feature>, Serializable, VisualDescrip
         descriptor = new float[descVals.size()];
         for (int i = 0; i < descriptor.length; i++) {
             descriptor[i] = descVals.get(i);
+        }
+    }
+
+    /**
+     * Writing out to bytes ... just to save some time and space.
+     *
+     * @return
+     */
+    public byte[] getByteArrayRepresentation() {
+        byte[] result = new byte[descriptor.length * 4 + 4 * 4];
+        byte[] tmp;
+
+        tmp = SerializationUtils.toBytes(scale);
+        for (int j = 0; j < 4; j++) result[j] = tmp[j];
+        tmp = SerializationUtils.toBytes(orientation);
+        for (int j = 0; j < 4; j++) result[4 + j] = tmp[j];
+        tmp = SerializationUtils.toBytes(location[0]);
+        for (int j = 0; j < 4; j++) result[8 + j] = tmp[j];
+        tmp = SerializationUtils.toBytes(location[1]);
+        for (int j = 0; j < 4; j++) result[12 + j] = tmp[j];
+
+        for (int i = 16; i < result.length; i += 4) {
+            tmp = SerializationUtils.toBytes(descriptor[(i-16)/4]);
+            for (int j = 0; j < 4; j++) {
+                result[i + j] = tmp[j];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Reads descriptor from a byte array. Much faster than the String based method.
+     *
+     * @param in byte array from corresponding method
+     * @see net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation
+     */
+    public void setByteArrayRepresentation(byte[] in) {
+        byte[] tmp = new byte[4];
+        descriptor = new float[in.length / 4 - 4];
+        location = new float[2];
+
+        System.arraycopy(in, 0, tmp, 0, 4);
+        scale = SerializationUtils.toFloat(tmp);
+        System.arraycopy(in, 4, tmp, 0, 4);
+        orientation = SerializationUtils.toFloat(tmp);
+        System.arraycopy(in, 8, tmp, 0, 4);
+        location[0] = SerializationUtils.toFloat(tmp);
+        System.arraycopy(in, 12, tmp, 0, 4);
+        location[1] = SerializationUtils.toFloat(tmp);
+
+        for (int i = 0; i < descriptor.length; i++) {
+            System.arraycopy(in, 16 + i * 4, tmp, 0, 4);
+            descriptor[i] = SerializationUtils.toFloat(tmp);
         }
     }
 }

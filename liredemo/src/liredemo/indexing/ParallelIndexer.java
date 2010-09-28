@@ -60,7 +60,7 @@ public class ParallelIndexer implements Runnable {
         }
     }
 
-    public Document getNext() {
+    public synchronized Document getNext() {
         if (imageFiles.size() < 1) {
             boolean fb = true;
             for (String t : indexThreads.keySet()) {
@@ -78,7 +78,6 @@ public class ParallelIndexer implements Runnable {
             }
         }
         return finished.removeFirst();
-
     }
 
     private String getNextImage() {

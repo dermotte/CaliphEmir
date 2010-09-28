@@ -139,8 +139,8 @@ public class TestLocalFeatureHistogram extends TestCase {
 //            int sampleQuery = sampleQueries[i];
 //            String s = testExtensive + "/" + sampleQuery + ".jpg";
             iw.addDocument(db.createDocument(new FileInputStream(images.get(i)), images.get(i)));
-            if (i % 100 == 0) System.out.print(".");
-            if (i % 1000 == 0) System.out.print(" " + i + "files indexed\n");
+            if (i % 100 == 99) System.out.print(".");
+            if (i % 1000 == 999) System.out.print(" ~ " + i + " files indexed\n");
             if (i > 10000) break;
         }
         System.out.println("");
@@ -150,17 +150,17 @@ public class TestLocalFeatureHistogram extends TestCase {
 
     public void testCreateLocalFeatureHistogram() throws IOException {
 //        testSiftIndexing();
-        // TODO: Make signature of SIFT features a lot smaller, otherwise the index will "explode"
-        SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File("sift-idx")), false), 1000);
+        
+        SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File("sift-idx")), false), 2000);
         sh.index();
         testFindimages();
     }
 
     public void testFindimages() throws IOException {
         IndexReader reader = IndexReader.open(FSDirectory.open(new File("sift-idx")));
-        int docID = 1;
+        int docID = 700;
         // test with plain L1:
-        SiftLocalFeatureHistogramImageSearcher searcher = new SiftLocalFeatureHistogramImageSearcher(10);
+        SiftLocalFeatureHistogramImageSearcher searcher = new SiftLocalFeatureHistogramImageSearcher(11);
         ImageSearchHits searchHits = searcher.search(reader.document(docID), reader);
         for (int i = 0; i < searchHits.length(); i++) {
             Document document = searchHits.doc(i);
@@ -196,8 +196,8 @@ public class TestLocalFeatureHistogram extends TestCase {
 
             @Override
             public float idf(int docfreq, int numdocs) {
-                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
-//                return (float) (1d+Math.log((double) numdocs/(double) docfreq));  //To change body of implemented methods use File | Settings | File Templates.
+//                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
+                return (float) (Math.log((double) numdocs/(double) docfreq));  //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
@@ -224,6 +224,19 @@ public class TestLocalFeatureHistogram extends TestCase {
             writeToFile(sb.toString(), "result.html");
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void testSiftSerialization() throws IOException {
+        String file = new String("./wang-1000/1.jpg");
+        Extractor e = new Extractor();
+        List<Feature> fs = e.computeSiftFeatures(ImageIO.read(new File(file)));
+        for (Iterator<Feature> featureIterator = fs.iterator(); featureIterator.hasNext();) {
+            Feature feature = featureIterator.next();
+            byte[] bytes = feature.getByteArrayRepresentation();
+            Feature cp = new Feature();
+            cp.setByteArrayRepresentation(bytes);
+            System.out.println(feature.getStringRepresentation().equals(cp.getStringRepresentation()));
         }
     }
 

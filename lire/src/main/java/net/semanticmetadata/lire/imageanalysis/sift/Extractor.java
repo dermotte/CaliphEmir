@@ -75,8 +75,8 @@ public class Extractor {
                 drawSquare(g1, new double[]{found.f1.location[0] / scale, found.f1.location[1] / scale}, fdsize * 1.0 * (double) found.f1.scale / scale, (double) found.f1.orientation);
                 drawSquare(g2, new double[]{found.f2.location[0] / scale, found.f2.location[1] / scale}, fdsize * 1.0 * (double) found.f2.scale / scale, (double) found.f2.orientation);
             }
-            // ImageIO.write(img1, "png", new File("out1.png"));
-            // ImageIO.write(img2, "png", new File("out2.png"));
+//            ImageIO.write(img1, "png", new File("out1.png"));
+//            ImageIO.write(img2, "png", new File("out2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,7 +85,7 @@ public class Extractor {
 
     public static void main(String[] args) throws IOException {
         Extractor e = new Extractor();
-        e.align(ImageIO.read(new File("STA_1.jpg")), ImageIO.read(new File("STB_1.jpg")));
+        e.align(ImageIO.read(new File("c:/temp/image001.png")), ImageIO.read(new File("c:/temp/image002.png")));
     }
 
     public List<Feature> computeSiftFeatures(BufferedImage img) throws IOException {

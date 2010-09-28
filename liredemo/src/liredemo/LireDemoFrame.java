@@ -12,6 +12,8 @@ import liredemo.flickr.FlickrIndexingThread;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
 import net.semanticmetadata.lire.ImageSearcherFactory;
+import net.semanticmetadata.lire.imageanalysis.sift.SiftFeatureHistogramBuilder;
+import net.semanticmetadata.lire.impl.SiftVisualWordsImageSearcher;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
@@ -819,7 +821,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
 
         jLabel1.setText("Type of IndexSearcher:");
 
-        selectboxDocumentBuilder.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"All MPEG-7 Descriptors", "Scalable Color (MPEG-7)", "Edge Histogram (MPEG-7)", "Color Layout (MPEG-7)", "Auto Color Correlogram", "CEDD", "FCTH", "RGB Color Histogram", "Tamura", "Gabor", "Metric Spaces (approximate CEDD)"}));
+        selectboxDocumentBuilder.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"All MPEG-7 Descriptors", "Scalable Color (MPEG-7)", "Edge Histogram (MPEG-7)", "Color Layout (MPEG-7)", "Auto Color Correlogram", "CEDD", "FCTH", "RGB Color Histogram", "Tamura", "Gabor", "BoVW (local features)"}));
         selectboxDocumentBuilder.setToolTipText(bundle.getString("options.tooltip.documentbuilderselection")); // NOI18N
         selectboxDocumentBuilder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -956,7 +958,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
 
         fileMenu.setText(bundle.getString("menu.file")); // NOI18N
 
-        fileMenuApproxIndex.setText("Create approximate search index");
+        fileMenuApproxIndex.setText("Create BoVW Index");
         fileMenuApproxIndex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fileMenuApproxIndexActionPerformed(evt);
@@ -1433,7 +1435,14 @@ public class LireDemoFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_viewMenuOptionsActionPerformed
 
     private void fileMenuApproxIndexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuApproxIndexActionPerformed
-        JOptionPane.showMessageDialog(this, "Not implemented yet ...");
+        System.out.println("Starting to index");
+        try {
+            SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(textfieldIndexName.getText())), false), 1000);
+            sh.index();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Couldn't create index: " + e.getLocalizedMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_fileMenuApproxIndexActionPerformed
 
     private void searchForImage(String imagePath) throws FileNotFoundException, IOException {
@@ -1497,8 +1506,10 @@ public class LireDemoFrame extends javax.swing.JFrame {
             searcher = ImageSearcherFactory.createColorHistogramImageSearcher(numResults);
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 8) {
             searcher = ImageSearcherFactory.createTamuraImageSearcher(numResults);
-        } else if (selectboxDocumentBuilder.getSelectedIndex() > 8) {
+        } else if (selectboxDocumentBuilder.getSelectedIndex() == 9) {
             searcher = ImageSearcherFactory.createGaborImageSearcher(numResults);
+        } else if (selectboxDocumentBuilder.getSelectedIndex() > 9) {
+            searcher = new SiftVisualWordsImageSearcher(numResults);
         }
         return searcher;
     }

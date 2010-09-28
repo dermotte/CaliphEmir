@@ -1,10 +1,16 @@
-CHANGES for LIRE
-================
+CHANGES for LIREDemo
+====================
+
+2010-09-28
+==========
+  - Added option to try BoVW
+  - Some additional synchronization in ParallelIndexer
+  - Added SIFT Extraction to default DocumentBuilder in Demo
 
 2009-05-14
 ==========
 General:
-  - Added indexing of tags based on a whitespaceanalyzer
+  - Added indexing of tags based on a WhitespaceAnalyzer
   - Changed initial state of "add to existing index" to "checked"
   - Added menu item for approximate search index
 

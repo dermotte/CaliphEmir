@@ -34,6 +34,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,7 +50,7 @@ import java.util.LinkedList;
 public class SiftFeatureHistogramBuilder {
     IndexReader reader;
     // number of documents used to build the vocabulary / clusters.
-    private int numDocsForVocabulary = 200;
+    private int numDocsForVocabulary = 1000;
     private int numClusters = 256;
     private Cluster[] clusters = null;
 
@@ -88,11 +89,11 @@ public class SiftFeatureHistogramBuilder {
             if (!reader.isDeleted(nextDoc)) {
                 Document d = reader.document(nextDoc);
                 features = new LinkedList<Feature>();
-                String[] fs = d.getValues(DocumentBuilder.FIELD_NAME_SIFT);
+                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SIFT);
                 String file = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
-                for (int j = 0; j < fs.length; j++) {
+                for (int j = 0; j < binaryValues.length; j++) {
                     Feature f = new Feature();
-                    f.setStringRepresentation(fs[j]);
+                    f.setByteArrayRepresentation(binaryValues[j]);
                     features.add(f);
                 }
                 k.addImage(file, features);
@@ -103,12 +104,14 @@ public class SiftFeatureHistogramBuilder {
         k.init();
         double laststress = k.clusteringStep();
         double newstress = k.clusteringStep();
-        while (newstress > laststress) {
+        while (Math.abs(newstress - laststress)>5) {
+            System.out.println("This is a step. Stress difference: " + Math.abs(newstress - laststress));
             laststress = newstress;
             newstress = k.clusteringStep();
         }
         // TODO: Serialize and store the clusters somewhere to re-use them if the index ever gets updated.
         clusters = k.getClusters();
+        Cluster.writeClusters(clusters, "./clusters.dat");
         //  create & store histograms:
         System.out.println("Creating histograms ...");
         int[] tmpHist = new int[numClusters];
@@ -121,14 +124,16 @@ public class SiftFeatureHistogramBuilder {
                 }
                 Document d = reader.document(i);
                 features = new LinkedList<Feature>();
-                String[] fs = d.getValues(DocumentBuilder.FIELD_NAME_SIFT);
+//                String[] fs = d.getValues(DocumentBuilder.FIELD_NAME_SIFT);
+                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SIFT);
+
                 String file = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                 // remove the fields if they are already there ...
                 d.removeField(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM);
                 d.removeField(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
                 // find the appropriate cluster for each feature:
-                for (int j = 0; j < fs.length; j++) {
-                    f.setStringRepresentation(fs[j]);
+                for (int j = 0; j < binaryValues.length; j++) {
+                    f.setByteArrayRepresentation(binaryValues[j]);
                     tmpHist[clusterForFeature(f)]++;
                 }
                 d.add(new Field(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM, arrayToString(tmpHist), Field.Store.YES, Field.Index.NO));
@@ -236,9 +241,10 @@ public class SiftFeatureHistogramBuilder {
         // need to make sure that this is not running forever ...
         int loopCount = 0;
         float maxDocs = reader.maxDoc();
-        HashSet<Integer> result = new HashSet<Integer>(numDocsForVocabulary);
+        int capacity = (int) Math.min(numDocsForVocabulary, maxDocs - 5);
+        HashSet<Integer> result = new HashSet<Integer>(capacity);
         int tmpDocNumber;
-        for (int r = 0; r < numDocsForVocabulary; r++) {
+        for (int r = 0; r < capacity; r++) {
             boolean worksFine = false;
             do {
                 tmpDocNumber = (int) (Math.random() * maxDocs);

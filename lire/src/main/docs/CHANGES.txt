@@ -1,5 +1,11 @@
 CHANGES for LIRE
 ================
+2010-09-28
+==========
+  - Changed SIFT feature serialization to byte[] (lot faster)
+  - added convenience methods to SerializationUtils
+  - added test class for SerializationUtils
+
 2010-05-20
 ==========
 General:

@@ -19,6 +19,12 @@
  */
 package net.semanticmetadata.lire.imageanalysis.sift;
 
+import net.semanticmetadata.lire.utils.SerializationUtils;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashSet;
 
 /**
@@ -27,12 +33,16 @@ import java.util.HashSet;
  * Date: 26.03.2010
  * Time: 12:10:19
  */
-class Cluster implements Comparable<Object> {
+public class Cluster implements Comparable<Object> {
     float[] mean;
     HashSet<Integer> members = new HashSet<Integer>();
 
-    Cluster() {
+    public Cluster() {
         this.mean = new float[4 * 4 * 8];
+    }
+
+    public Cluster(float[] mean) {
+        this.mean = mean;
     }
 
     public String toString() {
@@ -40,6 +50,10 @@ class Cluster implements Comparable<Object> {
         for (Integer integer : members) {
             sb.append(integer);
             sb.append(", ");
+        }
+        for (int i = 0; i < mean.length; i++) {
+            sb.append(mean[i]);
+            sb.append(';');
         }
         return sb.toString();
     }
@@ -59,17 +73,40 @@ class Cluster implements Comparable<Object> {
 
     /**
      * Creates a byte array representation from the clusters mean.
+     *
      * @return the clusters mean as byte array.
      */
     public byte[] getByteRepresentation() {
-        byte[] data = new byte[4*4*4*8];
-        for (int i = 0; i < mean.length; i++) {
-            for (int j = 0; j < data.length; j++) {
-                data[i*4+j] = data[j];
-            }
-        }
-        return data;
+        return SerializationUtils.toBytes(mean);
     }
 
+    public void setByteRepresentation(byte[] data) {
+        mean = SerializationUtils.toFloatArray(data);
+    }
+
+    public static void writeClusters(Cluster[] clusters, String file) throws IOException {
+        FileOutputStream fout = new FileOutputStream(file);
+        fout.write(SerializationUtils.toBytes(clusters.length));
+        for (int i = 0; i < clusters.length; i++) {
+            fout.write(clusters[i].getByteRepresentation());
+        }
+        fout.close();
+    }
+
+    public static Cluster[] readClusters(String file) throws IOException {
+        FileInputStream fin = new FileInputStream(file);
+        byte[] tmp = new byte[4];
+        fin.read(tmp, 0, 4);
+        Cluster[] result = new Cluster[SerializationUtils.toInt(tmp)];
+        tmp = new byte[128*4];
+        for (int i = 0; i < result.length; i++) {
+            int bytesRead = fin.read(tmp, 0, 128*4);
+            if (bytesRead != 128*4) System.err.println("Didn't read enough bytes ...");
+            result[i] = new Cluster();
+            result[i].setByteRepresentation(tmp);
+        }
+        fin.close();
+        return result;
+    }
 
 }

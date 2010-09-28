@@ -28,15 +28,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/lire.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/metadata-extractor-2.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -47,6 +38,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/lucene-core-3.0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/lire.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

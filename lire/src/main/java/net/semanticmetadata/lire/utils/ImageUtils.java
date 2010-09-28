@@ -21,7 +21,7 @@ import java.awt.image.BufferedImage;
  *
  * Copyright statement:
  * --------------------
- * (c) 2002-2006 by Mathias Lux (mathias@juggle.at)
+ * (c) 2002-2010 by Mathias Lux (mathias@juggle.at)
  * http://www.juggle.at, http://www.SemanticMetadata.net
  */
 
@@ -61,7 +61,7 @@ public class ImageUtils {
     }
 
     /**
-     * Scale image to an arbitrary shape not retaining proportions.
+     * Scale image to an arbitrary shape not retaining proportions and aspect ratio.
      *
      * @param image
      * @param width

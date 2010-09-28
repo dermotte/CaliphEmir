@@ -69,4 +69,33 @@ public class SerializationUtils {
     public static float toFloat(byte[] data) {
         return Float.intBitsToFloat(toInt(data));
     }
+
+    /**
+     * Convenience method for creating a byte array from a float array.
+     * @param data the input float array
+     * @return a byte array for serialization.
+     */
+    public static byte[] toBytes(float[] data) {
+        byte[] tmp, result = new byte[data.length*4];
+        for (int i = 0; i < data.length; i++) {
+            tmp = toBytes(data[i]);
+            System.arraycopy(tmp, 0, result, i*4, 4);
+        }
+        return result;
+    }
+
+    /**
+     * Convenience method for creating a float array from a byte array.
+     * @param data
+     * @return
+     */
+    public static float[] toFloatArray(byte[] data) {
+        float[] result = new float[data.length/4];
+        byte[] tmp = new byte[4];
+        for (int i = 0; i < result.length; i++) {
+            System.arraycopy(data, i*4, tmp, 0, 4);
+            result[i] = toFloat(tmp);
+        }
+        return result;
+    }
 }

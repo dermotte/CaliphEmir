@@ -116,8 +116,8 @@ public class KMeans {
             float[] mean = clusters[i].mean;
             for (int j = 0; j < mean.length; j++) {
                 mean[j] = 0;
-                for (Iterator<Integer> fit = clusters[i].members.iterator(); fit.hasNext();) {
-                    mean[j] += features.get(fit.next()).descriptor[j];
+                for (Integer member : clusters[i].members) {
+                    mean[j] += features.get(member).descriptor[j];
                 }
                 mean[j] = mean[j] / clusters[i].members.size();
             }
