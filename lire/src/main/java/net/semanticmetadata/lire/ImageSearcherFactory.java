@@ -1,6 +1,7 @@
 package net.semanticmetadata.lire;
 
 import net.semanticmetadata.lire.imageanalysis.*;
+import net.semanticmetadata.lire.impl.CEDDImageSearcher;
 import net.semanticmetadata.lire.impl.CorrelogramImageSearcher;
 import net.semanticmetadata.lire.impl.GenericImageSearcher;
 import net.semanticmetadata.lire.impl.SimpleImageSearcher;
@@ -155,7 +156,8 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createCEDDImageSearcher(int maximumHits) {
-        return new GenericImageSearcher(maximumHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
+        return new CEDDImageSearcher(maximumHits);
+//        return new GenericImageSearcher(maximumHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
     }
 
 

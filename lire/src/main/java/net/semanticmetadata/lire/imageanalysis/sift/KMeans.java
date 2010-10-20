@@ -26,6 +26,8 @@
  */
 package net.semanticmetadata.lire.imageanalysis.sift;
 
+import net.semanticmetadata.lire.imageanalysis.Histogram;
+
 import java.util.*;
 
 /**
@@ -38,9 +40,9 @@ import java.util.*;
 public class KMeans {
     private List<Image> images = new LinkedList<Image>();
     private int count = 0, numClusters = 256;
-    private ArrayList<Feature> features = null;
+    private ArrayList<Histogram> features = null;
     private Cluster[] clusters = null;
-    private HashMap<Feature, Integer> featureIndex = null;
+    private HashMap<Histogram, Integer> featureIndex = null;
 
     public KMeans() {
 
@@ -50,28 +52,43 @@ public class KMeans {
         this.numClusters = numClusters;
     }
 
-    public void addImage(String identifier, List<Feature> features) {
+    public void addImage(String identifier, List<Histogram> features) {
         images.add(new Image(identifier, features));
         count += features.size();
     }
 
+    public int getFeatureCount() {
+        return count;
+    }
+
     public void init() {
         // create a set of all features:
-        features = new ArrayList<Feature>(count);
+        features = new ArrayList<Histogram>(count);
         for (Iterator<Image> imageIterator = images.iterator(); imageIterator.hasNext();) {
             Image image = imageIterator.next();
-            for (Iterator<Feature> iterator = image.features.iterator(); iterator.hasNext();) {
+            for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext();) {
                 features.add(iterator.next());
             }
         }
         // find first clusters:
         clusters = new Cluster[numClusters];
+        Set<Integer> medians = selectInitialMedians(numClusters);
+        Iterator<Integer> mediansIterator = medians.iterator();
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new Cluster();
-            System.arraycopy(features.get(i).descriptor, 0, clusters[i].mean, 0, clusters[i].mean.length);
+            float[] descriptor = features.get(mediansIterator.next()).descriptor;
+            System.arraycopy(descriptor, 0, clusters[i].mean, 0, descriptor.length);
         }
-        reOrganizeFeatures();
-        recomputeMeans();
+//        reOrganizeFeatures();
+//        recomputeMeans();
+    }
+
+    private Set<Integer> selectInitialMedians(int numClusters) {
+        HashSet<Integer> medians = new HashSet<Integer>();
+        while (medians.size() < numClusters && medians.size() < features.size()) {
+            medians.add((int)(Math.random() * (double) numClusters));
+        }
+        return medians;
     }
 
     /**
@@ -94,12 +111,12 @@ public class KMeans {
      */
     private void reOrganizeFeatures() {
         for (int k = 0; k < features.size(); k++) {
-            Feature f = features.get(k);
+            Histogram f = features.get(k);
             Cluster best = clusters[0];
             double minDistance = clusters[0].getDistance(f);
             for (int i = 1; i < clusters.length; i++) {
                 double v = clusters[i].getDistance(f);
-                if (minDistance >= v) {
+                if (minDistance > v) {
                     best = clusters[i];
                     minDistance = v;
                 }
@@ -112,9 +129,10 @@ public class KMeans {
      * Computes the mean per cluster (averaged vector)
      */
     private void recomputeMeans() {
+        int length = features.get(0).descriptor.length;
         for (int i = 0; i < clusters.length; i++) {
             float[] mean = clusters[i].mean;
-            for (int j = 0; j < mean.length; j++) {
+            for (int j = 0; j < length; j++) {
                 mean[j] = 0;
                 for (Integer member : clusters[i].members) {
                     mean[j] += features.get(member).descriptor[j];
@@ -131,14 +149,16 @@ public class KMeans {
      */
     private double overallStress() {
         double v = 0;
+        int length = features.get(0).descriptor.length;
+
         for (int i = 0; i < clusters.length; i++) {
             for (Integer member : clusters[i].members) {
                 float tmpStress = 0;
-                for (int j = 0; j < clusters[i].mean.length; j++) {
-                    float f = clusters[i].mean[j] - features.get(member).descriptor[j];
-                    tmpStress += f * f;
+                for (int j = 0; j < length; j++) {
+                    float f = Math.abs(clusters[i].mean[j] - features.get(member).descriptor[j]);
+                    tmpStress += f ;
                 }
-                v += Math.sqrt(tmpStress);
+                v += tmpStress;
             }
         }
         return v;
@@ -165,8 +185,8 @@ public class KMeans {
         this.numClusters = numClusters;
     }
 
-    private HashMap<Feature, Integer> createIndex() {
-        featureIndex = new HashMap<Feature, Integer>(features.size());
+    private HashMap<Histogram, Integer> createIndex() {
+        featureIndex = new HashMap<Histogram, Integer>(features.size());
         for (int i = 0; i < clusters.length; i++) {
             Cluster cluster = clusters[i];
             for (Iterator<Integer> fidit = cluster.members.iterator(); fidit.hasNext();) {
@@ -184,19 +204,19 @@ public class KMeans {
      * @param f the feature to search for
      * @return the index of the Cluster
      */
-    public int getClusterOfFeature(Feature f) {
+    public int getClusterOfFeature(Histogram f) {
         if (featureIndex == null) createIndex();
         return featureIndex.get(f);
     }
 }
 
 class Image {
-    public List<Feature> features;
+    public List<Histogram> features;
     public String identifier;
     public int[] localFeatureHistogram = null;
     private final int QUANT_MAX_HISTOGRAM = 256;
 
-    Image(String identifier, List<Feature> features) {
+    Image(String identifier, List<Histogram> features) {
         this.features = features;
         this.identifier = identifier;
     }

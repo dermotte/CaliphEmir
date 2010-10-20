@@ -24,10 +24,12 @@
  *
  * (c) 2008 by Mathias Lux, mathias@juggle.at
  */
-package net.semanticmetadata.lire.imageanalysis.sift;
+package net.semanticmetadata.lire.imageanalysis;
 
 import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.imageanalysis.Histogram;
+import net.semanticmetadata.lire.imageanalysis.sift.Cluster;
+import net.semanticmetadata.lire.imageanalysis.sift.Feature;
+import net.semanticmetadata.lire.imageanalysis.sift.KMeans;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -49,15 +51,15 @@ import java.util.LinkedList;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class SiftFeatureHistogramBuilder {
+public class SurfFeatureHistogramBuilder {
     IndexReader reader;
     // number of documents used to build the vocabulary / clusters.
-    private int numDocsForVocabulary = 1000;
+    private int numDocsForVocabulary = 100;
     private int numClusters = 256;
     private Cluster[] clusters = null;
     DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
 
-    public SiftFeatureHistogramBuilder(IndexReader reader) {
+    public SurfFeatureHistogramBuilder(IndexReader reader) {
         this.reader = reader;
     }
 
@@ -68,12 +70,12 @@ public class SiftFeatureHistogramBuilder {
      * @param reader               the reader used to open the Lucene index,
      * @param numDocsForVocabulary gives the number of documents for building the vocabulary (clusters).
      */
-    public SiftFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary) {
+    public SurfFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary) {
         this.reader = reader;
         this.numDocsForVocabulary = numDocsForVocabulary;
     }
 
-    public SiftFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary, int numClusters) {
+    public SurfFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary, int numClusters) {
         this.numDocsForVocabulary = numDocsForVocabulary;
         this.numClusters = numClusters;
         this.reader = reader;
@@ -85,7 +87,7 @@ public class SiftFeatureHistogramBuilder {
      * (the cluster means). For all images a histogram on the visual words is created and added to the documents.
      * Pre-existing histograms are deleted, so this method can be used for re-indexing.
      *
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public void index() throws IOException {
         df.setMaximumFractionDigits(3);
@@ -99,10 +101,10 @@ public class SiftFeatureHistogramBuilder {
             if (!reader.isDeleted(nextDoc)) {
                 Document d = reader.document(nextDoc);
                 features = new LinkedList<Histogram>();
-                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SIFT);
+                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SURF);
                 String file = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                 for (int j = 0; j < binaryValues.length; j++) {
-                    Feature f = new Feature();
+                    SurfFeature f = new SurfFeature();
                     f.setByteArrayRepresentation(binaryValues[j]);
                     features.add(f);
                 }
@@ -121,7 +123,7 @@ public class SiftFeatureHistogramBuilder {
         time = System.currentTimeMillis();
         double newstress = k.clusteringStep();
         // critical part: Give the difference in between steps as a co,nstraint for accuracy vs. runtime trade off.
-        double treshold = Math.max(5d, (double) k.getFeatureCount()/2000d);
+        double treshold = Math.max(20d, (double) k.getFeatureCount()/1000d);
         System.out.println("Treshold = " + treshold);
         while (Math.abs(newstress - laststress) > treshold) {
             System.out.println(df.format((System.currentTimeMillis() - time) / (1000*60)) + " min. -> Next step. Stress difference ~ |" + (int) newstress + " - " + (int) laststress +"| = "+ df.format(Math.abs(newstress - laststress)));
@@ -145,20 +147,17 @@ public class SiftFeatureHistogramBuilder {
                 Document d = reader.document(i);
                 features = new LinkedList<Histogram>();
 //                String[] fs = d.getValues(DocumentBuilder.FIELD_NAME_SIFT);
-                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SIFT);
+                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SURF);
 
                 String file = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                 // remove the fields if they are already there ...
-                d.removeField(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM);
-                d.removeField(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
+                d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
                 // find the appropriate cluster for each feature:
                 for (int j = 0; j < binaryValues.length; j++) {
                     f.setByteArrayRepresentation(binaryValues[j]);
                     tmpHist[clusterForFeature(f)]++;
                 }
-                d.add(new Field(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM, arrayToString(tmpHist), Field.Store.YES, Field.Index.NO));
-                // stores visual words, something like "v0 v0 v1 v3 v4 ..."
-                d.add(new Field(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
                 // now write the new one. we use the identifier to update ;)
                 iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
             }

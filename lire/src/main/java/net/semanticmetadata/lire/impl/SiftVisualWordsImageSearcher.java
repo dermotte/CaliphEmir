@@ -10,6 +10,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Similarity;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
 
@@ -22,7 +23,7 @@ import java.util.LinkedList;
  * Time: 13:58:33
  * Mathias Lux, mathias@juggle.at
  */
-public class SiftVisualWordsImageSearcher extends AbstractImageSearcher{
+public class SiftVisualWordsImageSearcher extends AbstractImageSearcher {
     private QueryParser qp;
     private int numMaxHits;
 
@@ -38,6 +39,7 @@ public class SiftVisualWordsImageSearcher extends AbstractImageSearcher{
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
         SimpleImageSearchHits sh = null;
         IndexSearcher isearcher = new IndexSearcher(reader);
+        isearcher.setSimilarity(new TfIdfSimilarity());
         String query = doc.getValues(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
         try {
             TopDocs docs = isearcher.search(qp.parse(query), numMaxHits);
@@ -58,5 +60,39 @@ public class SiftVisualWordsImageSearcher extends AbstractImageSearcher{
 
     public ImageDuplicates findDuplicates(IndexReader reader) throws IOException {
         throw new UnsupportedOperationException("Not implemented!");
+    }
+
+    private static class TfIdfSimilarity extends Similarity {
+        @Override
+        public float lengthNorm(String s, int i) {
+            return 1;
+        }
+
+        @Override
+        public float queryNorm(float v) {
+            return 1;
+        }
+
+        @Override
+        public float sloppyFreq(int i) {
+            return 0;
+        }
+
+        @Override
+        public float tf(float v) {
+            return (float) Math.sqrt(v);
+            // return v;
+        }
+
+        @Override
+        public float idf(int docfreq, int numdocs) {
+            return 1f;
+//             return (float) (Math.log((double) numdocs / ((double) docfreq +  1d))); 
+        }
+
+        @Override
+        public float coord(int i, int i1) {
+            return 1;  //To change body of implemented methods use File | Settings | File Templates.
+        }
     }
 }

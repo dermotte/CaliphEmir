@@ -33,6 +33,7 @@ package net.semanticmetadata.lire.imageanalysis.sift;
 
 
 import at.lux.imageanalysis.VisualDescriptor;
+import net.semanticmetadata.lire.imageanalysis.Histogram;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.io.Serializable;
@@ -43,7 +44,7 @@ import java.util.logging.Logger;
 /**
  * SIFT feature container
  */
-public class Feature implements Comparable<Feature>, Serializable, VisualDescriptor {
+public class Feature extends Histogram implements Comparable<Feature>, Serializable, VisualDescriptor{
     /**
      *
      */
@@ -52,7 +53,7 @@ public class Feature implements Comparable<Feature>, Serializable, VisualDescrip
     public float scale;
     public float orientation;
     public float[] location;
-    public float[] descriptor;
+//    public float[] descriptor;
 
     /**
      * Dummy constructor for Serialization to work properly.

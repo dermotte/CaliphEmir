@@ -1,10 +1,7 @@
 package net.semanticmetadata.lire;
 
 import net.semanticmetadata.lire.imageanalysis.*;
-import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
-import net.semanticmetadata.lire.impl.CorrelogramDocumentBuilder;
-import net.semanticmetadata.lire.impl.GenericDocumentBuilder;
-import net.semanticmetadata.lire.impl.SimpleDocumentBuilder;
+import net.semanticmetadata.lire.impl.*;
 
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
@@ -152,8 +149,10 @@ public class DocumentBuilderFactory {
      * @return the created AutoCorrelation feature DocumentBuilder.
      */
     public static DocumentBuilder getCEDDDocumentBuilder() {
-        return new GenericDocumentBuilder(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
+        return new CEDDDocumentBuilder();
+//        return new GenericDocumentBuilder(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
     }
+
 
     /**
      * Creates a DocumentBuilder for the FCTH feature. See

@@ -52,6 +52,21 @@ public class MetricsUtils {
     }
 
     /**
+     * Euclidean distance
+     *
+     * @param h1
+     * @param h2
+     * @return
+     */
+    public static float distL2(float[] h1, float[] h2) {
+        double sum = 0d;
+        for (int i = 0; i < h1.length; i++) {
+            sum += (h1[i] - h2[i]) * (h1[i] - h2[i]);
+        }
+        return (float) Math.sqrt(sum);
+    }
+
+    /**
      * Jeffrey Divergence or Jensen-Shannon divergence (JSD) from
      * Deselaers, T.; Keysers, D. & Ney, H. Features for image retrieval: an experimental comparison Inf. Retr., Kluwer Academic Publishers, 2008, 11, 77-107
      *

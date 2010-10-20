@@ -19,12 +19,13 @@
  */
 package net.semanticmetadata.lire.imageanalysis.sift;
 
+import net.semanticmetadata.lire.imageanalysis.Histogram;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -39,6 +40,7 @@ public class Cluster implements Comparable<Object> {
 
     public Cluster() {
         this.mean = new float[4 * 4 * 8];
+        Arrays.fill(mean, 0f);
     }
 
     public Cluster(float[] mean) {
@@ -62,13 +64,13 @@ public class Cluster implements Comparable<Object> {
         return ((Cluster) o).members.size() - members.size();
     }
 
-    public double getDistance(Feature f) {
+    public double getDistance(Histogram f) {
         double d = 0;
-        for (int i = 0; i < mean.length; i++) {
-            double a = mean[i] - f.descriptor[i];
-            d += a * a;
+        // now using L1 for faster results ...
+        for (int i = 0; i < f.descriptor.length; i++) {
+            d += Math.abs(mean[i] - f.descriptor[i]);
         }
-        return Math.sqrt(d);
+        return d;
     }
 
     /**

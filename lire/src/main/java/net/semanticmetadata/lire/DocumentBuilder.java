@@ -79,6 +79,8 @@ public interface DocumentBuilder {
     public static final String FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS = "featureSiftHistogramVWords";
     public static final String FIELD_NAME_IDENTIFIER = "descriptorImageIdentifier";
     public static final String FIELD_NAME_CEDD_FAST = "featureCEDDfast";
+    public static final String FIELD_NAME_SURF = "featureSurf";
+    public static final String FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS = "featureSurfHistogramVWords";
 
 
     /**

@@ -29,10 +29,9 @@ package net.semanticmetadata.lire.imageanalysis.sift;
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.impl.CEDDDocumentBuilder;
-import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
-import net.semanticmetadata.lire.impl.SiftDocumentBuilder;
-import net.semanticmetadata.lire.impl.SiftLocalFeatureHistogramImageSearcher;
+import net.semanticmetadata.lire.imageanalysis.Histogram;
+import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
+import net.semanticmetadata.lire.impl.*;
 import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
@@ -51,6 +50,7 @@ import javax.imageio.ImageIO;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -84,7 +84,12 @@ public class TestLocalFeatureHistogram extends TestCase {
             String s = testExtensive + "/" + id + ".jpg";
             System.out.println("s = " + s);
             List<Feature> features = extractor.computeSiftFeatures(ImageIO.read(new File(s)));
-            k.addImage(s, features);
+            List<Histogram> tmpList = new LinkedList<Histogram>();
+            for (Iterator<Feature> histogramIterator = features.iterator(); histogramIterator.hasNext();) {
+                Feature feature = histogramIterator.next();
+                tmpList.add(feature);
+            }
+            k.addImage(s, tmpList);
 //            if (count > 20) break;
             count++;
         }
@@ -109,8 +114,8 @@ public class TestLocalFeatureHistogram extends TestCase {
         for (Iterator<Image> imageIterator = imgs.iterator(); imageIterator.hasNext();) {
             Image image = imageIterator.next();
             image.initHistogram(k.getNumClusters());
-            for (Iterator<Feature> iterator = image.features.iterator(); iterator.hasNext();) {
-                Feature feat = iterator.next();
+            for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext();) {
+                Histogram feat = iterator.next();
                 image.getLocalFeatureHistogram()[k.getClusterOfFeature(feat)]++;
                 image.normalizeFeatureHistogram();
             }
@@ -141,7 +146,25 @@ public class TestLocalFeatureHistogram extends TestCase {
             iw.addDocument(db.createDocument(new FileInputStream(images.get(i)), images.get(i)));
             if (i % 100 == 99) System.out.print(".");
             if (i % 1000 == 999) System.out.print(" ~ " + i + " files indexed\n");
-            if (i > 10000) break;
+            if (i > 1000) break;
+        }
+        System.out.println("");
+        iw.optimize();
+        iw.close();
+    }
+
+    public void testSurfIndexing() throws IOException {
+        ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
+        ChainedDocumentBuilder db = new ChainedDocumentBuilder();
+        db.addBuilder(new SurfDocumentBuilder());
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("surf-idx")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        for (int i = 0; i < images.size(); i++) {
+//            int sampleQuery = sampleQueries[i];
+//            String s = testExtensive + "/" + sampleQuery + ".jpg";
+            iw.addDocument(db.createDocument(new FileInputStream(images.get(i)), images.get(i)));
+            if (i % 100 == 99) System.out.print(".");
+            if (i % 1000 == 999) System.out.print(" ~ " + i + " files indexed\n");
+            if (i > 1000) break;
         }
         System.out.println("");
         iw.optimize();
@@ -154,6 +177,14 @@ public class TestLocalFeatureHistogram extends TestCase {
         SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File("sift-idx")), false), 2000);
         sh.index();
         testFindimages();
+    }
+
+    public void testCreateSurfFeatureHistogram() throws IOException {
+//        testSiftIndexing();
+
+        SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File("surf-idx")), false), 500, 1000);
+        sh.index();
+//        testFindimages();
     }
 
     public void testFindimages() throws IOException {
@@ -225,6 +256,69 @@ public class TestLocalFeatureHistogram extends TestCase {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public void testSurfSearch() throws IOException {
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File("surf-idx")));
+        int docID = 414;
+
+        String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
+        System.out.println("query = " + query);
+        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer());
+        IndexSearcher isearcher = new IndexSearcher(reader);
+        isearcher.setSimilarity(new Similarity() {
+            @Override
+            public float lengthNorm(String s, int i) {
+                return 1;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public float queryNorm(float v) {
+                return 1;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public float sloppyFreq(int i) {
+                return 0;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public float tf(float v) {
+                return (float) Math.sqrt(v);  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public float idf(int docfreq, int numdocs) {
+                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
+//                return (float) (Math.log((double) numdocs/(double) docfreq));  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public float coord(int i, int i1) {
+                return 1;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
+        StringBuilder sb = new StringBuilder();
+        try {
+            TopDocs docs = isearcher.search(qp.parse(query), 10);
+            sb.append("<html>\n" +
+                    "<body bgcolor=\"#FFFFFF\">\n" +
+                    "<table>");
+            for (int i = 0; i < docs.scoreDocs.length; i++) {
+                sb.append("    <tr>\n" +
+                        "        <td>"+docs.scoreDocs[i].score+", doc: "+docs.scoreDocs[i].doc+"</td>\n" +
+                        "        <td><img src=\""+reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]+"\"/></td>\n" +
+                        "    </tr>");
+                System.out.println(docs.scoreDocs[i].score + ": " + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]);
+            }
+            sb.append("</table>\n" +
+                    "</body>\n" +
+                    "</html>");
+            writeToFile(sb.toString(), "result.html");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void testSiftSerialization() throws IOException {
