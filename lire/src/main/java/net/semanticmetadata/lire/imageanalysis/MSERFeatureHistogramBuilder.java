@@ -27,6 +27,7 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.imageanalysis.mser.MSERFeature;
 import net.semanticmetadata.lire.imageanalysis.sift.Cluster;
 import net.semanticmetadata.lire.imageanalysis.sift.Feature;
 import net.semanticmetadata.lire.imageanalysis.sift.KMeans;
@@ -51,7 +52,7 @@ import java.util.LinkedList;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class SurfFeatureHistogramBuilder {
+public class MSERFeatureHistogramBuilder {
     IndexReader reader;
     // number of documents used to build the vocabulary / clusters.
     private int numDocsForVocabulary = 100;
@@ -59,7 +60,7 @@ public class SurfFeatureHistogramBuilder {
     private Cluster[] clusters = null;
     DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
 
-    public SurfFeatureHistogramBuilder(IndexReader reader) {
+    public MSERFeatureHistogramBuilder(IndexReader reader) {
         this.reader = reader;
     }
 
@@ -70,19 +71,19 @@ public class SurfFeatureHistogramBuilder {
      * @param reader               the reader used to open the Lucene index,
      * @param numDocsForVocabulary gives the number of documents for building the vocabulary (clusters).
      */
-    public SurfFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary) {
+    public MSERFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary) {
         this.reader = reader;
         this.numDocsForVocabulary = numDocsForVocabulary;
     }
 
-    public SurfFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary, int numClusters) {
+    public MSERFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary, int numClusters) {
         this.numDocsForVocabulary = numDocsForVocabulary;
         this.numClusters = numClusters;
         this.reader = reader;
     }
 
     /**
-     * Uses an existing index, where each and every document should have a set of SURF features. A number of
+     * Uses an existing index, where each and every document should have a set of MSER features. A number of
      * random images (numDocsForVocabulary) is selected and clustered to get a vocabulary of visual words
      * (the cluster means). For all images a histogram on the visual words is created and added to the documents.
      * Pre-existing histograms are deleted, so this method can be used for re-indexing.
@@ -101,14 +102,22 @@ public class SurfFeatureHistogramBuilder {
             if (!reader.isDeleted(nextDoc)) {
                 Document d = reader.document(nextDoc);
                 features = new LinkedList<Histogram>();
-                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SURF);
+                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_MSER);
                 String file = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                 for (int j = 0; j < binaryValues.length; j++) {
-                    SurfFeature f = new SurfFeature();
+                    MSERFeature f = new MSERFeature();
                     f.setByteArrayRepresentation(binaryValues[j]);
+                    for (int i = 0; i < f.descriptor.length; i++) {
+                        if (Float.isNaN(f.descriptor[i])) System.err.println("Error adding feature to KMeans: NaN " + file);
+                    }
                     features.add(f);
                 }
-                k.addImage(file, features);
+                if (features.size()>0) // just add those with features.
+                {
+                    k.addImage(file, features);
+                } else {
+                    System.err.println("Did not find features for image " + file);
+                }
             }
         }
         // do the clustering:
@@ -122,7 +131,9 @@ public class SurfFeatureHistogramBuilder {
         System.out.println(df.format((System.currentTimeMillis() - time) / (1000*60)) + " min. -> Next step.");
         time = System.currentTimeMillis();
         double newstress = k.clusteringStep();
-        // critical part: Give the difference in between steps as a co,nstraint for accuracy vs. runtime trade off.
+        System.out.println("newstress = " + newstress);
+        // critical part: Give the difference in between steps as a constraint for accuracy vs. runtime trade off.
+//        double treshold = 0.5d;
         double treshold = Math.max(20d, (double) k.getFeatureCount()/1000d);
         System.out.println("Treshold = " + treshold);
         while (Math.abs(newstress - laststress) > treshold) {
@@ -147,17 +158,17 @@ public class SurfFeatureHistogramBuilder {
                 Document d = reader.document(i);
                 features = new LinkedList<Histogram>();
 //                String[] fs = d.getValues(DocumentBuilder.FIELD_NAME_SIFT);
-                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SURF);
+                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_MSER);
 
                 String file = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                 // remove the fields if they are already there ...
-                d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
+                d.removeField(DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
                 // find the appropriate cluster for each feature:
                 for (int j = 0; j < binaryValues.length; j++) {
                     f.setByteArrayRepresentation(binaryValues[j]);
                     tmpHist[clusterForFeature(f)]++;
                 }
-                d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                d.add(new Field(DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
                 // now write the new one. we use the identifier to update ;)
                 iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
             }

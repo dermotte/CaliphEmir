@@ -66,8 +66,25 @@ public class KMeans {
         features = new ArrayList<Histogram>(count);
         for (Iterator<Image> imageIterator = images.iterator(); imageIterator.hasNext();) {
             Image image = imageIterator.next();
+            if (image.features.size()>0)
             for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext();) {
-                features.add(iterator.next());
+                Histogram histogram = iterator.next();
+                for (int i = 0; i < histogram.descriptor.length; i++) {
+                    if (Float.isNaN(histogram.descriptor[i])) {
+                        System.err.println("Found a NaN in init");
+                        System.out.println("image.identifier = " + image.identifier);
+                        for (int j = 0; j < histogram.descriptor.length; j++) {
+                            float v = histogram.descriptor[j];
+                            System.out.print(v + ", ");
+                        }
+                        System.out.println("");
+                    }
+
+                }
+                features.add(histogram);
+            }
+            else {
+                System.err.println("Image with no MSER features: " + image.identifier);
             }
         }
         // find first clusters:
@@ -77,6 +94,11 @@ public class KMeans {
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new Cluster();
             float[] descriptor = features.get(mediansIterator.next()).descriptor;
+            for (int j = 0; j < descriptor.length; j++) {
+                if (Float.isNaN(descriptor[j]))
+                    System.err.println("There is a NaN in the init medians!");
+
+            }
             System.arraycopy(descriptor, 0, clusters[i].mean, 0, descriptor.length);
         }
 //        reOrganizeFeatures();
@@ -93,7 +115,7 @@ public class KMeans {
 
     /**
      * Do one step and return the overall stress (squared error). You should do this until
-     * the error is below a treshold or doesn't change a lot in between two subsequent steps.
+     * the error is below a threshold or doesn't change a lot in between two subsequent steps.
      *
      * @return
      */
@@ -137,7 +159,8 @@ public class KMeans {
                 for (Integer member : clusters[i].members) {
                     mean[j] += features.get(member).descriptor[j];
                 }
-                mean[j] = mean[j] / clusters[i].members.size();
+                if (clusters[i].members.size()>1)
+                    mean[j] = mean[j] / clusters[i].members.size();
             }
         }
     }
@@ -155,6 +178,7 @@ public class KMeans {
             for (Integer member : clusters[i].members) {
                 float tmpStress = 0;
                 for (int j = 0; j < length; j++) {
+//                    if (Float.isNaN(features.get(member).descriptor[j])) System.err.println("Error: there is a NaN in cluster " + i + " at member " + member);
                     float f = Math.abs(clusters[i].mean[j] - features.get(member).descriptor[j]);
                     tmpStress += f ;
                 }
@@ -213,7 +237,7 @@ public class KMeans {
 class Image {
     public List<Histogram> features;
     public String identifier;
-    public int[] localFeatureHistogram = null;
+    public float[] localFeatureHistogram = null;
     private final int QUANT_MAX_HISTOGRAM = 256;
 
     Image(String identifier, List<Histogram> features) {
@@ -221,23 +245,23 @@ class Image {
         this.identifier = identifier;
     }
 
-    public int[] getLocalFeatureHistogram() {
+    public float[] getLocalFeatureHistogram() {
         return localFeatureHistogram;
     }
 
-    public void setLocalFeatureHistogram(int[] localFeatureHistogram) {
+    public void setLocalFeatureHistogram(float[] localFeatureHistogram) {
         this.localFeatureHistogram = localFeatureHistogram;
     }
 
     public void initHistogram(int bins) {
-        localFeatureHistogram = new int[bins];
+        localFeatureHistogram = new float[bins];
         for (int i = 0; i < localFeatureHistogram.length; i++) {
             localFeatureHistogram[i] = 0;
         }
     }
 
     public void normalizeFeatureHistogram() {
-        int max = 0;
+        float max = 0;
         for (int i = 0; i < localFeatureHistogram.length; i++) {
             max = Math.max(localFeatureHistogram[i], max);
         }

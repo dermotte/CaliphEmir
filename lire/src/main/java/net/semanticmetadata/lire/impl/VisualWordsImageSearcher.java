@@ -1,7 +1,6 @@
 package net.semanticmetadata.lire.impl;
 
 import net.semanticmetadata.lire.AbstractImageSearcher;
-import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
@@ -19,25 +18,28 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 /**
- * TODO: Delete and refactor use to VisualWOrdsImageSearcher
+ * Provides a general searcher for visual words implementation. Can be used for SIFT, SURF and MSER.
  * Date: 28.09.2010
  * Time: 13:58:33
  * Mathias Lux, mathias@juggle.at
  */
-public class SurfVisualWordsImageSearcher extends AbstractImageSearcher {
+public class VisualWordsImageSearcher extends AbstractImageSearcher {
     private QueryParser qp;
     private int numMaxHits;
+    private String fieldName;
     private Similarity similarity = new TfIdfSimilarity();
 
-    public SurfVisualWordsImageSearcher(int numMaxHits, Similarity similarity) {
+    public VisualWordsImageSearcher(int numMaxHits, Similarity similarity, String fieldName) {
         this.similarity = similarity;
         this.numMaxHits = numMaxHits;
-        qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer());
+        this.fieldName = fieldName;
+        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer());
     }
 
-    public SurfVisualWordsImageSearcher(int numMaxHits) {
+    public VisualWordsImageSearcher(int numMaxHits, String fieldName) {
         this.numMaxHits = numMaxHits;
-        qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer());
+        this.fieldName = fieldName;
+        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer());
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {
@@ -48,7 +50,7 @@ public class SurfVisualWordsImageSearcher extends AbstractImageSearcher {
         SimpleImageSearchHits sh = null;
         IndexSearcher isearcher = new IndexSearcher(reader);
         isearcher.setSimilarity(similarity);
-        String queryString = doc.getValues(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
+        String queryString = doc.getValues(fieldName)[0];
         //            Query query = qp.parse(queryString);
         Query tq = createQuery(queryString);
 
@@ -66,7 +68,6 @@ public class SurfVisualWordsImageSearcher extends AbstractImageSearcher {
     }
 
     private Query createQuery(String queryString) {
-        String fieldName = DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
         StringTokenizer st = new StringTokenizer(queryString);
         BooleanQuery query = new BooleanQuery();
         HashSet<String> terms = new HashSet<String>();

@@ -117,7 +117,7 @@ public class TestLocalFeatureHistogram extends TestCase {
             for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext();) {
                 Histogram feat = iterator.next();
                 image.getLocalFeatureHistogram()[k.getClusterOfFeature(feat)]++;
-                image.normalizeFeatureHistogram();
+//                image.normalizeFeatureHistogram();
             }
         }
 

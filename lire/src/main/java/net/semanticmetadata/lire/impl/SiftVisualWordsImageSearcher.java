@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 /**
+ * TODO: Delete and refactor use to VisualWordsImageSearcher
  * Date: 28.09.2010
  * Time: 13:58:33
  * Mathias Lux, mathias@juggle.at

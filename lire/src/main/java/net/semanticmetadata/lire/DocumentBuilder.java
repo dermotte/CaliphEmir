@@ -81,6 +81,8 @@ public interface DocumentBuilder {
     public static final String FIELD_NAME_CEDD_FAST = "featureCEDDfast";
     public static final String FIELD_NAME_SURF = "featureSurf";
     public static final String FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS = "featureSurfHistogramVWords";
+    public static final String FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS = "featureMSERHistogramVWords";
+    public static final String FIELD_NAME_MSER = "featureMSER";
 
 
     /**
