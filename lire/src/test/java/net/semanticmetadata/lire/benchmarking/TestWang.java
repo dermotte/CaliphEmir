@@ -49,7 +49,7 @@ public class TestWang extends TestCase {
         // Setting up DocumentBuilder:
         builder = new ChainedDocumentBuilder();
 //        builder.addBuilder(new CEDDDocumentBuilder());
-//        builder.addBuilder(new SurfDocumentBuilder());
+        builder.addBuilder(new SurfDocumentBuilder());
         builder.addBuilder(new MSERDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());

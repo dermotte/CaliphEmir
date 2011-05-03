@@ -30,6 +30,7 @@ import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.imageanalysis.sift.Cluster;
 import net.semanticmetadata.lire.imageanalysis.sift.Feature;
 import net.semanticmetadata.lire.imageanalysis.sift.KMeans;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -152,12 +153,14 @@ public class SurfFeatureHistogramBuilder {
                 String file = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                 // remove the fields if they are already there ...
                 d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
+                d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM);
                 // find the appropriate cluster for each feature:
                 for (int j = 0; j < binaryValues.length; j++) {
                     f.setByteArrayRepresentation(binaryValues[j]);
                     tmpHist[clusterForFeature(f)]++;
                 }
                 d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
                 // now write the new one. we use the identifier to update ;)
                 iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
             }
@@ -214,6 +217,8 @@ public class SurfFeatureHistogramBuilder {
 
         */
     }
+
+
 
     /**
      * Find the appropriate cluster for a given feature.

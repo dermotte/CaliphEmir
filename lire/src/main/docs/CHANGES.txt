@@ -1,5 +1,14 @@
 CHANGES for LIRE
 ================
+
+2011-05-03
+==========
+  - Added test classes for BoVW extraction
+
+2011-05-02
+==========
+  - Added MSER + BoVW for MSER
+
 2010-09-28
 ==========
   - Changed SIFT feature serialization to byte[] (lot faster)
@@ -191,7 +200,7 @@ General:
 CBIR:
   - Added Tamura feature based on the code of Marko Keuschnig &
     Christian Penz to imageanalysis
-  - Added Tamura to document and search builder factories
+  - Added Tamura to document and search documentBuilder factories
   - Removed specific implementations for color histogram and CEDD
   - Introduced LireFeature interface (for use in GenericDocumentBuilder
     and GenericImageSearcher)

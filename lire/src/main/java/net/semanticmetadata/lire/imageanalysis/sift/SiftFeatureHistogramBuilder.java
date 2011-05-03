@@ -28,6 +28,7 @@ package net.semanticmetadata.lire.imageanalysis.sift;
 
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.imageanalysis.Histogram;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -156,7 +157,7 @@ public class SiftFeatureHistogramBuilder {
                     f.setByteArrayRepresentation(binaryValues[j]);
                     tmpHist[clusterForFeature(f)]++;
                 }
-                d.add(new Field(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM, arrayToString(tmpHist), Field.Store.YES, Field.Index.NO));
+                d.add(new Field(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.NO));
                 // stores visual words, something like "v0 v0 v1 v3 v4 ..."
                 d.add(new Field(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
                 // now write the new one. we use the identifier to update ;)
@@ -247,15 +248,6 @@ public class SiftFeatureHistogramBuilder {
             }
         }
         return sb.toString();
-    }
-
-    private String arrayToString(int[] hist) {
-        StringBuilder sb = new StringBuilder(256);
-        for (int i = 0; i < hist.length; i++) {
-            sb.append(hist[i]);
-            sb.append(' ');
-        }
-        return sb.toString().trim();
     }
 
     private HashSet<Integer> selectVocabularyDocs() throws IOException {
