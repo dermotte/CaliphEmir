@@ -2,16 +2,15 @@ package net.semanticmetadata.lire.benchmarking;
 
 //import Jama.Matrix;
 //import Jama.SingularValueDecomposition;
+
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
-import net.semanticmetadata.lire.imageanalysis.ColorLayout;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.impl.*;
 import net.semanticmetadata.lire.utils.FileUtils;
 import net.semanticmetadata.lire.utils.ImageUtils;
-import net.semanticmetadata.lire.utils.MetricsUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
@@ -21,7 +20,10 @@ import org.apache.lucene.store.SimpleFSDirectory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * User: mlux
@@ -231,6 +233,7 @@ public class TestGeneral extends TestCase {
                 "</html>");
         bw.close();
     }
+
 
     /*
     private ImageSearchHits lsa(IndexReader reader, ColorLayout query, int numDims) {

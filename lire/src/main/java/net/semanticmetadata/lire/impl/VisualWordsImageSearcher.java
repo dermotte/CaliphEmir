@@ -27,7 +27,9 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
     private QueryParser qp;
     private int numMaxHits;
     private String fieldName;
-    private Similarity similarity = new TfIdfSimilarity();
+    private Similarity similarity = new DefaultSimilarity();
+//    private Similarity similarity = new TfIdfSimilarity();
+    
 
     public VisualWordsImageSearcher(int numMaxHits, Similarity similarity, String fieldName) {
         this.similarity = similarity;
@@ -105,8 +107,8 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
 
         @Override
         public float tf(float v) {
-//            return (float) (v);
-            return 1;
+            return (float) (v);
+//            return 1;
         }
 
         @Override
@@ -117,7 +119,7 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
 
         @Override
         public float coord(int i, int i1) {
-            return 1;  //To change body of implemented methods use File | Settings | File Templates.
+            return 1;  
         }
     }
 }

@@ -36,7 +36,7 @@ public class MSERParameter
     {
         // original of paper: 3, 0.5, > 25 pixel, 1, 0.5
         this.delta = 5;
-        this.minArea = 0.001;
+        this.minArea = 0.005;
         this.maxArea = 0.5;
         this.maxVariation = 1;
         this.minDiversity = 0.75F;

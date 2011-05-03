@@ -2,6 +2,7 @@ package net.semanticmetadata.lire;
 
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.impl.DocumentFactory;
+import net.semanticmetadata.lire.impl.VisualWordsImageSearcher;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
@@ -9,9 +10,7 @@ import org.apache.lucene.store.FSDirectory;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 /*
  * This file is part of Caliph & Emir.
  *
@@ -237,4 +236,41 @@ public class TestImageSearcher extends TestCase {
         }
 
     }
+
+    public void testMSERHistogramSearcher() throws IOException {
+        String query = "312.jpg";
+        VisualWordsImageSearcher searcher = new VisualWordsImageSearcher(25, DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File("wang-index")));
+        ImageSearchHits hits = searcher.search(findDoc(reader, query), reader);
+        saveToHtml("mser", hits, query);
+    }
+
+    private Document findDoc(IndexReader reader, String file) throws IOException {
+        for (int i = 0; i < reader.numDocs(); i++) {
+            Document document = reader.document(i);
+            String s = document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
+            if (s.endsWith(File.separator + file)) {
+//                System.out.println("s = " + s);
+                return document;
+            }
+        }
+        return null;
+    }
+
+    private void saveToHtml(String prefix, ImageSearchHits hits, String queryImage) throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter("results - " + prefix + ".html"));
+        bw.write("<html>\n" +
+                "<head><title>Search Results</title></head>\n" +
+                "<body bgcolor=\"#FFFFFF\">\n");
+        bw.write("<h3>query</h3>\n");
+        bw.write("<a href=\"file://" + queryImage + "\"><img src=\"file://" + queryImage + "\"></a><p>\n");
+        bw.write("<h3>results</h3>\n");
+        for (int i = 0; i < hits.length(); i++) {
+            bw.write(hits.score(i) + " - <a href=\"file://" + hits.doc(i).get("descriptorImageIdentifier") + "\"><img src=\"file://" + hits.doc(i).get("descriptorImageIdentifier") + "\"></a><p>\n");
+        }
+        bw.write("</body>\n" +
+                "</html>");
+        bw.close();
+    }
+
 }
