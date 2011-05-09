@@ -1,6 +1,10 @@
 CHANGES for LIRE
 ================
 
+2011-05-09
+==========
+  - Bugfix in SimpleColorHistogram based on the information of Arthur Lin
+  
 2011-05-03
 ==========
   - Added test classes for BoVW extraction

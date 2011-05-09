@@ -144,7 +144,7 @@ public class SimpleColorHistogram implements LireFeature {
             return (pixel[0] * histogram.length) / (256);
         } else {
 //            return Quantization.quantDistributionBased(pixel, histogram.length, 512);
-            return Quantization.quantUniformly(pixel, histogram.length, DEFAULT_NUMBER_OF_BINS);
+            return Quantization.quantUniformly(pixel, DEFAULT_NUMBER_OF_BINS, histogram.length);
         }
     }
 
