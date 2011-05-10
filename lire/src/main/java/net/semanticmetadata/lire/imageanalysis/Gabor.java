@@ -35,6 +35,7 @@ import java.util.StringTokenizer;
 
 /**
  * Implementation of a Gabor texture features done by  Marko Keuschnig & Christian Penz<br>
+ * Fixed 2011-05-10 based on the comments of Arthur Lin.
  */
 
 public class Gabor implements LireFeature {
@@ -90,7 +91,7 @@ public class Gabor implements LireFeature {
         double distance = 0;
         for (int m = 0; m < M; m++) {
             for (int n = 0; n < N; n++) {
-                distance += Math.sqrt(Math.pow(queryFeatureVector[m * N + n * 2] - targetFeatureVector[m * N + n * 2], 2) + Math.pow(queryFeatureVector[m * N + n * 2 + 1] - targetFeatureVector[m * N + n * 2 + 1], 2));
+                distance += Math.sqrt(Math.pow(queryFeatureVector[m * 2 * N + n * 2] - targetFeatureVector[m * 2 * N + n * 2], 2) + Math.pow(queryFeatureVector[m * 2 * N + n * 2 + 1] - targetFeatureVector[m * 2 * N + n * 2 + 1], 2));
             }
         }
 
@@ -107,7 +108,7 @@ public class Gabor implements LireFeature {
         double orientationVectorSum2 = 0;
         for (int m = 0; m < M; m++) {
             for (int n = 0; n < N; n++) {
-                orientationVectorSum2 += Math.sqrt(Math.pow(featureVector[m * N + n * 2], 2) + Math.pow(featureVector[m * N + n * 2 + 1], 2));
+                orientationVectorSum2 += Math.sqrt(Math.pow(featureVector[m * 2 * N + n * 2], 2) + Math.pow(featureVector[m * 2 * N + n * 2 + 1], 2));
             }
             if (orientationVectorSum2 > orientationVectorSum) {
                 orientationVectorSum = orientationVectorSum2;
@@ -118,14 +119,14 @@ public class Gabor implements LireFeature {
         double[] normalizedFeatureVector = new double[featureVector.length];
         for (int m = dominantOrientation, k = 0; m < M; m++, k++) {
             for (int n = 0; n < N; n++) {
-                normalizedFeatureVector[k * N + n * 2] = featureVector[m * N + n * 2];
-                normalizedFeatureVector[k * N + n * 2 + 1] = featureVector[m * N + n * 2 + 1];
+                normalizedFeatureVector[k * 2 * N + n * 2] = featureVector[m * 2 * N + n * 2];
+                normalizedFeatureVector[k * 2 * N + n * 2 + 1] = featureVector[m * 2 * N + n * 2 + 1];
             }
         }
         for (int m = 0, k = M - dominantOrientation; m < dominantOrientation; m++, k++) {
             for (int n = 0; n < N; n++) {
-                normalizedFeatureVector[k * N + n * 2] = featureVector[m * N + n * 2];
-                normalizedFeatureVector[k * N + n * 2 + 1] = featureVector[m * N + n * 2 + 1];
+                normalizedFeatureVector[k * 2 * N + n * 2] = featureVector[m * 2 * N + n * 2];
+                normalizedFeatureVector[k * 2 * N + n * 2 + 1] = featureVector[m * 2 * N + n * 2 + 1];
             }
         }
 
@@ -159,7 +160,7 @@ public class Gabor implements LireFeature {
 
         for (int m = 0; m < M; m++) {
             for (int n = 0; n < N; n++) {
-                featureVector[m * N + n * 2] = magnitudes[m][n] / imageSize;
+                featureVector[m * 2 * N + n * 2] = magnitudes[m][n] / imageSize;
                 for (int i = 0; i < magnitudesForVariance.length; i++) {
                     for (int j = 0; j < magnitudesForVariance[0].length; j++) {
                         magnitudesForVariance[i][j] = 0.;
@@ -167,11 +168,11 @@ public class Gabor implements LireFeature {
                 }
                 for (int x = S; x < image.getWidth(); x++) {
                     for (int y = T; y < image.getHeight(); y++) {
-                        magnitudesForVariance[m][n] += Math.pow(Math.sqrt(Math.pow(this.gaborWavelet[x - S][y - T][m][n][0], 2) + Math.pow(this.gaborWavelet[x - S][y - T][m][n][1], 2)) - featureVector[m * N + n * 2], 2);
+                        magnitudesForVariance[m][n] += Math.pow(Math.sqrt(Math.pow(this.gaborWavelet[x - S][y - T][m][n][0], 2) + Math.pow(this.gaborWavelet[x - S][y - T][m][n][1], 2)) - featureVector[m * 2 * N + n * 2], 2);
                     }
                 }
 
-                featureVector[m * N + n * 2 + 1] = Math.sqrt(magnitudesForVariance[m][n]) / imageSize;
+                featureVector[m * 2 * N + n * 2 + 1] = Math.sqrt(magnitudesForVariance[m][n]) / imageSize;
             }
         }
         this.gaborWavelet = null;

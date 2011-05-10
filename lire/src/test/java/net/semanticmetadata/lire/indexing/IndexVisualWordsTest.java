@@ -18,11 +18,9 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mlux
  * Date: 03.05.2011
  * Time: 10:28:16
- * To change this template use File | Settings | File Templates.
  */
 public class IndexVisualWordsTest extends TestCase {
     public void testIndexSurfHistogram() throws IOException {

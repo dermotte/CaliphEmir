@@ -40,6 +40,7 @@ public class SiftVisualWordsImageSearcher extends AbstractImageSearcher {
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
         SimpleImageSearchHits sh = null;
         IndexSearcher isearcher = new IndexSearcher(reader);
+//        isearcher.setSimilarity(new DefaultSimilarity());
         isearcher.setSimilarity(new TfIdfSimilarity());
         String query = doc.getValues(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
         try {
@@ -76,13 +77,13 @@ public class SiftVisualWordsImageSearcher extends AbstractImageSearcher {
 
         @Override
         public float sloppyFreq(int i) {
-            return 0;
+            throw new UnsupportedOperationException("Not working!");
         }
 
         @Override
         public float tf(float v) {
-            return (float) Math.sqrt(v);
-            // return v;
+//            return (float) Math.sqrt(v);
+            return v;
         }
 
         @Override

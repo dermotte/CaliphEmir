@@ -2,9 +2,13 @@ package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.DocumentBuilderFactory;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
-import net.semanticmetadata.lire.imageanalysis.*;
+import net.semanticmetadata.lire.imageanalysis.CEDD;
+import net.semanticmetadata.lire.imageanalysis.FCTH;
+import net.semanticmetadata.lire.imageanalysis.JCD;
+import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
 import net.semanticmetadata.lire.imageanalysis.sift.SiftFeatureHistogramBuilder;
 import net.semanticmetadata.lire.impl.*;
 import net.semanticmetadata.lire.utils.FileUtils;
@@ -41,27 +45,29 @@ public class TestWang extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         // set to all queries ... approach "leave one out"
-        sampleQueries = new int[250];
+        sampleQueries = new int[1000];
         for (int i = 0; i < sampleQueries.length; i++) {
-            sampleQueries[i] = i*4+1;
+            sampleQueries[i] = i;
 
         }
         // Setting up DocumentBuilder:
         builder = new ChainedDocumentBuilder();
-//        builder.addBuilder(new CEDDDocumentBuilder());
-        builder.addBuilder(new SurfDocumentBuilder());
-        builder.addBuilder(new MSERDocumentBuilder());
-//        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
-//        builder.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
+        builder.addBuilder(new CEDDDocumentBuilder());
+//        builder.addBuilder(new SurfDocumentBuilder());
+//        builder.addBuilder(new MSERDocumentBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
 
         // from Arthur:
 //        builder.addBuilder(new GenericDocumentBuilder(FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"));
 //        builder.addBuilder(new GenericDocumentBuilder(JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"));
 
-//        builder.addBuilder(new SimpleDocumentBuilder(false, false, true));
-//        builder.addBuilder(new SiftDocumentBuilder());
-//        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
-//        builder.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
+        builder.addBuilder(new SimpleDocumentBuilder(true, true, true));
+        builder.addBuilder(new SiftDocumentBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
     }
 
     public void testIndexWang() throws IOException {
@@ -75,8 +81,8 @@ public class TestWang extends TestCase {
 //        sh1.index();
 //        SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
 //        sh.index();
-        MSERFeatureHistogramBuilder sh = new MSERFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
-        sh.index();
+//        MSERFeatureHistogramBuilder sh = new MSERFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
+//        sh.index();
 
         System.out.println("-< Indexing finished >--------------");
 //        System.out.println("SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 1000);");
@@ -142,12 +148,18 @@ public class TestWang extends TestCase {
 //        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L1");
 //        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L2;
 //        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
-//        computeErrorRate(new GenericImageSearcher(1000, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"), "FuzzyColorHistogram");
-//        computeErrorRate(new GenericImageSearcher(1000, JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"), "JpegCoefficientHistogram");
+//        computeMAP(ImageSearcherFactory.createTamuraImageSearcher(1000), "Tamura");
+//        computeMAP(ImageSearcherFactory.createGaborImageSearcher(1000), "Gabor");
+//        computeMAP(ImageSearcherFactory.createDefaultCorrelogramImageSearcher(1000), "color correlogram");
+//        computeMAP(ImageSearcherFactory.createWeightedSearcher(1000, 1f, 0f, 0f), "scalable color");
+//        computeMAP(ImageSearcherFactory.createWeightedSearcher(1000, 0f, 1f, 0f), "color layout");
+//        computeMAP(ImageSearcherFactory.createWeightedSearcher(1000, 0f, 0f, 1f), "edge Hist");
+//        computeMAP(new GenericImageSearcher(1000, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"), "FuzzyColorHistogram");
+//        computeMAP(new GenericImageSearcher(1000, JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"), "JpegCoefficientHistogram");
 //        computeMAP(new CEDDImageSearcher(1000), "CEDD");
-        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "MSER BoVW");    // used for MSER!!!
-//        computeMAP(new SiftVisualWordsImageSearcher(1000), "Sift BoVW");
-//        computeErrorRate(ImageSearcherFactory.createFCTHImageSearcher(1000), "FCTH");
+//        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "MSER BoVW");    // used for MSER!!!
+        computeMAP(new SiftVisualWordsImageSearcher(1000), "Sift BoVW");
+//        computeMAP(ImageSearcherFactory.createFCTHImageSearcher(1000), "FCTH");
 
     }
 
@@ -180,7 +192,7 @@ public class TestWang extends TestCase {
 //            Document document = builder.createDocument(new FileInputStream(file), file);
             ImageSearchHits hits = searcher.search(findDoc(reader, id + ".jpg"), reader);
             int goodOnes = 0;
-            double avgPrecision = 0;
+            double avgPrecision = 0d;
             double precision10temp = 0d;
             int countResults = 0;
             for (int j = 0; j < hits.length(); j++) {
@@ -207,7 +219,7 @@ public class TestWang extends TestCase {
                     }
                 }
 //                System.out.print(" (" + testID + ") ");
-            }
+            }  // end for loop iterating results.
 //            if (avgPrecision<=0) {
 //                System.out.println("avgPrecision = " + avgPrecision);
 //                System.out.println("goodOnes = " + goodOnes);

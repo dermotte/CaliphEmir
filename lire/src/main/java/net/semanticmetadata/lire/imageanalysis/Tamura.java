@@ -40,6 +40,7 @@ import java.util.StringTokenizer;
  * <ul>
  * <li> Ankit Jain (jankit87@gmail.com): histogram length in set string
  * <li> shen72@users.sourceforge.net: bugfixes in math (casting and brackets)
+ * <li> Arthur Lin (applefan99@gmail.com) 2011-05-10: fix to avoid NaN
  * </ul>
  * Date: 28.05.2008
  * Time: 11:52:03
@@ -150,6 +151,8 @@ public class Tamura implements LireFeature {
 		double result = 0, my, sigma, my4 = 0, alpha4 = 0;
 		my = this.calculateMy();
 		sigma = this.calculateSigma(my);
+
+        if (sigma <= 0) return 0; // fix based on the comments orf Arthur Lin. Black images would lead to a NaN in later division.
 
 		for (int x = 0; x < this.imgWidth; x ++) {
 			for (int y = 0; y < this.imgHeight; y ++) {

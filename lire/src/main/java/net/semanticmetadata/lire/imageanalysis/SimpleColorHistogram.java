@@ -41,7 +41,7 @@ import java.util.StringTokenizer;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SimpleColorHistogram implements LireFeature {
-    public static final int DEFAULT_NUMBER_OF_BINS = 512;
+    public static final int DEFAULT_NUMBER_OF_BINS = 1024;
     public static HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.RGB;
     public static DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.L1;
 
@@ -113,8 +113,8 @@ public class SimpleColorHistogram implements LireFeature {
                     rgb2yuv(pixel[0], pixel[1], pixel[2], pixel);
                 } else if (histogramType == HistogramType.HMMD) {
                     histogram[quantHmmd(rgb2hmmd(pixel[0], pixel[1], pixel[2]), DEFAULT_NUMBER_OF_BINS)]++;
-                }
-                if (histogramType != HistogramType.HMMD) histogram[quant(pixel)]++;
+                } else // RGB 
+                    histogram[quant(pixel)]++;
             }
         }
         normalize(histogram, image.getWidth() * image.getHeight());
@@ -132,10 +132,9 @@ public class SimpleColorHistogram implements LireFeature {
     }
 
     private int quant(int[] pixel) {
-        int quantRgb = (256 * 256 * 256) / histogram.length;
         if (histogramType == HistogramType.HSV) {
             // Todo: tune this one ...
-            int qH = (pixel[0] * 8) / 360;    // more granularity in color
+            int qH = (pixel[0] * 16) / 360;    // more granularity in color
             int qS = (pixel[2] * 4) / 100;
             return qH * qS + qS;
         } else if (histogramType == HistogramType.HMMD) {
@@ -144,7 +143,7 @@ public class SimpleColorHistogram implements LireFeature {
             return (pixel[0] * histogram.length) / (256);
         } else {
 //            return Quantization.quantDistributionBased(pixel, histogram.length, 512);
-            return Quantization.quantUniformly(pixel, DEFAULT_NUMBER_OF_BINS, histogram.length);
+            return Quantization.quantUniformly(pixel, DEFAULT_NUMBER_OF_BINS, 256);
         }
     }
 
