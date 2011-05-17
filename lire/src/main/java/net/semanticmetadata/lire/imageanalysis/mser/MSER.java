@@ -35,8 +35,7 @@ public class MSER
     private MSERGrowthHistory[] mers = null;
 
     // TODO: find a suitable value
-    private static final double COARSE_ANGLE = Math.PI/4;
-
+    public static final double COARSE_ANGLE = Math.PI/5;
 
     public MSER()
     {
@@ -282,6 +281,7 @@ public class MSER
 
         int imaxsize = (int) (imageLength * params.maxArea);
         int iminsize = (int) (imageLength * params.minArea);
+//        System.out.println("Iminsize" + iminsize);
 
         /*
            * Here clean up is done to remove low descriptive MSERs.
@@ -417,10 +417,7 @@ public class MSER
 
     public List<MSERFeature> computeMSERFeatures(BufferedImage image)
     {
-        ImagePlus ip = new ImagePlus("image", image);
-        MSERGrowthHistory[] msers = extractMSER(ip);
-        ip.close();
-
+        MSERGrowthHistory[] msers = extractMSER(new ImagePlus("", image));
         return computeFourier(msers, image.getWidth(), image.getHeight());
     }
 
@@ -432,12 +429,13 @@ public class MSER
         for (MSERGrowthHistory mser : msers)
         {
             // getBorderPoints closes the shape already
-            // is this a problem with coarsenPoly ??
+            // This a problem with coarsenPoly!!
+            ImagePoint[] border = mser.getBorderPoints(width, height);
+            // so the last point is omitted
             double[][] coarsedPoly = coarsenPoly(
-                    pointToMatrix(mser.getBorderPoints(width, height)), COARSE_ANGLE);
+                    pointToMatrix(border, border.length-1), COARSE_ANGLE);
 
             // TODO: check if there is a problem with coarsenPoly
-            // TODO: if not, check if the coarsedPoly is closed after this
             // calculate the Fourier descriptors
             Fourier f = new Fourier(matrixToPoints(coarsedPoly, true));
 
@@ -452,7 +450,7 @@ public class MSER
         return features;
     }
 
-    private static Point2D.Double[] matrixToPoints(double[][] coarsedPoly, boolean closeShape)
+    public static Point2D.Double[] matrixToPoints(double[][] coarsedPoly, boolean closeShape)
     {
         int n = (closeShape)? coarsedPoly[0].length+1 : coarsedPoly[0].length;
         int mod = coarsedPoly[0].length;
@@ -505,11 +503,11 @@ public class MSER
             }
         }
 
-        printMatrix("RES", res);
+//        printMatrix("RES", res);
         return res;
     }
 
-    protected static double[][] coarsenPoly(double[][] p, double angle)
+    public static double[][] coarsenPoly(double[][] p, double angle)
     {
         // finding the number of indices of p
         int n = p[0].length;
@@ -617,11 +615,11 @@ public class MSER
         matrix[1] = new double[] {4, 5};
         matrix[2] = new double[] {7, 8};
 
-//        printMatrix("1", matrix);
+        printMatrix("1", matrix);
 
         matrix = cycltrans(matrix, 1, 0);
 
-//        printMatrix("2", matrix);
+        printMatrix("2", matrix);
 
         Point2D.Double[] poly = new Point2D.Double[10];
         poly[0] = new Point2D.Double(4, 0);
@@ -638,7 +636,135 @@ public class MSER
 
         poly = matrixToPoints(coarsenPoly(pointToMatrix(poly), Math.PI/4), true);
 
-//        printPoints("POLY", poly);
+        printPoints("POLY", poly);
+
+
+        poly = new Point2D.Double[55];
+        poly[0] = new Point2D.Double(199,3);
+        poly[1] = new Point2D.Double(200,4);
+        poly[2] = new Point2D.Double(201,5);
+        poly[3] = new Point2D.Double(202,5);
+        poly[4] = new Point2D.Double(203,6);
+        poly[5] = new Point2D.Double(204,7);
+        poly[6] = new Point2D.Double(204,8);
+        poly[7] = new Point2D.Double(204,9);
+        poly[8] = new Point2D.Double(203,10);
+        poly[9] = new Point2D.Double(202,11);
+        poly[10] = new Point2D.Double(202,12);
+        poly[11] = new Point2D.Double(202,13);
+        poly[12] = new Point2D.Double(202,14);
+        poly[13] = new Point2D.Double(202,15);
+        poly[14] = new Point2D.Double(202,16);
+        poly[15] = new Point2D.Double(202,17);
+        poly[16] = new Point2D.Double(202,18);
+        poly[17] = new Point2D.Double(202,19);
+        poly[18] = new Point2D.Double(202,20);
+        poly[19] = new Point2D.Double(202,21);
+        poly[20] = new Point2D.Double(202,22);
+        poly[21] = new Point2D.Double(202,23);
+        poly[22] = new Point2D.Double(203,24);
+        poly[23] = new Point2D.Double(204,24);
+        poly[24] = new Point2D.Double(205,23);
+        poly[25] = new Point2D.Double(205,22);
+        poly[26] = new Point2D.Double(206,21);
+        poly[27] = new Point2D.Double(207,21);
+        poly[28] = new Point2D.Double(208,20);
+        poly[29] = new Point2D.Double(208,19);
+        poly[30] = new Point2D.Double(209,18);
+        poly[31] = new Point2D.Double(209,17);
+        poly[32] = new Point2D.Double(210,16);
+        poly[33] = new Point2D.Double(211,16);
+        poly[34] = new Point2D.Double(211,15);
+        poly[35] = new Point2D.Double(211,14);
+        poly[36] = new Point2D.Double(211,13);
+        poly[37] = new Point2D.Double(211,12);
+        poly[38] = new Point2D.Double(211,11);
+        poly[39] = new Point2D.Double(211,10);
+        poly[40] = new Point2D.Double(212,9);
+        poly[41] = new Point2D.Double(212,8);
+        poly[42] = new Point2D.Double(212,7);
+        poly[43] = new Point2D.Double(211,6);
+        poly[44] = new Point2D.Double(210,5);
+        poly[45] = new Point2D.Double(209,4);
+        poly[46] = new Point2D.Double(208,4);
+        poly[47] = new Point2D.Double(207,4);
+        poly[48] = new Point2D.Double(206,4);
+        poly[49] = new Point2D.Double(205,4);
+        poly[50] = new Point2D.Double(204,4);
+        poly[51] = new Point2D.Double(203,4);
+        poly[52] = new Point2D.Double(202,4);
+        poly[53] = new Point2D.Double(201,3);
+        poly[54] = new Point2D.Double(200,3);
+//        poly[55] = new Point2D.Double(199,3);
+
+        poly = matrixToPoints(coarsenPoly(pointToMatrix(poly), Math.PI/5), false);
+
+        printPoints("POLY", poly);
+
+
+        poly = new Point2D.Double[57];
+        poly[0] = new Point2D.Double(364,0);
+        poly[1] = new Point2D.Double(364,1);
+        poly[2] = new Point2D.Double(363,2);
+        poly[3] = new Point2D.Double(363,3);
+        poly[4] = new Point2D.Double(363,4);
+        poly[5] = new Point2D.Double(363,5);
+        poly[6] = new Point2D.Double(363,6);
+        poly[7] = new Point2D.Double(363,7);
+        poly[8] = new Point2D.Double(363,8);
+        poly[9] = new Point2D.Double(363,9);
+        poly[10] = new Point2D.Double(363,10);
+        poly[11] = new Point2D.Double(363,11);
+        poly[12] = new Point2D.Double(363,12);
+        poly[13] = new Point2D.Double(364,13);
+        poly[14] = new Point2D.Double(364,14);
+        poly[15] = new Point2D.Double(364,15);
+        poly[16] = new Point2D.Double(365,16);
+        poly[17] = new Point2D.Double(366,17);
+        poly[18] = new Point2D.Double(366,18);
+        poly[19] = new Point2D.Double(367,19);
+        poly[20] = new Point2D.Double(367,20);
+        poly[21] = new Point2D.Double(367,21);
+        poly[22] = new Point2D.Double(368,22);
+        poly[23] = new Point2D.Double(369,22);
+        poly[24] = new Point2D.Double(370,22);
+        poly[25] = new Point2D.Double(371,22);
+        poly[26] = new Point2D.Double(372,22);
+        poly[27] = new Point2D.Double(373,21);
+        poly[28] = new Point2D.Double(373,20);
+        poly[29] = new Point2D.Double(373,19);
+        poly[30] = new Point2D.Double(373,18);
+        poly[31] = new Point2D.Double(373,17);
+        poly[32] = new Point2D.Double(373,16);
+        poly[33] = new Point2D.Double(373,15);
+        poly[34] = new Point2D.Double(373,14);
+        poly[35] = new Point2D.Double(373,13);
+        poly[36] = new Point2D.Double(373,12);
+        poly[37] = new Point2D.Double(373,11);
+        poly[38] = new Point2D.Double(373,10);
+        poly[39] = new Point2D.Double(373,9);
+        poly[40] = new Point2D.Double(373,8);
+        poly[41] = new Point2D.Double(373,7);
+        poly[42] = new Point2D.Double(373,6);
+        poly[43] = new Point2D.Double(373,5);
+        poly[44] = new Point2D.Double(373,4);
+        poly[45] = new Point2D.Double(373,3);
+        poly[46] = new Point2D.Double(373,2);
+        poly[47] = new Point2D.Double(373,1);
+        poly[48] = new Point2D.Double(373,0);
+        poly[49] = new Point2D.Double(372,0);
+        poly[50] = new Point2D.Double(371,0);
+        poly[51] = new Point2D.Double(370,0);
+        poly[52] = new Point2D.Double(369,0);
+        poly[53] = new Point2D.Double(368,0);
+        poly[54] = new Point2D.Double(367,0);
+        poly[55] = new Point2D.Double(366,0);
+        poly[56] = new Point2D.Double(365,0);
+
+        poly = matrixToPoints(coarsenPoly(pointToMatrix(poly), Math.PI/8), false);
+
+        printPoints("POLY", poly);
+
 
 /*
         // gerades F
@@ -663,7 +789,7 @@ public class MSER
 
     }
 
-    private static double[][] pointToMatrix(Point2D.Double[] poly)
+    public static double[][] pointToMatrix(Point2D.Double[] poly)
     {
         double[][] res = new double[2][poly.length];
         for (int i = 0; i < poly.length; i++)
@@ -675,10 +801,16 @@ public class MSER
         return res;
     }
 
-    private static double[][] pointToMatrix(ImagePoint[] poly)
+    /**
+     *
+     * @param poly    the poly to transform
+     * @param length  Lenght of the matrix
+     * @return  a matrix of the values
+     */
+    public static double[][] pointToMatrix(ImagePoint[] poly, int length)
     {
-        double[][] res = new double[2][poly.length];
-        for (int i = 0; i < poly.length; i++)
+        double[][] res = new double[2][length];
+        for (int i = 0; i < length; i++)
         {
             res[0][i] = poly[i].getX();
             res[1][i] = poly[i].getY();
@@ -687,37 +819,49 @@ public class MSER
         return res;
     }
 
-    private static void printMatrix(String name, double[][] matrix)
+    public static void printMatrix(String name, double[][] matrix)
     {
-//        System.out.println("MATRIX " + name + ":");
-//        for (int i = 0; i < matrix.length; i++)
-//        {
-//            for (int j = 0; j < matrix[i].length; j++)
-//            {
-//                System.out.print(matrix[i][j]);
-//                System.out.print(",");
-//            }
-//            System.out.println();
-//        }
+        System.out.println("MATRIX " + name + ":");
+        for (int i = 0; i < matrix.length; i++)
+        {
+            for (int j = 0; j < matrix[i].length; j++)
+            {
+                System.out.print(matrix[i][j]);
+                System.out.print(",");
+            }
+            System.out.println();
+        }
     }
 
     private static void printArray(String name, double[] array)
     {
-//        System.out.println("ARRAY " + name + ":");
-//        for (int i = 0; i < array.length; i++)
-//        {
-//            System.out.print(array[i]);
-//            System.out.print(",");
-//            System.out.println();
-//        }
+        System.out.println("ARRAY " + name + ":");
+        for (int i = 0; i < array.length; i++)
+        {
+            System.out.print(array[i]);
+            System.out.print(",");
+            System.out.println();
+        }
     }
 
-    private static void printPoints(String name, Point2D.Double[] points)
+    public static void printPoints(String name, Point2D.Double[] points)
     {
-//        System.out.println("points " + name + ":");
-//        for (int i = 0; i < points.length; i++)
-//        {
-//            System.out.println(points[i].toString());
-//        }
+        System.out.println("points " + name + ":");
+        for (int i = 0; i < points.length; i++)
+        {
+            System.out.print("," + points[i].getX() + "," + points[i].getY());
+        }
+    }
+
+    public static void printPoints(String name, ImagePoint[] points)
+    {
+        System.out.println("points " + name + ":");
+        for (int i = 0; i < points.length; i++)
+        {
+//            System.out.print("," + points[i].getIndex());
+            System.out.print("," + points[i].toString());
+
+//            System.out.println("poly[" + i + "] = new Point2D.Double(" + points[i].toString()+ ");");
+        }
     }
 }

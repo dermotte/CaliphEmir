@@ -41,4 +41,9 @@ public class ImagePoint
         return y;
     }
 
+    @Override
+    public String toString()
+    {
+        return x + "," + y;
+    }
 }

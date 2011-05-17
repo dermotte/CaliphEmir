@@ -2,13 +2,9 @@ package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.DocumentBuilderFactory;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
-import net.semanticmetadata.lire.imageanalysis.CEDD;
-import net.semanticmetadata.lire.imageanalysis.FCTH;
-import net.semanticmetadata.lire.imageanalysis.JCD;
-import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
+import net.semanticmetadata.lire.imageanalysis.*;
 import net.semanticmetadata.lire.imageanalysis.sift.SiftFeatureHistogramBuilder;
 import net.semanticmetadata.lire.impl.*;
 import net.semanticmetadata.lire.utils.FileUtils;
@@ -52,22 +48,22 @@ public class TestWang extends TestCase {
         }
         // Setting up DocumentBuilder:
         builder = new ChainedDocumentBuilder();
-        builder.addBuilder(new CEDDDocumentBuilder());
+//        builder.addBuilder(new CEDDDocumentBuilder());
 //        builder.addBuilder(new SurfDocumentBuilder());
-//        builder.addBuilder(new MSERDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
+        builder.addBuilder(new MSERDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
 
         // from Arthur:
 //        builder.addBuilder(new GenericDocumentBuilder(FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"));
 //        builder.addBuilder(new GenericDocumentBuilder(JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"));
 
-        builder.addBuilder(new SimpleDocumentBuilder(true, true, true));
-        builder.addBuilder(new SiftDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
+//        builder.addBuilder(new SimpleDocumentBuilder(true, true, true));
+//        builder.addBuilder(new SiftDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
     }
 
     public void testIndexWang() throws IOException {
@@ -81,8 +77,8 @@ public class TestWang extends TestCase {
 //        sh1.index();
 //        SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
 //        sh.index();
-//        MSERFeatureHistogramBuilder sh = new MSERFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
-//        sh.index();
+        MSERFeatureHistogramBuilder sh = new MSERFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
+        sh.index();
 
         System.out.println("-< Indexing finished >--------------");
 //        System.out.println("SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 1000);");
@@ -157,8 +153,8 @@ public class TestWang extends TestCase {
 //        computeMAP(new GenericImageSearcher(1000, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST"), "FuzzyColorHistogram");
 //        computeMAP(new GenericImageSearcher(1000, JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"), "JpegCoefficientHistogram");
 //        computeMAP(new CEDDImageSearcher(1000), "CEDD");
-//        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "MSER BoVW");    // used for MSER!!!
-        computeMAP(new SiftVisualWordsImageSearcher(1000), "Sift BoVW");
+        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "MSER BoVW");    // used for MSER!!!
+//        computeMAP(new SiftVisualWordsImageSearcher(1000), "Sift BoVW");
 //        computeMAP(ImageSearcherFactory.createFCTHImageSearcher(1000), "FCTH");
 
     }
