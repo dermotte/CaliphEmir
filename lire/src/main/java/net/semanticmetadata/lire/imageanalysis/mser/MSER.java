@@ -580,7 +580,7 @@ public class MSER
         counter = 0;
         for (int i = 0; i < n; i++)
         {
-            if (a[i] < (Math.PI-angle))
+            if (a[i] <= (Math.PI-angle))
             {
                 cq[0][counter] = q[0][i];
                 cq[1][counter++] = q[1][i];

@@ -1,6 +1,10 @@
 CHANGES for LIRE
 ================
 
+2011-05-19
+==========
+  - Bugfixes in MSER
+
 2011-05-09
 ==========
   - Bugfixes in Gabor & Tamura based on the information of Arthur Lin
