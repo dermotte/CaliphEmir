@@ -1,6 +1,14 @@
 CHANGES for LIRE
 ================
 
+2011-06-30
+==========
+  - Added BasicFeatures and BasicDocumentBuilder (from Thomas Pairitsch).
+  - Added byte[] serialization for ColorLayout and respective fields, builder and searcher.
+  - Changed the ColorLayout implementation in LireDemo to the fast one.
+  - Added CombinationTest to check the precision on a combination of selection by local features (SURF) and
+    ranking of the selection by ColorLayout
+  
 2011-05-19
 ==========
   - Bugfixes in MSER

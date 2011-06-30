@@ -45,6 +45,36 @@ public class SerializationUtils {
     }
 
     /**
+     * Convenience method to transform an int[] array to a byte array for serialization.
+     *
+     * @param data the int[] to convert
+     * @return the resulting byte[] 4 times in size (4 bytes per int)
+     */
+    public static byte[] toByteArray(int[] data) {
+        byte[] tmp, result = new byte[data.length * 4];
+        for (int i = 0; i < data.length; i++) {
+            tmp = toBytes(data[i]);
+            System.arraycopy(tmp, 0, result, i * 4, 4);
+        }
+        return result;
+    }
+
+    /**
+     * Convenience method to create an int[] array from a byte[] array.
+     * @param data the byte[] array to decode
+     * @return the decoded int[]
+     */
+    public static int[] toIntArray(byte[] data) {
+        int[] result = new int[data.length / 4];
+        byte[] tmp = new byte[4];
+        for (int i = 0; i < result.length; i++) {
+            System.arraycopy(data, i * 4, tmp, 0, 4);
+            result[i] = toInt(tmp);
+        }
+        return result;
+    }
+
+    /**
      * Converts a float to a byte array with 4 elements. Used to put floats into a byte[] payload in a convenient
      * and fast way by shifting without using streams (which is kind of slow). Use
      * {@link net.semanticmetadata.lire.utils.SerializationUtils#toFloat(byte[])} to decode.
@@ -103,6 +133,7 @@ public class SerializationUtils {
 
     /**
      * Convenience method for creating a String from an array.
+     *
      * @param array
      * @return
      */
