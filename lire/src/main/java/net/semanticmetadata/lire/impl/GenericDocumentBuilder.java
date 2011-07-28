@@ -30,8 +30,8 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
 import java.awt.image.BufferedImage;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class allows to create a DocumentBuilder based on a class implementing LireFeature.
@@ -49,7 +49,9 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
     Mode currentMode = DEFAULT_MODE;
 
     // Decide between byte array version (fast) or string version (slow)
-    enum Mode {Fast, Slow }
+    public enum Mode {
+        Fast, Slow
+    }
 
     /**
      * Creating a new DocumentBuilder based on a class based on the interface {@link net.semanticmetadata.lire.imageanalysis.LireFeature}

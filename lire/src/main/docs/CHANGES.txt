@@ -9,6 +9,8 @@ CHANGES for LIRE
     just got skeletons with exceptions.
   - Added option for byte[] representation to GenericDocumentBuilder
   - Added GenericFastImageSearcher and GenericFastDocumentBuilder
+  - Changed DocumentBuilderFactory and ImageSearcherFactory to provide byte[] serialization (fast)
+    versions of ACC, RGB Histogram, Tamura, Gabor and FCTH.
 
 2011-06-30
 ==========

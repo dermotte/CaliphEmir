@@ -25,6 +25,7 @@ package net.semanticmetadata.lire.imageanalysis;
 
 import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.utils.ImageUtils;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
@@ -269,15 +270,15 @@ public class Gabor implements LireFeature {
     }
 
     public byte[] getByteArrayRepresentation() {
-        throw new UnsupportedOperationException("No implemented!");
+        return SerializationUtils.toByteArray(histogram);
     }
 
     public void setByteArrayRepresentation(byte[] in) {
-        throw new UnsupportedOperationException("No implemented!");
+        histogram = SerializationUtils.toDoubleArray(in);
     }
 
     public double[] getDoubleHistogram() {
-        throw new UnsupportedOperationException("No implemented!");
+        return histogram;
     }
 
     public float getDistance(VisualDescriptor vd) {   // added by mlux

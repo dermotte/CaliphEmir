@@ -47,7 +47,7 @@ import net.semanticmetadata.lire.impl.*;
  * }
  * long timeTaken = (System.currentTimeMillis() - time);
  * float sec = ((float) timeTaken) / 1000f;
- * <p/>
+ *
  * System.out.println(sec + " seconds taken, " + (timeTaken / count) + " ms per image.");
  * iw.optimize();
  * iw.close();
@@ -65,7 +65,7 @@ public class DocumentBuilderFactory {
      * Creates a simple version of a DocumentBuilder. In this case the
      * {@link net.semanticmetadata.lire.impl.SimpleDocumentBuilder} is used, only ColorLayout and ScalableColor are
      * used to index the images. Note that the color histogram weight in
-     * {@link ImageSearcherFactory#createWeightedSearcher(int,float,float,float)}
+     * {@link ImageSearcherFactory#createWeightedSearcher(int, float, float, float)}
      * won't have any effect on documents created with a DocumentBuilder like this. Only the color distribution
      * weight and the texture weight are used in such a case.
      *
@@ -89,6 +89,15 @@ public class DocumentBuilderFactory {
     }
 
     /**
+     * Creates a fast (byte[] based) version of the ColorLayout document builder.
+     *
+     * @return the document builder.
+     */
+    public static DocumentBuilder getColorLayoutBuilder() {
+        return new GenericFastDocumentBuilder(ColorLayout.class, DocumentBuilder.FIELD_NAME_COLORLAYOUT);
+    }
+
+    /**
      * Creates a simple version of a DocumentBuilder. In this case the
      * {@link net.semanticmetadata.lire.impl.SimpleDocumentBuilder} is used,
      * only ColorLayout is used. So this can be taken for color only images.
@@ -104,7 +113,7 @@ public class DocumentBuilderFactory {
      * Creates a simple version of a DocumentBuilder. In this case the
      * {@link net.semanticmetadata.lire.impl.SimpleDocumentBuilder} is used,
      * only ColorLayout is used to index the images. Note that the weights in
-     * {@link ImageSearcherFactory#createWeightedSearcher(int,float,float,float)}
+     * {@link ImageSearcherFactory#createWeightedSearcher(int, float, float, float)}
      * won't have any effect on documents created with a DocumentBuilder like this, as only color distribution is used.
      *
      * @return a simple and fast DocumentBuilder.
@@ -124,7 +133,7 @@ public class DocumentBuilderFactory {
      * @return the created AutoCorrelation feature DocumentBuilder.
      */
     public static DocumentBuilder getDefaultAutoColorCorrelationDocumentBuilder() {
-        return new CorrelogramDocumentBuilder(AutoColorCorrelogram.Mode.SuperFast);
+        return new GenericDocumentBuilder(AutoColorCorrelogram.class, DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM, GenericDocumentBuilder.Mode.Fast);
     }
 
     /**
@@ -162,7 +171,7 @@ public class DocumentBuilderFactory {
      * @return the created AutoCorrelation feature DocumentBuilder.
      */
     public static DocumentBuilder getFCTHDocumentBuilder() {
-        return new GenericDocumentBuilder(FCTH.class, DocumentBuilder.FIELD_NAME_FCTH);
+        return new GenericDocumentBuilder(FCTH.class, DocumentBuilder.FIELD_NAME_FCTH, GenericDocumentBuilder.Mode.Fast);
     }
 
     /**
@@ -174,7 +183,7 @@ public class DocumentBuilderFactory {
      * @return the created feature DocumentBuilder.
      */
     public static DocumentBuilder getColorHistogramDocumentBuilder() {
-        return new GenericDocumentBuilder(SimpleColorHistogram.class, DocumentBuilder.FIELD_NAME_COLORHISTOGRAM);
+        return new GenericDocumentBuilder(SimpleColorHistogram.class, DocumentBuilder.FIELD_NAME_COLORHISTOGRAM, GenericDocumentBuilder.Mode.Fast);
     }
 
     /**
@@ -186,7 +195,7 @@ public class DocumentBuilderFactory {
      * @return the created Tamura feature DocumentBuilder.
      */
     public static DocumentBuilder getTamuraDocumentBuilder() {
-        return new GenericDocumentBuilder(Tamura.class, DocumentBuilder.FIELD_NAME_TAMURA);
+        return new GenericFastDocumentBuilder(Tamura.class, DocumentBuilder.FIELD_NAME_TAMURA);
     }
 
     /**
@@ -198,7 +207,7 @@ public class DocumentBuilderFactory {
      * @return the created Tamura feature DocumentBuilder.
      */
     public static DocumentBuilder getGaborDocumentBuilder() {
-        return new GenericDocumentBuilder(Gabor.class, DocumentBuilder.FIELD_NAME_GABOR);
+        return new GenericFastDocumentBuilder(Gabor.class, DocumentBuilder.FIELD_NAME_GABOR);
     }
 
     /**

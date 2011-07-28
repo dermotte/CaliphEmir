@@ -3,7 +3,7 @@ package net.semanticmetadata.lire;
 import net.semanticmetadata.lire.imageanalysis.*;
 import net.semanticmetadata.lire.impl.CEDDImageSearcher;
 import net.semanticmetadata.lire.impl.CorrelogramImageSearcher;
-import net.semanticmetadata.lire.impl.GenericImageSearcher;
+import net.semanticmetadata.lire.impl.GenericFastImageSearcher;
 import net.semanticmetadata.lire.impl.SimpleImageSearcher;
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
@@ -44,7 +44,7 @@ import net.semanticmetadata.lire.impl.SimpleImageSearcher;
  * for (int i = 0; i < 5; i++) {
  * System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
  * }
- * <p/>
+ *
  * // searching for a document:
  * Document document = hits.doc(0);
  * hits = searcher.search(document, reader);
@@ -134,7 +134,8 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createDefaultCorrelogramImageSearcher(int maximumHits) {
-        return new CorrelogramImageSearcher(maximumHits, AutoColorCorrelogram.Mode.SuperFast);
+        return new GenericFastImageSearcher(maximumHits, AutoColorCorrelogram.class, DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM);
+//        return new CorrelogramImageSearcher(maximumHits, AutoColorCorrelogram.Mode.SuperFast);
     }
 
     /**
@@ -169,7 +170,8 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createFCTHImageSearcher(int maximumHits) {
-        return new GenericImageSearcher(maximumHits, FCTH.class, DocumentBuilder.FIELD_NAME_FCTH);
+//        return new GenericImageSearcher(maximumHits, FCTH.class, DocumentBuilder.FIELD_NAME_FCTH);
+        return new GenericFastImageSearcher(maximumHits, FCTH.class, DocumentBuilder.FIELD_NAME_FCTH);
     }
 
 
@@ -181,7 +183,8 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createColorHistogramImageSearcher(int maximumHits) {
-        return new GenericImageSearcher(maximumHits, SimpleColorHistogram.class, DocumentBuilder.FIELD_NAME_COLORHISTOGRAM);
+//        return new GenericImageSearcher(maximumHits, SimpleColorHistogram.class, DocumentBuilder.FIELD_NAME_COLORHISTOGRAM);
+        return new GenericFastImageSearcher(maximumHits, SimpleColorHistogram.class, DocumentBuilder.FIELD_NAME_COLORHISTOGRAM);
     }
 
     /**
@@ -192,7 +195,7 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createTamuraImageSearcher(int maximumHits) {
-        return new GenericImageSearcher(maximumHits, Tamura.class, DocumentBuilder.FIELD_NAME_TAMURA);
+        return new GenericFastImageSearcher(maximumHits, Tamura.class, DocumentBuilder.FIELD_NAME_TAMURA);
     }
 
     /**
@@ -203,7 +206,7 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createGaborImageSearcher(int maximumHits) {
-        return new GenericImageSearcher(maximumHits, Gabor.class, DocumentBuilder.FIELD_NAME_GABOR);
+        return new GenericFastImageSearcher(maximumHits, Gabor.class, DocumentBuilder.FIELD_NAME_GABOR);
     }
 
 
