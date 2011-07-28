@@ -1,3 +1,33 @@
+/*
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LIRe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LIRe; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
+ *
+ * Copyright statement:
+ * --------------------
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
+ */
+
 package net.semanticmetadata.lire.indexing.fastmap;
 
 import net.semanticmetadata.lire.matrix.SimilarityMatrix;
@@ -17,7 +47,7 @@ import java.util.List;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
-//    private double[][] distance;
+    //    private double[][] distance;
     //    protected HashMap<Integer, HashMap> distance;
     private ArrayList<?> objects;
     private HashMap<Object, Integer> objects2position;
@@ -33,7 +63,7 @@ public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
      * @param distanceFunction allows the distance calculation  or -1 if objects distance cannot be computes, has to be a metric
      */
     @SuppressWarnings("unchecked")
-	public NocacheFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction) {
+    public NocacheFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction) {
         init(distanceFunction, userObjects);
     }
 
@@ -46,13 +76,13 @@ public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
      * @param userObjects      select true if you want to distribute not equal but zero distance objects.
      */
     @SuppressWarnings("unchecked")
-	public NocacheFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction, boolean distributeObjects) {
+    public NocacheFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction, boolean distributeObjects) {
         init(distanceFunction, userObjects);
         this.distributeObjects = distributeObjects;
     }
 
     @SuppressWarnings("unchecked")
-	private void init(DistanceCalculator distanceFunction, List userObjects) {
+    private void init(DistanceCalculator distanceFunction, List userObjects) {
         distanceFct = distanceFunction;
         // this might be a problem for collections > INT_MAXSIZE
         this.objects = new ArrayList(userObjects.size());
@@ -61,7 +91,7 @@ public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
         // init HashMaps ...
         objects2position = new HashMap<Object, Integer>(dimension);
         int count = 0;
-        for (Iterator iterator = objects.iterator(); iterator.hasNext();) {
+        for (Iterator iterator = objects.iterator(); iterator.hasNext(); ) {
             Object o = iterator.next();
             objects2position.put(o, count);
             count++;
@@ -70,7 +100,7 @@ public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
 
     /**
      * Calculates the distance between objects using the distance function for k = 0,
-     * using {@link DistanceCalculator#getDistance(Object,Object)}. If it has not
+     * using {@link DistanceCalculator#getDistance(Object, Object)}. If it has not
      * been computed previously it is computed and stored now.
      *
      * @param o1 Object 1 to compute
@@ -86,7 +116,7 @@ public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
 
     /**
      * Calculates the distance between objects using the distance function for k = 0,
-     * using {@link DistanceCalculator#getDistance(Object,Object)}. If it has not
+     * using {@link DistanceCalculator#getDistance(Object, Object)}. If it has not
      * been computed previously it is computed and stored now.
      *
      * @param index1 index of first object to compute
@@ -175,11 +205,11 @@ public class NocacheFastmapDistanceMatrix implements FastmapDistanceMatrix {
 
     /**
      * Used for the heuristic for getting the pivots as described in the paper. This method calls
-     * {@link FastmapDistanceMatrix#getMaximumDistance(int,int,double[][])} with parameters (row, 0, null, null).
+     * {@link FastmapDistanceMatrix#getMaximumDistance(int, int, double[][])} with parameters (row, 0, null, null).
      *
      * @param row defines the row where we want to find the maximum
      * @return the index of the object with maximum distance to the row object.
-     * @see FastmapDistanceMatrix#getMaximumDistance(int,int,double[][])
+     * @see FastmapDistanceMatrix#getMaximumDistance(int, int, double[][])
      */
     public int getMaximumDistance(int row) {
         return getMaximumDistance(row, 0, null);

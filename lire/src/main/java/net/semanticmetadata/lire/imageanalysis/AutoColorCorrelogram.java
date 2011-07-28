@@ -1,38 +1,45 @@
 /*
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
- *
- * Caliph & Emir is free software; you can redistribute it and/or modify
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Caliph & Emir is distributed in the hope that it will be useful,
+ * LIRe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Caliph & Emir; if not, write to the Free Software
+ * along with LIRe; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
  * --------------------
- * (c) 2002-2008 by Mathias Lux (mathias@juggle.at)
- * http://www.juggle.at, http://www.SemanticMetadata.net
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
-import java.util.StringTokenizer;
-
+import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.correlogram.DynamicProgrammingAutoCorrelogramExtraction;
 import net.semanticmetadata.lire.imageanalysis.correlogram.IAutoCorrelogramFeatureExtractor;
 import net.semanticmetadata.lire.imageanalysis.correlogram.MLuxAutoCorrelogramExtraction;
 import net.semanticmetadata.lire.imageanalysis.correlogram.NaiveAutoCorrelogramExtraction;
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.utils.ConversionUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.util.StringTokenizer;
 
 /**
  * <p>VisualDescriptor for the AutoCorrelogram based on color as described in
@@ -44,11 +51,11 @@ import net.semanticmetadata.lire.utils.SerializationUtils;
  */
 public class AutoColorCorrelogram implements LireFeature {
     private static final int DEFAULT_NUMBER_COLORS = 256;
-    
-	private float quantH;
+
+    private float quantH;
     private float quantV;
     private float quantS;
-//    private int[][][] quantTable;
+    //    private int[][][] quantTable;
     private float[][] correlogram;
     private int[] distanceSet;
     private int numBins;
@@ -56,10 +63,10 @@ public class AutoColorCorrelogram implements LireFeature {
     private float quantS_f;
     private float quantV_f;
 
-    
+
     private static final ExtractionMethod DEFAULT_EXTRACTION_METHOD = ExtractionMethod.NaiveHuangAlgorithm;
     private IAutoCorrelogramFeatureExtractor extractionAlgorithm;
-    
+
     /**
      * Defines the available analysis modes: Superfast uses the approach described in the paper, Quarterneighbourhood
      * investigates the pixels in down and to the right of the respective pixel and FullNeighbourhood investigates
@@ -70,18 +77,18 @@ public class AutoColorCorrelogram implements LireFeature {
         QuarterNeighbourhood,
         SuperFast
     }
-    
+
     /**
      * Defines which algorithm to use to extract the features vector
      */
     public enum ExtractionMethod {
         LireAlgorithm,
         NaiveHuangAlgorithm,
-    	DynamicProgrammingHuangAlgorithm
+        DynamicProgrammingHuangAlgorithm
     }
-    
+
     public AutoColorCorrelogram() {
-    	this(DEFAULT_NUMBER_COLORS,new int[]{1,2,3,4},null);
+        this(DEFAULT_NUMBER_COLORS, new int[]{1, 2, 3, 4}, null);
     }
 
     /**
@@ -96,62 +103,67 @@ public class AutoColorCorrelogram implements LireFeature {
 
     /**
      * Creates a new AutoColorCorrelogram using a maximum L_inf pixel distance for analysis and given mode
+     *
      * @param maxDistance maximum L_inf pixel distance for analysis
      * @param mode        the mode of calculation (determines the speed of extraction)
      */
     public AutoColorCorrelogram(int maxDistance, Mode mode) {
-        this(DEFAULT_NUMBER_COLORS,null,new MLuxAutoCorrelogramExtraction(mode));
+        this(DEFAULT_NUMBER_COLORS, null, new MLuxAutoCorrelogramExtraction(mode));
         int[] D = new int[maxDistance];
-        for(int i=0;i<maxDistance;i++) D[i]=i+1;
+        for (int i = 0; i < maxDistance; i++) D[i] = i + 1;
         this.distanceSet = D;
     }
+
     /**
      * Creates a new AutoColorCorrelogram, where the distance k is in distance set
+     *
      * @param distanceSet distance set
      */
     public AutoColorCorrelogram(int[] distanceSet) {
-        this(DEFAULT_NUMBER_COLORS,distanceSet,null);
+        this(DEFAULT_NUMBER_COLORS, distanceSet, null);
     }
+
     /**
      * Creates a new AutoCorrelogram with specified algorithm of extraction and distance set
-     * @param distanceSet distance set
-     * @param extractionAlgorith the algorithm to extract 
+     *
+     * @param distanceSet        distance set
+     * @param extractionAlgorith the algorithm to extract
      */
     public AutoColorCorrelogram(int[] distanceSet, IAutoCorrelogramFeatureExtractor extractionAlgorith) {
-        this(DEFAULT_NUMBER_COLORS,distanceSet,extractionAlgorith);
+        this(DEFAULT_NUMBER_COLORS, distanceSet, extractionAlgorith);
     }
 
     /**
      * Creates a new AutoCorrelogram with specified algorithm of extraction
      * Uses distance set {1,2,3,4} which is chosen to be compatible with legacy code
-     * @param extractionAlgorith the algorithm to extract 
+     *
+     * @param extractionAlgorith the algorithm to extract
      */
     public AutoColorCorrelogram(IAutoCorrelogramFeatureExtractor extractionAlgorith) {
-        this(DEFAULT_NUMBER_COLORS,new int[]{1,2,3,4},extractionAlgorith);
+        this(DEFAULT_NUMBER_COLORS, new int[]{1, 2, 3, 4}, extractionAlgorith);
     }
 
     /**
      * Creates a new AutoColorCorrelogram using a maximum L_inf pixel distance for analysis and given mode
-     *
      */
     public AutoColorCorrelogram(int numBins, int[] distanceSet, IAutoCorrelogramFeatureExtractor extractionAlgorith) {
-    	this.numBins = numBins;
-        this.distanceSet = distanceSet;        
+        this.numBins = numBins;
+        this.distanceSet = distanceSet;
 
-        if(extractionAlgorith == null){
-        	switch(DEFAULT_EXTRACTION_METHOD) {	
-        	case LireAlgorithm:
-        		this.extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
-        		break;
-        	case NaiveHuangAlgorithm:
-        		this.extractionAlgorithm  = new NaiveAutoCorrelogramExtraction();
-        		break;
-        	case DynamicProgrammingHuangAlgorithm:
-        		this.extractionAlgorithm  = DynamicProgrammingAutoCorrelogramExtraction.getInstance();
-        		break;
-        	}
+        if (extractionAlgorith == null) {
+            switch (DEFAULT_EXTRACTION_METHOD) {
+                case LireAlgorithm:
+                    this.extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
+                    break;
+                case NaiveHuangAlgorithm:
+                    this.extractionAlgorithm = new NaiveAutoCorrelogramExtraction();
+                    break;
+                case DynamicProgrammingHuangAlgorithm:
+                    this.extractionAlgorithm = DynamicProgrammingAutoCorrelogramExtraction.getInstance();
+                    break;
+            }
         } else this.extractionAlgorithm = extractionAlgorith;
-        
+
         if (numBins < 17) {
             quantH_f = 4f;
             quantS_f = 2f;
@@ -210,41 +222,41 @@ public class AutoColorCorrelogram implements LireFeature {
             }
         }
         return pixels;
-    	
+
     }
 
     public void extract(BufferedImage bi) {
-    	final Raster r = bi.getRaster();
-        int[][][] hsvImage = hsvImage(r);        
-        extract(hsvImage);    	
+        final Raster r = bi.getRaster();
+        int[][][] hsvImage = hsvImage(r);
+        extract(hsvImage);
     }
 
     public byte[] getByteArrayRepresentation() {
-        byte[] result = new byte[correlogram.length*correlogram[0].length*4+5];
+        byte[] result = new byte[correlogram.length * correlogram[0].length * 4 + 5];
         for (int i = 0; i < correlogram.length; i++) {
-            System.arraycopy(SerializationUtils.toByteArray(correlogram[i]), 0, result, i*correlogram[i].length*4, correlogram[i].length*4);
+            System.arraycopy(SerializationUtils.toByteArray(correlogram[i]), 0, result, i * correlogram[i].length * 4, correlogram[i].length * 4);
         }
-        System.arraycopy(SerializationUtils.toBytes(numBins), 0, result, result.length-5, 4);
-        result[result.length-1] = (byte) distanceSet.length;
+        System.arraycopy(SerializationUtils.toBytes(numBins), 0, result, result.length - 5, 4);
+        result[result.length - 1] = (byte) distanceSet.length;
         return result;
     }
 
     public void setByteArrayRepresentation(byte[] in) {
         byte[] numBinsBytes = new byte[4];
-        numBinsBytes[0] = in[in.length-5];
-        numBinsBytes[1] = in[in.length-4];
-        numBinsBytes[2] = in[in.length-3];
-        numBinsBytes[3] = in[in.length-2];
-        int maxDistance = (int) in[in.length-1];
+        numBinsBytes[0] = in[in.length - 5];
+        numBinsBytes[1] = in[in.length - 4];
+        numBinsBytes[2] = in[in.length - 3];
+        numBinsBytes[3] = in[in.length - 2];
+        int maxDistance = (int) in[in.length - 1];
         numBins = SerializationUtils.toInt(numBinsBytes);
         correlogram = new float[numBins][maxDistance];
         float[] temp = SerializationUtils.toFloatArray(in);
         for (int i = 0; i < correlogram.length; i++) {
-            System.arraycopy(temp, i*maxDistance, correlogram[i], 0, maxDistance);
+            System.arraycopy(temp, i * maxDistance, correlogram[i], 0, maxDistance);
         }
         distanceSet = new int[maxDistance];
         for (int i = 0; i < distanceSet.length; i++) {
-            distanceSet[i] = i+1;
+            distanceSet[i] = i + 1;
         }
     }
 
@@ -253,22 +265,22 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     private float[] getFloatHistogram() {
-        float[] result = new float[correlogram.length*correlogram[0].length];
+        float[] result = new float[correlogram.length * correlogram[0].length];
         for (int i = 0; i < correlogram.length; i++) {
-            System.arraycopy(correlogram[i], 0, result, i*correlogram[0].length, correlogram[0].length);
+            System.arraycopy(correlogram[i], 0, result, i * correlogram[0].length, correlogram[0].length);
         }
         return result;
     }
 
     public void extract(int[][][] img) {
-    	final int W = img.length;
-    	final int H = img[0].length;
-    	int[][] quantPixels = new int[W][H];
-    	
+        final int W = img.length;
+        final int H = img[0].length;
+        int[][] quantPixels = new int[W][H];
+
         // quantize colors for each pixel (done in HSV color space):
         for (int x = 0; x < W; x++)
-            for (int y = 0; y < H; y++) 
-            	quantPixels[x][y] = quantize(img[x][y]);
+            for (int y = 0; y < H; y++)
+                quantPixels[x][y] = quantize(img[x][y]);
 
         this.correlogram = this.extractionAlgorithm.extract(this.numBins, this.distanceSet, quantPixels);
     }
@@ -282,7 +294,7 @@ public class AutoColorCorrelogram implements LireFeature {
     private int quantize(int[] pixel) {
         return (int) ((int) (pixel[0] / quantH) * (quantV_f) * (quantS_f)
                 + (int) (pixel[1] / quantS) * (quantV_f)
-                + (int) (pixel[2] / quantV) );
+                + (int) (pixel[2] / quantV));
     }
 
     /**
@@ -429,7 +441,7 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     public String getStringRepresentation() {
-    	int maxDistance = this.distanceSet.length;
+        int maxDistance = this.distanceSet.length;
         StringBuilder sb = new StringBuilder(numBins * maxDistance);
         sb.append(maxDistance);
         sb.append(' ');

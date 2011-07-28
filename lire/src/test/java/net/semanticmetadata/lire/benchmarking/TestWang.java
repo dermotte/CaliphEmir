@@ -1,3 +1,33 @@
+/*
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LIRe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LIRe; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
+ *
+ * Copyright statement:
+ * --------------------
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
+ */
+
 package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
@@ -105,7 +135,7 @@ public class TestWang extends TestCase {
         SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), numDocs, numClusters);
         sh.index();
         System.out.println("*******************************************");
-        System.out.println("SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), "+numDocs+", "+numClusters+");");
+        System.out.println("SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), " + numDocs + ", " + numClusters + ");");
         computeMAP(new SurfVisualWordsImageSearcher(1000), "Surf BoVW");
         computeMAP(new SiftVisualWordsImageSearcher(1000), "Sift BoVW");
         System.out.println("*******************************************");
@@ -220,8 +250,8 @@ public class TestWang extends TestCase {
 //                System.out.println("avgPrecision = " + avgPrecision);
 //                System.out.println("goodOnes = " + goodOnes);
 //            }
-            assertTrue("Check if average precision is > 0", avgPrecision>0);
-            assertTrue("Check if goodOnes is > 0", goodOnes>0);
+            assertTrue("Check if average precision is > 0", avgPrecision > 0);
+            assertTrue("Check if goodOnes is > 0", goodOnes > 0);
             avgPrecision = avgPrecision / goodOnes;
             precision10 += precision10temp / 10d;
             // precision @ 10 for each category ...
@@ -295,14 +325,14 @@ public class TestWang extends TestCase {
                     }
 //                System.out.print(" (" + testID + ") ");
                 }
-                assertTrue(goodOnes>0);
+                assertTrue(goodOnes > 0);
                 avgPrecision = avgPrecision / goodOnes;
-                assertTrue(avgPrecision>0);
+                assertTrue(avgPrecision > 0);
                 map += avgPrecision;
 //                System.out.println(" " + avgPrecision + " (" + map / (i + 1) + ")");
             }
         }
-        assertTrue(sampleQueries.length>0);
+        assertTrue(sampleQueries.length > 0);
         map = map / sampleQueries.length;
         errorRate = errorRate / sampleQueries.length;
         System.out.println("map = " + map);

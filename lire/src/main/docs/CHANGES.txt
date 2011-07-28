@@ -11,6 +11,7 @@ CHANGES for LIRE
   - Added GenericFastImageSearcher and GenericFastDocumentBuilder
   - Changed DocumentBuilderFactory and ImageSearcherFactory to provide byte[] serialization (fast)
     versions of ACC, RGB Histogram, Tamura, Gabor and FCTH.
+  - Changed all the copyrights.
 
 2011-06-30
 ==========

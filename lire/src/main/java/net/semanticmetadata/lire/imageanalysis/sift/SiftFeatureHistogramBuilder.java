@@ -1,28 +1,31 @@
 /*
- * This file is part of the LIRE project: http://www.SemanticMetadata.net/lire.
- *
- * Lire is free software; you can redistribute it and/or modify
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Lire is distributed in the hope that it will be useful,
+ * LIRe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Lire; if not, write to the Free Software
+ * along with LIRe; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
  * --------------------
- * Note, that the SIFT-algorithm is protected by U.S. Patent 6,711,293: "Method and
- * apparatus for identifying scale invariant features in an image and use of same for
- * locating an object in an image" by the University of British Columbia. That is, for
- * commercial applications the permission of the author is required.
- *
- * (c) 2008 by Mathias Lux, mathias@juggle.at
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
  */
 package net.semanticmetadata.lire.imageanalysis.sift;
 
@@ -95,7 +98,7 @@ public class SiftFeatureHistogramBuilder {
         KMeans k = new KMeans(numClusters);
         // fill the KMeans object:
         LinkedList<Histogram> features;
-        for (Iterator<Integer> iterator = docIDs.iterator(); iterator.hasNext();) {
+        for (Iterator<Integer> iterator = docIDs.iterator(); iterator.hasNext(); ) {
             int nextDoc = iterator.next();
             if (!reader.isDeleted(nextDoc)) {
                 Document d = reader.document(nextDoc);
@@ -118,14 +121,14 @@ public class SiftFeatureHistogramBuilder {
         double time = System.currentTimeMillis();
         double laststress = k.clusteringStep();
 
-        System.out.println(df.format((System.currentTimeMillis() - time) / (1000*60)) + " min. -> Next step.");
+        System.out.println(df.format((System.currentTimeMillis() - time) / (1000 * 60)) + " min. -> Next step.");
         time = System.currentTimeMillis();
         double newstress = k.clusteringStep();
         // critical part: Give the difference in between steps as a co,nstraint for accuracy vs. runtime trade off.
-        double treshold = Math.max(5d, (double) k.getFeatureCount()/2000d);
+        double treshold = Math.max(5d, (double) k.getFeatureCount() / 2000d);
         System.out.println("Treshold = " + treshold);
         while (Math.abs(newstress - laststress) > treshold) {
-            System.out.println(df.format((System.currentTimeMillis() - time) / (1000*60)) + " min. -> Next step. Stress difference ~ |" + (int) newstress + " - " + (int) laststress +"| = "+ df.format(Math.abs(newstress - laststress)));
+            System.out.println(df.format((System.currentTimeMillis() - time) / (1000 * 60)) + " min. -> Next step. Stress difference ~ |" + (int) newstress + " - " + (int) laststress + "| = " + df.format(Math.abs(newstress - laststress)));
             time = System.currentTimeMillis();
             laststress = newstress;
             newstress = k.clusteringStep();

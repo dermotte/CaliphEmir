@@ -1,16 +1,45 @@
+/*
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LIRe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LIRe; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
+ *
+ * Copyright statement:
+ * --------------------
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
+ */
+
 package net.semanticmetadata.lire.imageanalysis.mser;
 
 import java.util.HashMap;
 
 /**
  * Boundary Pixel for boundary following algorithm.
- *
+ * <p/>
  * User: Shotty
  * Date: 01.05.11
  * Time: 11:04
  */
-public class BoundaryPixel8Edge extends BoundaryPixel
-{
+public class BoundaryPixel8Edge extends BoundaryPixel {
     public static final int BOTTOM_RIGHT_EDGE = 1;
     public static final int BOTTOM_LEFT_EDGE = 3;
     public static final int TOP_LEFT_EDGE = 5;
@@ -24,14 +53,13 @@ public class BoundaryPixel8Edge extends BoundaryPixel
     /**
      * Constructs a Pixel which is abel to get the neighbouring pixels taking account of the boundaries.
      *
-     * @param point          the inspected point
-     * @param imageWidth     width of the image
-     * @param imageHeight    height of the image
-     * @param clockwise      clockwise or counterclockwise inspection of the neighbours
+     * @param point       the inspected point
+     * @param imageWidth  width of the image
+     * @param imageHeight height of the image
+     * @param clockwise   clockwise or counterclockwise inspection of the neighbours
      */
     public BoundaryPixel8Edge(ImagePoint point, int imageWidth, int imageHeight, boolean clockwise,
-                              HashMap<String, ImagePoint> imagePoints)
-    {
+                              HashMap<String, ImagePoint> imagePoints) {
         super(point, imageWidth, imageHeight);
         this.clockwise = clockwise;
         this.nextEdge = LEFT_EDGE;
@@ -41,99 +69,73 @@ public class BoundaryPixel8Edge extends BoundaryPixel
 
     /**
      * Set the next Edge
+     *
      * @param edge the EDGE to start from
      */
-    public void setCurrentEdge(int edge)
-    {
+    public void setCurrentEdge(int edge) {
         this.currentEdge = edge;
-        if (clockwise)
-        {
-            nextEdge = (currentEdge+1) % MAX_EDGES;
-        }
-        else
-        {
-            nextEdge = (currentEdge > 0)? (currentEdge-1) : MAX_EDGES-1;
+        if (clockwise) {
+            nextEdge = (currentEdge + 1) % MAX_EDGES;
+        } else {
+            nextEdge = (currentEdge > 0) ? (currentEdge - 1) : MAX_EDGES - 1;
 
         }
     }
 
-    protected ImagePoint getTopLeftNeighbor()
-    {
-        if (getY() == 0 || getX() == 0)
-        {
+    protected ImagePoint getTopLeftNeighbor() {
+        if (getY() == 0 || getX() == 0) {
             return null;
-        }
-        else
-        {
+        } else {
             return new ImagePoint(getIndex() - imageWidth - 1, imageWidth);
         }
     }
 
-    protected ImagePoint getTopRightNeighbor()
-    {
-        if (getY() == 0 || getX() == imageWidth-1)
-        {
+    protected ImagePoint getTopRightNeighbor() {
+        if (getY() == 0 || getX() == imageWidth - 1) {
             return null;
-        }
-        else
-        {
+        } else {
             return new ImagePoint(getIndex() - imageWidth + 1, imageWidth);
         }
     }
 
-    protected ImagePoint getBottomLeftNeighbor()
-    {
-        if (getY() == imageHeight - 1 || getX() == 0)
-        {
+    protected ImagePoint getBottomLeftNeighbor() {
+        if (getY() == imageHeight - 1 || getX() == 0) {
             return null;
-        }
-        else
-        {
+        } else {
             return new ImagePoint(getIndex() + imageWidth - 1, imageWidth);
         }
     }
 
-    protected ImagePoint getBottomRightNeighbor()
-    {
-        if (getY() == imageHeight - 1 || getX() == imageWidth - 1)
-        {
+    protected ImagePoint getBottomRightNeighbor() {
+        if (getY() == imageHeight - 1 || getX() == imageWidth - 1) {
             return null;
-        }
-        else
-        {
+        } else {
             return new ImagePoint(getIndex() + imageWidth + 1, imageWidth);
         }
     }
 
-    protected ImagePoint setNextEdge(ImagePoint nextEdgePoint)
-    {
+    protected ImagePoint setNextEdge(ImagePoint nextEdgePoint) {
         currentEdge = nextEdge;
-        if (clockwise)
-        {
-            nextEdge = (nextEdge+1) % MAX_EDGES;
-        }
-        else
-        {
-            nextEdge = (nextEdge > 0)? (nextEdge-1) : MAX_EDGES-1;
+        if (clockwise) {
+            nextEdge = (nextEdge + 1) % MAX_EDGES;
+        } else {
+            nextEdge = (nextEdge > 0) ? (nextEdge - 1) : MAX_EDGES - 1;
 
         }
         if (nextEdgePoint != null && imagePoints.containsKey(nextEdgePoint.getX() + "_" + nextEdgePoint.getY()))
         // in boundary && part of the shape
         {
             return nextEdgePoint;
-        }
-        else  // not in boundary, calc the next edge
+        } else  // not in boundary, calc the next edge
         {
             return calcNextEdge();
         }
     }
 
     @Override
-    public ImagePoint calcNextEdge()
-    {
+    public ImagePoint calcNextEdge() {
         ImagePoint nextEdgePoint;
-        switch(nextEdge)
-        {
+        switch (nextEdge) {
             case RIGHT_EDGE:
                 // try the get the right edge of the current pixel
                 nextEdgePoint = getRightNeighbor();
@@ -172,12 +174,10 @@ public class BoundaryPixel8Edge extends BoundaryPixel
         }
     }
 
-    public int getNeighbourEdge()
-    {
+    public int getNeighbourEdge() {
         // which edge is this from the neighbours view
         // always the diagonal opposite of the current edge;
-        switch(currentEdge)
-        {
+        switch (currentEdge) {
             case TOP_EDGE:
                 return BOTTOM_EDGE;
             case TOP_RIGHT_EDGE:
@@ -204,15 +204,11 @@ public class BoundaryPixel8Edge extends BoundaryPixel
      *
      * @return the BoundaryPixel of the next Neighbour
      */
-    public BoundaryPixel8Edge getNextBoundary()
-    {
+    public BoundaryPixel8Edge getNextBoundary() {
         ImagePoint nextEdge = calcNextEdge();
-        if (nextEdge != null)
-        {
+        if (nextEdge != null) {
             return new BoundaryPixel8Edge(nextEdge, imageWidth, imageHeight, clockwise, imagePoints);
-        }
-        else
-        {
+        } else {
             return null;
         }
     }

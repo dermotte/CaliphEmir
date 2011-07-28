@@ -1,28 +1,31 @@
 /*
- * This file is part of the LIRE project: http://www.SemanticMetadata.net/lire.
- *
- * Lire is free software; you can redistribute it and/or modify
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Lire is distributed in the hope that it will be useful,
+ * LIRe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Lire; if not, write to the Free Software
+ * along with LIRe; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
  * --------------------
- * Note, that the SIFT-algorithm is protected by U.S. Patent 6,711,293: "Method and
- * apparatus for identifying scale invariant features in an image and use of same for
- * locating an object in an image" by the University of British Columbia. That is, for
- * commercial applications the permission of the author is required.
- *
- * (c) 2008 by Mathias Lux, mathias@juggle.at
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
  */
 package net.semanticmetadata.lire.imageanalysis.sift;
 
@@ -64,7 +67,7 @@ public class TestLocalFeatureHistogram extends TestCase {
     private Extractor extractor;
     private String indexPath = "wang-index";
     private String testExtensive = "C:\\Temp\\flickrphotos\\flickrphotos";
-//    private String testExtensive = "../liredemo/flickrphotos";
+    //    private String testExtensive = "../liredemo/flickrphotos";
 //    private String testExtensive = "./wang-1000";
     private int[] sampleQueries = {284, 77, 108, 416, 144, 534, 898, 104, 67, 10, 607, 165, 343, 973, 591, 659, 812, 231, 261, 224, 227, 914, 427, 810, 979, 716, 253, 708, 751, 269, 531, 699, 835, 370, 642, 504, 297, 970, 929, 20, 669, 434, 201, 9, 575, 631, 730, 7, 546, 816, 431, 235, 289, 111, 862, 184, 857, 624, 323, 393, 465, 905, 581, 626, 212, 459, 722, 322, 584, 540, 194, 704, 410, 267, 349, 371, 909, 403, 724, 573, 539, 812, 831, 600, 667, 672, 454, 873, 452, 48, 322, 424, 952, 277, 565, 388, 149, 966, 524, 36, 528, 75, 337, 655, 836, 698, 230, 259, 897, 652, 590, 757, 673, 937, 676, 650, 297, 434, 358, 789, 484, 975, 318, 12, 506, 38, 979, 732, 957, 904, 852, 635, 620, 28, 59, 732, 84, 788, 562, 913, 173, 508, 32, 16, 882, 847, 320, 185, 268, 230, 259, 931, 653, 968, 838, 906, 596, 140, 880, 847, 297, 77, 983, 536, 494, 530, 870, 922, 467, 186, 254, 727, 439, 241, 12, 947, 561, 160, 740, 705, 619, 571, 745, 774, 845, 507, 156, 936, 473, 830, 88, 66, 204, 737, 770, 445, 358, 707, 95, 349};
 
@@ -85,7 +88,7 @@ public class TestLocalFeatureHistogram extends TestCase {
             System.out.println("s = " + s);
             List<Feature> features = extractor.computeSiftFeatures(ImageIO.read(new File(s)));
             List<Histogram> tmpList = new LinkedList<Histogram>();
-            for (Iterator<Feature> histogramIterator = features.iterator(); histogramIterator.hasNext();) {
+            for (Iterator<Feature> histogramIterator = features.iterator(); histogramIterator.hasNext(); ) {
                 Feature feature = histogramIterator.next();
                 tmpList.add(feature);
             }
@@ -111,10 +114,10 @@ public class TestLocalFeatureHistogram extends TestCase {
         // create histograms ...
         List<Image> imgs = k.getImages();
         Cluster[] clusters = k.getClusters();
-        for (Iterator<Image> imageIterator = imgs.iterator(); imageIterator.hasNext();) {
+        for (Iterator<Image> imageIterator = imgs.iterator(); imageIterator.hasNext(); ) {
             Image image = imageIterator.next();
             image.initHistogram(k.getNumClusters());
-            for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext();) {
+            for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext(); ) {
                 Histogram feat = iterator.next();
                 image.getLocalFeatureHistogram()[k.getClusterOfFeature(feat)]++;
 //                image.normalizeFeatureHistogram();
@@ -173,7 +176,7 @@ public class TestLocalFeatureHistogram extends TestCase {
 
     public void testCreateLocalFeatureHistogram() throws IOException {
 //        testSiftIndexing();
-        
+
         SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File("sift-idx")), false), 2000);
         sh.index();
         testFindimages();
@@ -228,7 +231,7 @@ public class TestLocalFeatureHistogram extends TestCase {
             @Override
             public float idf(int docfreq, int numdocs) {
 //                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
-                return (float) (Math.log((double) numdocs/(double) docfreq));  //To change body of implemented methods use File | Settings | File Templates.
+                return (float) (Math.log((double) numdocs / (double) docfreq));  //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
@@ -244,8 +247,8 @@ public class TestLocalFeatureHistogram extends TestCase {
                     "<table>");
             for (int i = 0; i < docs.scoreDocs.length; i++) {
                 sb.append("    <tr>\n" +
-                        "        <td>"+docs.scoreDocs[i].score+"</td>\n" +
-                        "        <td><img src=\""+reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]+"\"/></td>\n" +
+                        "        <td>" + docs.scoreDocs[i].score + "</td>\n" +
+                        "        <td><img src=\"" + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0] + "\"/></td>\n" +
                         "    </tr>");
                 System.out.println(docs.scoreDocs[i].score + ": " + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]);
             }
@@ -306,8 +309,8 @@ public class TestLocalFeatureHistogram extends TestCase {
                     "<table>");
             for (int i = 0; i < docs.scoreDocs.length; i++) {
                 sb.append("    <tr>\n" +
-                        "        <td>"+docs.scoreDocs[i].score+", doc: "+docs.scoreDocs[i].doc+"</td>\n" +
-                        "        <td><img src=\""+reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]+"\"/></td>\n" +
+                        "        <td>" + docs.scoreDocs[i].score + ", doc: " + docs.scoreDocs[i].doc + "</td>\n" +
+                        "        <td><img src=\"" + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0] + "\"/></td>\n" +
                         "    </tr>");
                 System.out.println(docs.scoreDocs[i].score + ": " + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]);
             }
@@ -325,7 +328,7 @@ public class TestLocalFeatureHistogram extends TestCase {
         String file = new String("./wang-1000/1.jpg");
         Extractor e = new Extractor();
         List<Feature> fs = e.computeSiftFeatures(ImageIO.read(new File(file)));
-        for (Iterator<Feature> featureIterator = fs.iterator(); featureIterator.hasNext();) {
+        for (Iterator<Feature> featureIterator = fs.iterator(); featureIterator.hasNext(); ) {
             Feature feature = featureIterator.next();
             byte[] bytes = feature.getByteArrayRepresentation();
             Feature cp = new Feature();

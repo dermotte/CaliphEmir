@@ -1,41 +1,47 @@
+/*
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LIRe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LIRe; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
+ *
+ * Copyright statement:
+ * --------------------
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
+ */
+
 package net.semanticmetadata.lire.imageanalysis;
 
+import junit.framework.TestCase;
+import net.semanticmetadata.lire.imageanalysis.correlogram.DynamicProgrammingAutoCorrelogramExtraction;
+import net.semanticmetadata.lire.imageanalysis.correlogram.MLuxAutoCorrelogramExtraction;
+import net.semanticmetadata.lire.imageanalysis.correlogram.NaiveAutoCorrelogramExtraction;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import javax.imageio.ImageIO;
-
-import junit.framework.TestCase;
-import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram.Mode;
-import net.semanticmetadata.lire.imageanalysis.correlogram.DynamicProgrammingAutoCorrelogramExtraction;
-import net.semanticmetadata.lire.imageanalysis.correlogram.MLuxAutoCorrelogramExtraction;
-import net.semanticmetadata.lire.imageanalysis.correlogram.NaiveAutoCorrelogramExtraction;
-
-/*
- * This file is part of Caliph & Emir.
- *
- * Caliph & Emir is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Caliph & Emir is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Caliph & Emir; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Copyright statement:
- * --------------------
- * (c) 2002-2007 by Mathias Lux (mathias@juggle.at)
- * http://www.juggle.at, http://caliph-emir.sourceforge.net
- */
 public class AutoColorCorrelogramTest extends TestCase {
     private String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
     private String testFilesPath = "./src/test/resources/small/";
@@ -59,37 +65,37 @@ public class AutoColorCorrelogramTest extends TestCase {
         distance = acc.getDistance(ac2);
         System.out.println("distance = " + distance);
     }
-    
-    public void testMethodsPerformance() throws IOException {
-    	AutoColorCorrelogram[] acc = new AutoColorCorrelogram[4];
-    	int[] D = {1,3,5,7};
-    	int C = 64;
-    	acc[0] = new AutoColorCorrelogram(C,D,new MLuxAutoCorrelogramExtraction(AutoColorCorrelogram.Mode.SuperFast));
-    	acc[1] = new AutoColorCorrelogram(C,D,new MLuxAutoCorrelogramExtraction(AutoColorCorrelogram.Mode.FullNeighbourhood));
-    	acc[2] = new AutoColorCorrelogram(C,D,new NaiveAutoCorrelogramExtraction());
-    	acc[3] = new AutoColorCorrelogram(C,D,DynamicProgrammingAutoCorrelogramExtraction.getInstance());
-    	int[] testSet =  {284, 77, 108, 416, 144, 534, 898, 104, 67, 10};
 
-    	//reads all images
-    	BufferedImage[] image = new BufferedImage[testSet.length];
-		for(int j=0;j<testSet.length;j++) {
-			int id = testSet[j];
-	        String file = testExtensive + "/" + id + ".jpg";
-	        image[j] = ImageIO.read(new FileInputStream(file));			
-		}
-    	
-    	
-    	for(int i=0;i<4;i++) {
-    		long t0 = System.currentTimeMillis();
-    		for(int j=0;j<testSet.length;j++) {
-    			acc[i].extract(image[j]);
-    			System.out.print(".");
-    		}
-    		long tf = System.currentTimeMillis();
-    		long dt = tf-t0;
-    		double avt = (double) dt/testSet.length;
-    		System.out.printf("Method %d: total time %d, average %f\n",i,dt,avt);
-    	}
+    public void testMethodsPerformance() throws IOException {
+        AutoColorCorrelogram[] acc = new AutoColorCorrelogram[4];
+        int[] D = {1, 3, 5, 7};
+        int C = 64;
+        acc[0] = new AutoColorCorrelogram(C, D, new MLuxAutoCorrelogramExtraction(AutoColorCorrelogram.Mode.SuperFast));
+        acc[1] = new AutoColorCorrelogram(C, D, new MLuxAutoCorrelogramExtraction(AutoColorCorrelogram.Mode.FullNeighbourhood));
+        acc[2] = new AutoColorCorrelogram(C, D, new NaiveAutoCorrelogramExtraction());
+        acc[3] = new AutoColorCorrelogram(C, D, DynamicProgrammingAutoCorrelogramExtraction.getInstance());
+        int[] testSet = {284, 77, 108, 416, 144, 534, 898, 104, 67, 10};
+
+        //reads all images
+        BufferedImage[] image = new BufferedImage[testSet.length];
+        for (int j = 0; j < testSet.length; j++) {
+            int id = testSet[j];
+            String file = testExtensive + "/" + id + ".jpg";
+            image[j] = ImageIO.read(new FileInputStream(file));
+        }
+
+
+        for (int i = 0; i < 4; i++) {
+            long t0 = System.currentTimeMillis();
+            for (int j = 0; j < testSet.length; j++) {
+                acc[i].extract(image[j]);
+                System.out.print(".");
+            }
+            long tf = System.currentTimeMillis();
+            long dt = tf - t0;
+            double avt = (double) dt / testSet.length;
+            System.out.printf("Method %d: total time %d, average %f\n", i, dt, avt);
+        }
     }
 
     public void testPerformance() throws IOException {
@@ -148,7 +154,7 @@ public class AutoColorCorrelogramTest extends TestCase {
             System.out.println(testFiles[i] + " distance = " + distance);
         }
         int count = 0;
-        for (Iterator<String> iterator = vds.iterator(); iterator.hasNext();) {
+        for (Iterator<String> iterator = vds.iterator(); iterator.hasNext(); ) {
             String s = iterator.next();
             AutoColorCorrelogram a = new AutoColorCorrelogram();
             a.setStringRepresentation(s);

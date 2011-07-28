@@ -1,3 +1,33 @@
+/*
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LIRe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LIRe; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
+ *
+ * Copyright statement:
+ * --------------------
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
+ */
+
 package net.semanticmetadata.lire.imageanalysis;
 
 import junit.framework.TestCase;
@@ -9,28 +39,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/*
- * This file is part of Caliph & Emir.
- *
- * Caliph & Emir is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Caliph & Emir is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Caliph & Emir; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Copyright statement:
- * --------------------
- * (c) 2002-2007 by Mathias Lux (mathias@juggle.at)
- * http://www.juggle.at, http://caliph-emir.sourceforge.net
- */
 public class FCTHTest extends TestCase {
     private String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
     private String testFilesPath = "./lire/src/test/resources/small/";
@@ -59,7 +67,7 @@ public class FCTHTest extends TestCase {
             System.out.println(testFiles[i] + " distance = " + distance);
         }
         int count = 0;
-        for (Iterator<String> iterator = vds.iterator(); iterator.hasNext();) {
+        for (Iterator<String> iterator = vds.iterator(); iterator.hasNext(); ) {
             String s = iterator.next();
             FCTH a = new FCTH();
             a.setStringRepresentation(s);

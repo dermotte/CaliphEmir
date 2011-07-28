@@ -1,24 +1,31 @@
 /*
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
- *
- * Caliph & Emir is free software; you can redistribute it and/or modify
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Caliph & Emir is distributed in the hope that it will be useful,
+ * LIRe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Caliph & Emir; if not, write to the Free Software
+ * along with LIRe; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
  * --------------------
- * (c) 2002-2010 by Mathias Lux (mathias@juggle.at)
- * http://www.juggle.at, http://www.SemanticMetadata.net
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
  */
 
 package net.semanticmetadata.lire.imageanalysis.visualattention;
@@ -54,9 +61,10 @@ public class StentifordModel {
 
     /**
      * Constructor for advance use. Instead of using the default values they can be set.
+     *
      * @param neighbourhoodSize number of pixels selected from the neighbourhood
-     * @param maxChecks number of random checks for each pixels, according to the paper 100 should work fine.
-     * @param maxDist the maximum distance between colors to be deemed similar
+     * @param maxChecks         number of random checks for each pixels, according to the paper 100 should work fine.
+     * @param maxDist           the maximum distance between colors to be deemed similar
      */
     public StentifordModel(int neighbourhoodSize, int maxChecks, int maxDist) {
         this.neighbourhoodSize = neighbourhoodSize;
@@ -71,12 +79,12 @@ public class StentifordModel {
     }
 
     static {
-        int side = 2*radius+1;
-        possibleNeighbours = new int[side*side-1][2];
+        int side = 2 * radius + 1;
+        possibleNeighbours = new int[side * side - 1][2];
         int count = 0;
-        for (int i = -radius; i<=radius; i++) {
-            for (int j = -radius; j<=radius; j++) {
-                if (j!=0 || i!=0) {
+        for (int i = -radius; i <= radius; i++) {
+            for (int j = -radius; j <= radius; j++) {
+                if (j != 0 || i != 0) {
                     possibleNeighbours[count][0] = i;
                     possibleNeighbours[count][1] = j;
                     count++;
@@ -105,12 +113,12 @@ public class StentifordModel {
             for (int y = radius; y < raster.getHeight() - radius; y++) {
                 createRandomNeighbourhood();
                 getNeighbourhood(x, y, nx, raster);
-                for (int checks = 0; checks<maxChecks; checks++) {
-                    getNeighbourhood((int) (Math.random()*(img.getWidth()-2*radius)+radius), 
-                            (int) (Math.random()*(img.getHeight()-2*radius)+radius), ny, raster);
+                for (int checks = 0; checks < maxChecks; checks++) {
+                    getNeighbourhood((int) (Math.random() * (img.getWidth() - 2 * radius) + radius),
+                            (int) (Math.random() * (img.getHeight() - 2 * radius) + radius), ny, raster);
                     match = true;
                     for (int i = 0; i < nx.length; i++) {
-                        if (getDistance(nx[i], ny[i])>maxDist) {
+                        if (getDistance(nx[i], ny[i]) > maxDist) {
                             match = false;
                             break;
                         }
@@ -143,9 +151,9 @@ public class StentifordModel {
 
     private void getNeighbourhood(int x, int y, int[][] values, WritableRaster raster) {
         int k = 0;
-        for (Iterator<Integer> integerIterator = randomNeighbourhood.iterator(); integerIterator.hasNext();) {
+        for (Iterator<Integer> integerIterator = randomNeighbourhood.iterator(); integerIterator.hasNext(); ) {
             int n = integerIterator.next();
-            raster.getPixel(x+possibleNeighbours[n][0], y+possibleNeighbours[n][1], values[k]);
+            raster.getPixel(x + possibleNeighbours[n][0], y + possibleNeighbours[n][1], values[k]);
             // convert to HSV:
             rgb2hsv(values[k][0], values[k][1], values[k][2], values[k]);
             k++;
@@ -154,9 +162,9 @@ public class StentifordModel {
 
     private void createRandomNeighbourhood() {
         randomNeighbourhood.clear();
-        while (randomNeighbourhood.size()<neighbourhoodSize) {
-            int n = (int) (Math.random()*possibleNeighbours.length);
-            if (n==possibleNeighbours.length) n--;
+        while (randomNeighbourhood.size() < neighbourhoodSize) {
+            int n = (int) (Math.random() * possibleNeighbours.length);
+            if (n == possibleNeighbours.length) n--;
             randomNeighbourhood.add(n);
         }
     }
@@ -167,6 +175,7 @@ public class StentifordModel {
 
     /**
      * Visualizes the attention model in a picture. Lighter pixels are the ones with more attention.
+     *
      * @return an image visualizing the attention model
      */
     public BufferedImage getAttentionVisualization() {
@@ -174,10 +183,10 @@ public class StentifordModel {
         int[] pixel = new int[3];
         for (int i = 0; i < attentionModel.length; i++) {
             for (int j = 0; j < attentionModel[i].length; j++) {
-                pixel[0] = (int) (((float) attentionModel[i][j])/((float) maxChecks)*255f);
-                pixel[1] = (int) (((float) attentionModel[i][j])/((float) maxChecks)*255f);
-                pixel[2] = (int) (((float) attentionModel[i][j])/((float) maxChecks)*255f);
-                result.getRaster().setPixel(i,j,pixel);
+                pixel[0] = (int) (((float) attentionModel[i][j]) / ((float) maxChecks) * 255f);
+                pixel[1] = (int) (((float) attentionModel[i][j]) / ((float) maxChecks) * 255f);
+                pixel[2] = (int) (((float) attentionModel[i][j]) / ((float) maxChecks) * 255f);
+                result.getRaster().setPixel(i, j, pixel);
             }
         }
         return result;

@@ -1,3 +1,33 @@
+/*
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LIRe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LIRe; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
+ *
+ * Copyright statement:
+ * --------------------
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
+ */
+
 package net.semanticmetadata.lire.benchmarking;
 
 //import Jama.Matrix;
@@ -155,7 +185,7 @@ public class TestGeneral extends TestCase {
     public void computeErrorRate(ImageSearcher searcher, String prefix) throws IOException, InstantiationException, IllegalAccessException {
 //        int maxHits = 10;
         IndexReader reader = IndexReader.open(SimpleFSDirectory.open(new File(testIndex)), true);
-        for (Iterator<String> testIterator = testcases.keySet().iterator(); testIterator.hasNext();) {
+        for (Iterator<String> testIterator = testcases.keySet().iterator(); testIterator.hasNext(); ) {
             queryImage = testIterator.next();
             Document query;
             if (cutImages) {
@@ -173,26 +203,26 @@ public class TestGeneral extends TestCase {
             // saveToHtml(queryImage.substring(queryImage.lastIndexOf('\\') + 1) + "-" + prefix, hits, queryImage);
         }
     }
-       /*
-    public void computeErrorRateLsa(ImageSearcher searcher, String prefix) throws IOException, InstantiationException, IllegalAccessException {
+    /*
+  public void computeErrorRateLsa(ImageSearcher searcher, String prefix) throws IOException, InstantiationException, IllegalAccessException {
 //        int maxHits = 10;
-        IndexReader reader = IndexReader.open(SimpleFSDirectory.open(new File(testIndex)), true);
-        for (Iterator<String> testIterator = testcases.keySet().iterator(); testIterator.hasNext();) {
-            queryImage = testIterator.next();
-            BufferedImage bimg = ImageIO.read(new FileInputStream(queryImage));
-            if (cutImages)
-                bimg = ImageUtils.cropImage(bimg, 0, 0, 200, 69);
-            ColorLayout cl = new ColorLayout();
-            cl.extract(bimg);
-            ImageSearchHits hits = lsa(reader, cl, 100);
-            for (int i = 0; i < hits.length(); i++) {
-                if (hits.doc(i).get("descriptorImageIdentifier").toLowerCase().endsWith(testcases.get(queryImage))) {
-                    System.out.println(queryImage.substring(queryImage.lastIndexOf('\\') + 1) + "-" + prefix + " -> Found at rank " + i);
-                }
-            }
+      IndexReader reader = IndexReader.open(SimpleFSDirectory.open(new File(testIndex)), true);
+      for (Iterator<String> testIterator = testcases.keySet().iterator(); testIterator.hasNext();) {
+          queryImage = testIterator.next();
+          BufferedImage bimg = ImageIO.read(new FileInputStream(queryImage));
+          if (cutImages)
+              bimg = ImageUtils.cropImage(bimg, 0, 0, 200, 69);
+          ColorLayout cl = new ColorLayout();
+          cl.extract(bimg);
+          ImageSearchHits hits = lsa(reader, cl, 100);
+          for (int i = 0; i < hits.length(); i++) {
+              if (hits.doc(i).get("descriptorImageIdentifier").toLowerCase().endsWith(testcases.get(queryImage))) {
+                  System.out.println(queryImage.substring(queryImage.lastIndexOf('\\') + 1) + "-" + prefix + " -> Found at rank " + i);
+              }
+          }
 //            saveToHtml(queryImage.substring(queryImage.lastIndexOf('\\') + 1) + "-" + prefix, hits, queryImage);
-        }
-    }  */
+      }
+  }  */
 
     private ImageSearchHits rerank(ImageSearchHits hits, Document query, Class descriptorClass, String fieldName) throws IllegalAccessException, InstantiationException {
         ArrayList<SimpleResult> results = new ArrayList<SimpleResult>(hits.length());

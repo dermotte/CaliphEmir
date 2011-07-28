@@ -1,24 +1,31 @@
 /*
- * This file is part of Lire (Lucene Image Retrieval).
- *
- * Lire is free software; you can redistribute it and/or modify
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Lire is distributed in the hope that it will be useful,
+ * LIRe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Lire; if not, write to the Free Software
+ * along with LIRe; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
  * --------------------
- * (c) 2002-2008 by Mathias Lux (mathias@juggle.at)
- * http://www.semanticmetadata.net
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
  */
 package net.semanticmetadata.lire.indexing;
 
@@ -26,6 +33,7 @@ import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
 import net.semanticmetadata.lire.imageanalysis.CEDD;
+import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.impl.GenericImageSearcher;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.SimpleAnalyzer;
@@ -36,14 +44,14 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermPositions;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import net.semanticmetadata.lire.imageanalysis.LireFeature;
 
 
 /**
@@ -302,19 +310,19 @@ public class MetricSpacesInvertedListIndexing {
             position++;
         }
         int currdocscore = 0;
-        int maxScore = 0, minScore = (position -1) * position;
+        int maxScore = 0, minScore = (position - 1) * position;
         TreeSet<ScoreDoc> results = new TreeSet<ScoreDoc>(new ScoreDocComparator());
-        for (Iterator<Integer> iterator = doc2count.keySet().iterator(); iterator.hasNext();) {
+        for (Iterator<Integer> iterator = doc2count.keySet().iterator(); iterator.hasNext(); ) {
             currDoc = iterator.next();
-            currdocscore = (position -1) * position -  // max score ... minus actual distance.
-                    (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * (position-1));
+            currdocscore = (position - 1) * position -  // max score ... minus actual distance.
+                    (doc2score.get(currDoc) + (position - doc2count.get(currDoc)) * (position - 1));
             maxScore = Math.max(maxScore, currdocscore);
             minScore = Math.min(minScore, currdocscore);
-            if (results.size()< numHits || currdocscore >=minScore) {
+            if (results.size() < numHits || currdocscore >= minScore) {
                 results.add(new ScoreDoc(currDoc, currdocscore));
             }
         }
-        while(results.size()>numHits) results.pollLast();
+        while (results.size() > numHits) results.pollLast();
         return new TopDocs(Math.min(results.size(), numHits), (ScoreDoc[]) results.toArray(new ScoreDoc[results.size()]), maxScore);
     }
 

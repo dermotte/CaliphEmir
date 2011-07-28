@@ -1,28 +1,31 @@
 /*
- * This file is part of the LIRE project: http://www.SemanticMetadata.net/lire.
- *
- * Lire is free software; you can redistribute it and/or modify
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Lire is distributed in the hope that it will be useful,
+ * LIRe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Lire; if not, write to the Free Software
+ * along with LIRe; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
  * --------------------
- * Note, that the SIFT-algorithm is protected by U.S. Patent 6,711,293: "Method and
- * apparatus for identifying scale invariant features in an image and use of same for
- * locating an object in an image" by the University of British Columbia. That is, for
- * commercial applications the permission of the author is required.
- *
- * (c) 2008-2010 by Mathias Lux, mathias@juggle.at
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
  */
 package net.semanticmetadata.lire.imageanalysis.sift;
 
@@ -64,25 +67,25 @@ public class KMeans {
     public void init() {
         // create a set of all features:
         features = new ArrayList<Histogram>(count);
-        for (Iterator<Image> imageIterator = images.iterator(); imageIterator.hasNext();) {
+        for (Iterator<Image> imageIterator = images.iterator(); imageIterator.hasNext(); ) {
             Image image = imageIterator.next();
-            if (image.features.size()>0)
-            for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext();) {
-                Histogram histogram = iterator.next();
-                for (int i = 0; i < histogram.descriptor.length; i++) {
-                    if (Float.isNaN(histogram.descriptor[i])) {
-                        System.err.println("Found a NaN in init");
-                        System.out.println("image.identifier = " + image.identifier);
-                        for (int j = 0; j < histogram.descriptor.length; j++) {
-                            float v = histogram.descriptor[j];
-                            System.out.print(v + ", ");
+            if (image.features.size() > 0)
+                for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext(); ) {
+                    Histogram histogram = iterator.next();
+                    for (int i = 0; i < histogram.descriptor.length; i++) {
+                        if (Float.isNaN(histogram.descriptor[i])) {
+                            System.err.println("Found a NaN in init");
+                            System.out.println("image.identifier = " + image.identifier);
+                            for (int j = 0; j < histogram.descriptor.length; j++) {
+                                float v = histogram.descriptor[j];
+                                System.out.print(v + ", ");
+                            }
+                            System.out.println("");
                         }
-                        System.out.println("");
-                    }
 
+                    }
+                    features.add(histogram);
                 }
-                features.add(histogram);
-            }
             else {
                 System.err.println("Image with no MSER features: " + image.identifier);
             }
@@ -108,7 +111,7 @@ public class KMeans {
     private Set<Integer> selectInitialMedians(int numClusters) {
         HashSet<Integer> medians = new HashSet<Integer>();
         while (medians.size() < numClusters && medians.size() < features.size()) {
-            medians.add((int)(Math.random() * (double) numClusters));
+            medians.add((int) (Math.random() * (double) numClusters));
         }
         return medians;
     }
@@ -159,7 +162,7 @@ public class KMeans {
                 for (Integer member : clusters[i].members) {
                     mean[j] += features.get(member).descriptor[j];
                 }
-                if (clusters[i].members.size()>1)
+                if (clusters[i].members.size() > 1)
                     mean[j] = mean[j] / clusters[i].members.size();
             }
         }
@@ -180,7 +183,7 @@ public class KMeans {
                 for (int j = 0; j < length; j++) {
 //                    if (Float.isNaN(features.get(member).descriptor[j])) System.err.println("Error: there is a NaN in cluster " + i + " at member " + member);
                     float f = Math.abs(clusters[i].mean[j] - features.get(member).descriptor[j]);
-                    tmpStress += f ;
+                    tmpStress += f;
                 }
                 v += tmpStress;
             }
@@ -213,7 +216,7 @@ public class KMeans {
         featureIndex = new HashMap<Histogram, Integer>(features.size());
         for (int i = 0; i < clusters.length; i++) {
             Cluster cluster = clusters[i];
-            for (Iterator<Integer> fidit = cluster.members.iterator(); fidit.hasNext();) {
+            for (Iterator<Integer> fidit = cluster.members.iterator(); fidit.hasNext(); ) {
                 int fid = fidit.next();
                 featureIndex.put(features.get(fid), i);
             }

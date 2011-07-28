@@ -1,33 +1,37 @@
 /*
- * This file is part of the LIRE project: http://www.SemanticMetadata.net/lire.
- *
- * Lire is free software; you can redistribute it and/or modify
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Lire is distributed in the hope that it will be useful,
+ * LIRe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Lire; if not, write to the Free Software
+ * along with LIRe; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
  * --------------------
- * (c) 2008 by Savvas A. Chatzichristofis, savvash@gmail.com
- * 
- * some further adoptions to Lire made by
- *     Mathias Lux, mathias@juggle.at
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
  */
 
 package net.semanticmetadata.lire.imageanalysis;
 
 import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.cedd.*;
-import net.semanticmetadata.lire.utils.ConversionUtils;
 
 import java.awt.image.BufferedImage;
 import java.util.StringTokenizer;
@@ -364,6 +368,7 @@ public class CEDD implements LireFeature {
 
     /**
      * Provides a much faster way of serialization.
+     *
      * @return a byte array that can be read with the corresponding method.
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#setByteArrayRepresentation(byte[])
      */
@@ -377,8 +382,9 @@ public class CEDD implements LireFeature {
 
     /**
      * Reads descriptor from a byte array. Much faster than the String based method.
-     * @see net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation
+     *
      * @param in byte array from corresponding method
+     * @see net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation
      */
     public void setByteArrayRepresentation(byte[] in) {
         data = new double[in.length];
