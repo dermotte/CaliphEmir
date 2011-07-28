@@ -79,7 +79,7 @@ public class Cluster implements Comparable<Object> {
      * @return the clusters mean as byte array.
      */
     public byte[] getByteRepresentation() {
-        return SerializationUtils.toBytes(mean);
+        return SerializationUtils.toByteArray(mean);
     }
 
     public void setByteRepresentation(byte[] data) {

@@ -1,5 +1,7 @@
 package net.semanticmetadata.lire.utils;
 
+import java.util.Arrays;
+
 /**
  * Utility class for serialization issues.
  * Created by: Mathias Lux, mathias@juggle.at
@@ -106,7 +108,7 @@ public class SerializationUtils {
      * @param data the input float array
      * @return a byte array for serialization.
      */
-    public static byte[] toBytes(float[] data) {
+    public static byte[] toByteArray(float[] data) {
         byte[] tmp, result = new byte[data.length * 4];
         for (int i = 0; i < data.length; i++) {
             tmp = toBytes(data[i]);
@@ -132,17 +134,78 @@ public class SerializationUtils {
     }
 
     /**
+     * Converts a double to a byte array with 4 elements. Used to put doubles into a byte[] payload in a convenient
+     * and fast way by shifting without using streams (which is kind of slow). Use
+     * {@link net.semanticmetadata.lire.utils.SerializationUtils#toDouble(byte[])} to decode. Note that there is a loss
+     * in precision as the double is converted to a float in the course of conversion.
+     *
+     * @param data the double to convert
+     * @return the resulting byte array
+     * @see net.semanticmetadata.lire.utils.SerializationUtils#toDouble(byte[])
+     */
+    public static byte[] toBytes(double data) {
+        return toBytes(Float.floatToRawIntBits((float) data));
+    }
+
+    /**
+     * Converts a byte array with 4 elements to a double. Used to put doubles into a byte[] payload in a convenient
+     * and fast way by shifting without using streams (which is kind of slow). Use
+     * {@link net.semanticmetadata.lire.utils.SerializationUtils#toBytes(double)} to encode. Note that there is a loss
+     * in precision as the double is converted to a float in the course of conversion.
+     *
+     * @param data the input byte array
+     * @return the resulting float
+     * @see net.semanticmetadata.lire.utils.SerializationUtils#toBytes(double)
+     */
+    public static double toDouble(byte[] data) {
+        return (double) Float.intBitsToFloat(toInt(data));
+    }
+
+    /**
+     * Convenience method for creating a byte array from a double array.
+     *
+     * @param data the input float array
+     * @return a byte array for serialization.
+     */
+    public static byte[] toByteArray(double[] data) {
+        byte[] tmp, result = new byte[data.length * 4];
+        for (int i = 0; i < data.length; i++) {
+            tmp = toBytes(data[i]);
+            System.arraycopy(tmp, 0, result, i * 4, 4);
+        }
+        return result;
+    }
+
+    /**
+     * Convenience method for creating a double array from a byte array.
+     *
+     * @param data
+     * @return
+     */
+    public static double[] toDoubleArray(byte[] data) {
+        double[] result = new double[data.length / 4];
+        byte[] tmp = new byte[4];
+        for (int i = 0; i < result.length; i++) {
+            System.arraycopy(data, i * 4, tmp, 0, 4);
+            result[i] = toDouble(tmp);
+        }
+        return result;
+    }
+
+
+    /**
      * Convenience method for creating a String from an array.
      *
      * @param array
      * @return
      */
     public static String arrayToString(int[] array) {
-        StringBuilder sb = new StringBuilder(256);
-        for (int i = 0; i < array.length; i++) {
-            sb.append(array[i]);
-            sb.append(' ');
-        }
-        return sb.toString().trim();
+        return Arrays.toString(array);
+//        StringBuilder sb = new StringBuilder(256);
+//        for (int i = 0; i < array.length; i++) {
+//            sb.append(array[i]);
+//            sb.append(' ');
+//        }
+//        return sb.toString().trim();
     }
 }

@@ -40,20 +40,39 @@ import java.util.logging.Level;
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class GenericDocumentBuilder  extends AbstractDocumentBuilder {
+public class GenericDocumentBuilder extends AbstractDocumentBuilder {
     private Logger logger = Logger.getLogger(getClass().getName());
     public static final int MAX_IMAGE_DIMENSION = 1024;
     Class<? extends LireFeature> descriptorClass;
     String fieldName;
+    final static Mode DEFAULT_MODE = Mode.Slow;
+    Mode currentMode = DEFAULT_MODE;
+
+    // Decide between byte array version (fast) or string version (slow)
+    enum Mode {Fast, Slow }
 
     /**
      * Creating a new DocumentBuilder based on a class based on the interface {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
+     *
      * @param descriptorClass has to implement {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
-     * @param fieldName the field name in the index.
+     * @param fieldName       the field name in the index.
      */
     public GenericDocumentBuilder(Class<? extends LireFeature> descriptorClass, String fieldName) {
         this.descriptorClass = descriptorClass;
         this.fieldName = fieldName;
+    }
+
+    /**
+     * Creating a new DocumentBuilder based on a class based on the interface {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
+     *
+     * @param descriptorClass has to implement {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
+     * @param fieldName       the field name in the index.
+     * @param mode            the mode the GenericDocumentBuilder should work in, byte[] (== Mode.Fast) or string (==Mode.Slow) storage in Lucene.
+     */
+    public GenericDocumentBuilder(Class<? extends LireFeature> descriptorClass, String fieldName, Mode mode) {
+        this.descriptorClass = descriptorClass;
+        this.fieldName = fieldName;
+        this.currentMode = mode;
     }
 
     public Document createDocument(BufferedImage image, String identifier) {
@@ -74,7 +93,11 @@ public class GenericDocumentBuilder  extends AbstractDocumentBuilder {
             logger.fine("Extraction finished [" + descriptorClass.getName() + "].");
 
             doc = new Document();
-            doc.add(new Field(fieldName, featureString, Field.Store.YES, Field.Index.NO));
+            if (currentMode == Mode.Slow)
+                doc.add(new Field(fieldName, featureString, Field.Store.YES, Field.Index.NO));
+            else
+                doc.add(new Field(fieldName, vd.getByteArrayRepresentation(), Field.Store.YES));
+
             if (identifier != null)
                 doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
 

@@ -35,6 +35,18 @@ public class GeneralColorLayout implements LireFeature {
         }
     }
 
+    public byte[] getByteArrayRepresentation() {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public double[] getDoubleHistogram() {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
     private int quant(int[] pixel) {
         int qH = (int) Math.floor((pixel[0] * 64f) / 360f);    // more granularity in color
         int qS = (int) Math.floor((pixel[2] * 8f) / 100f);

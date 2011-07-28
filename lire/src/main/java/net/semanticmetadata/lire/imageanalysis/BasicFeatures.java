@@ -127,20 +127,41 @@ public class BasicFeatures implements LireFeature{
 		
 		//System.out.println("DEBUG: {"+brightness+","+contrast+","+hueCount+","+saturation+","+complexity+","+clipping+","+energy+","+ skew+"}");
 	}
-	
-	/*
-	private float evaluate(float brightness, float contrast, float hueCount,
-			float saturation, float complexity, float clipping,float energy, float skew) {
-		QPrediction qPred = new QPrediction();
-		try {
-			qPred = WekaQuality.predictQuality(new float[]{brightness,contrast,hueCount,saturation,complexity,clipping,energy,skew});
-		} catch (Exception e) {
-			System.err.println("Could not predict value, setting quality=0");
-			e.printStackTrace();
-		}
-		return qPred.prGood;
-	}
-	*/
+
+    public byte[] getByteArrayRepresentation() {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public double[] getDoubleHistogram() {
+        double[] result = new double[8];
+        result[0] = brightness;
+        result[1] = clipping;
+        result[2] = contrast;
+        result[3] = hueCount;
+        result[4] = saturation;
+        result[5] = complexity;
+        result[6] = skew;
+        result[7] = energy;
+        return result;
+    }
+
+    /*
+     private float evaluate(float brightness, float contrast, float hueCount,
+             float saturation, float complexity, float clipping,float energy, float skew) {
+         QPrediction qPred = new QPrediction();
+         try {
+             qPred = WekaQuality.predictQuality(new float[]{brightness,contrast,hueCount,saturation,complexity,clipping,energy,skew});
+         } catch (Exception e) {
+             System.err.println("Could not predict value, setting quality=0");
+             e.printStackTrace();
+         }
+         return qPred.prGood;
+     }
+     */
 
 	private float getComplexity(BufferedImage img){
 		//Uses its own resizing method to remove color in the same step

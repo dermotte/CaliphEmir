@@ -29,7 +29,7 @@ package net.semanticmetadata.lire.imageanalysis.mser.fourier.utils;
  * tan(a)       = -6.685231390246571E-6 + 1.0000103108981198i
  * <p/>
  *
- * Copyright © 2007, Robert Sedgewick and Kevin Wayne.
+ * Copyright 2007, Robert Sedgewick and Kevin Wayne.
  * Last updated: Tue Sep 29 16:17:41 EDT 2009.
  * ***********************************************************************
  */

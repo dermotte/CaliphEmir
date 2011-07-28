@@ -31,6 +31,8 @@ import net.semanticmetadata.lire.imageanalysis.correlogram.IAutoCorrelogramFeatu
 import net.semanticmetadata.lire.imageanalysis.correlogram.MLuxAutoCorrelogramExtraction;
 import net.semanticmetadata.lire.imageanalysis.correlogram.NaiveAutoCorrelogramExtraction;
 import at.lux.imageanalysis.VisualDescriptor;
+import net.semanticmetadata.lire.utils.ConversionUtils;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 /**
  * <p>VisualDescriptor for the AutoCorrelogram based on color as described in
@@ -55,8 +57,7 @@ public class AutoColorCorrelogram implements LireFeature {
     private float quantV_f;
 
     
-    
-    private static final ExtractionMethod DEFAULT_EXTRACTION_METHOD = ExtractionMethod.MluxAlgorithm;   
+    private static final ExtractionMethod DEFAULT_EXTRACTION_METHOD = ExtractionMethod.NaiveHuangAlgorithm;
     private IAutoCorrelogramFeatureExtractor extractionAlgorithm;
     
     /**
@@ -74,8 +75,8 @@ public class AutoColorCorrelogram implements LireFeature {
      * Defines which algorithm to use to extract the features vector
      */
     public enum ExtractionMethod {
-    	MluxAlgorithm,
-    	NaiveHuangAlgorith,
+        LireAlgorithm,
+        NaiveHuangAlgorithm,
     	DynamicProgrammingHuangAlgorithm
     }
     
@@ -90,7 +91,7 @@ public class AutoColorCorrelogram implements LireFeature {
      * @param maxDistance upper limit of k
      */
     public AutoColorCorrelogram(int maxDistance) {
-    	this(maxDistance,Mode.SuperFast);
+//    	this(maxDistance,Mode.SuperFast);
     }
 
     /**
@@ -132,8 +133,6 @@ public class AutoColorCorrelogram implements LireFeature {
     /**
      * Creates a new AutoColorCorrelogram using a maximum L_inf pixel distance for analysis and given mode
      *
-     * @param maxDistance maximum L_inf pixel distance for analysis
-     * @param mode        the mode of calculation (determines the speed of extraction)
      */
     public AutoColorCorrelogram(int numBins, int[] distanceSet, IAutoCorrelogramFeatureExtractor extractionAlgorith) {
     	this.numBins = numBins;
@@ -141,10 +140,10 @@ public class AutoColorCorrelogram implements LireFeature {
 
         if(extractionAlgorith == null){
         	switch(DEFAULT_EXTRACTION_METHOD) {	
-        	case MluxAlgorithm:
+        	case LireAlgorithm:
         		this.extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
         		break;
-        	case NaiveHuangAlgorith:
+        	case NaiveHuangAlgorithm:
         		this.extractionAlgorithm  = new NaiveAutoCorrelogramExtraction();
         		break;
         	case DynamicProgrammingHuangAlgorithm:
@@ -219,6 +218,48 @@ public class AutoColorCorrelogram implements LireFeature {
         int[][][] hsvImage = hsvImage(r);        
         extract(hsvImage);    	
     }
+
+    public byte[] getByteArrayRepresentation() {
+        byte[] result = new byte[correlogram.length*correlogram[0].length*4+5];
+        for (int i = 0; i < correlogram.length; i++) {
+            System.arraycopy(SerializationUtils.toByteArray(correlogram[i]), 0, result, i*correlogram[i].length*4, correlogram[i].length*4);
+        }
+        System.arraycopy(SerializationUtils.toBytes(numBins), 0, result, result.length-5, 4);
+        result[result.length-1] = (byte) distanceSet.length;
+        return result;
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        byte[] numBinsBytes = new byte[4];
+        numBinsBytes[0] = in[in.length-5];
+        numBinsBytes[1] = in[in.length-4];
+        numBinsBytes[2] = in[in.length-3];
+        numBinsBytes[3] = in[in.length-2];
+        int maxDistance = (int) in[in.length-1];
+        numBins = SerializationUtils.toInt(numBinsBytes);
+        correlogram = new float[numBins][maxDistance];
+        float[] temp = SerializationUtils.toFloatArray(in);
+        for (int i = 0; i < correlogram.length; i++) {
+            System.arraycopy(temp, i*maxDistance, correlogram[i], 0, maxDistance);
+        }
+        distanceSet = new int[maxDistance];
+        for (int i = 0; i < distanceSet.length; i++) {
+            distanceSet[i] = i+1;
+        }
+    }
+
+    public double[] getDoubleHistogram() {
+        return ConversionUtils.toDouble(getFloatHistogram());
+    }
+
+    private float[] getFloatHistogram() {
+        float[] result = new float[correlogram.length*correlogram[0].length];
+        for (int i = 0; i < correlogram.length; i++) {
+            System.arraycopy(correlogram[i], 0, result, i*correlogram[0].length, correlogram[0].length);
+        }
+        return result;
+    }
+
     public void extract(int[][][] img) {
     	final int W = img.length;
     	final int H = img[0].length;

@@ -56,6 +56,18 @@ public class JpegCoefficientHistogram implements LireFeature {
         getComponentHistogram(yuvImage, newWidth, newHeight, 2, descriptorValues);
     }
 
+    public byte[] getByteArrayRepresentation() {
+        throw new UnsupportedOperationException("Not implemented!");
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        throw new UnsupportedOperationException("Not implemented!");
+    }
+
+    public double[] getDoubleHistogram() {
+        throw new UnsupportedOperationException("Not implemented!");
+    }
+
     protected class DctPoint {
         public int i;
         public int j;

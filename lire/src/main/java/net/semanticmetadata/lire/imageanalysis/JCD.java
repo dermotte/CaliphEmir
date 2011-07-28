@@ -25,6 +25,7 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 import at.lux.imageanalysis.VisualDescriptor;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.awt.image.BufferedImage;
 
@@ -50,6 +51,18 @@ public class JCD implements LireFeature {
         FCTH f = new FCTH();
         f.extract(bimg);
         init(c, f);
+    }
+
+    public byte[] getByteArrayRepresentation() {
+        return SerializationUtils.toByteArray(data);
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        data = SerializationUtils.toDoubleArray(in);
+    }
+
+    public double[] getDoubleHistogram() {
+        return data;
     }
 
     public void init(CEDD c, FCTH f) {

@@ -27,6 +27,7 @@ package net.semanticmetadata.lire.imageanalysis;
 
 import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.cedd.*;
+import net.semanticmetadata.lire.utils.ConversionUtils;
 
 import java.awt.image.BufferedImage;
 import java.util.StringTokenizer;
@@ -384,5 +385,9 @@ public class CEDD implements LireFeature {
         for (int i = 0; i < data.length; i++) {
             data[i] = in[i];
         }
+    }
+
+    public double[] getDoubleHistogram() {
+        return data;
     }
 }

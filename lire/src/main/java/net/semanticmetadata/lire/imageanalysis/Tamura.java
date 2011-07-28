@@ -26,6 +26,7 @@ package net.semanticmetadata.lire.imageanalysis;
 
 import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.utils.ImageUtils;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -276,6 +277,18 @@ public class Tamura implements LireFeature {
 			histogram[i] = directionality[i - 2];
 		}
 	}
+
+    public byte[] getByteArrayRepresentation() {
+        return SerializationUtils.toByteArray(histogram);
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        histogram = SerializationUtils.toDoubleArray(in);
+    }
+
+    public double[] getDoubleHistogram() {
+        return histogram;
+    }
 
     public float getDistance(VisualDescriptor vd) {
         // Check if instance of the right class ...

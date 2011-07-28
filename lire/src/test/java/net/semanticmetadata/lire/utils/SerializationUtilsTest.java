@@ -16,15 +16,33 @@ public class SerializationUtilsTest extends TestCase {
      * Test some basic serialization routines ...
      */
     public void testSerialization() {
-        float[] test = new float[100];
-        for (int i = 0; i < test.length; i++) {
-            test[i] = (float) (Math.random()*1000);
-        }
-        byte[] bytes = SerializationUtils.toBytes(test);
-        float[] floats = SerializationUtils.toFloatArray(bytes);
+        {
+            // --- floats
+            float[] test = new float[100];
+            for (int i = 0; i < test.length; i++) {
+                test[i] = (float) (Math.random() * 1000);
+            }
+            byte[] bytes = SerializationUtils.toByteArray(test);
+            float[] floats = SerializationUtils.toFloatArray(bytes);
 
-        for (int i = 0; i < floats.length; i++) {
-            assertEquals(floats[i], test[i]);
+            for (int i = 0; i < floats.length; i++) {
+                assertEquals(floats[i], test[i]);
+            }
+        }
+        {
+            // --- doubles
+
+            double[] test = new double[100];
+            for (int i = 0; i < test.length; i++) {
+                test[i] = (double) (Math.random() * 1000);
+            }
+            byte[] bytes = SerializationUtils.toByteArray(test);
+            double[] floats = SerializationUtils.toDoubleArray(bytes);
+
+            for (int i = 0; i < floats.length; i++) {
+                // need to cast to floats due to the loss in precision in conversion.
+                assertEquals((float) floats[i], (float) test[i]);
+            }
         }
     }
 
@@ -36,7 +54,7 @@ public class SerializationUtilsTest extends TestCase {
         for (int i = 0; i < tc.length; i++) {
             float[] test = new float[128];
             for (int j = 0; j < test.length; j++) {
-                test[j] = (float) (Math.random()*1000);
+                test[j] = (float) (Math.random() * 1000);
             }
             tc[i] = new Cluster(test);
         }

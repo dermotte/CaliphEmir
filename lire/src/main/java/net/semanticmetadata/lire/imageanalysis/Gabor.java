@@ -268,6 +268,18 @@ public class Gabor implements LireFeature {
         histogram = getNormalizedFeature(bimg);
     }
 
+    public byte[] getByteArrayRepresentation() {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public double[] getDoubleHistogram() {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
     public float getDistance(VisualDescriptor vd) {   // added by mlux
         // Check if instance of the right class ...
         if (!(vd instanceof Gabor))

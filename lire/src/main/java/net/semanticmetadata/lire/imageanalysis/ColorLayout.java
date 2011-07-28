@@ -108,4 +108,16 @@ public class ColorLayout extends ColorLayoutImpl implements LireFeature {
         System.arraycopy(data, 2 + numYCoeff, CbCoeff, 0, numCCoeff);
         System.arraycopy(data, 2 + numYCoeff + numCCoeff, CrCoeff, 0, numCCoeff);
     }
+
+    public double[] getDoubleHistogram() {
+        double[] result = new double[numYCoeff+numCCoeff*2];
+        for (int i = 0; i < numYCoeff; i++) {
+            result[i] = YCoeff[i];
+        }
+        for (int i = 0; i < numCCoeff; i++) {
+            result[i+numYCoeff] = CbCoeff[i];
+            result[i+numCCoeff+numYCoeff] = CrCoeff[i];
+        }
+        return result;
+    }
 }

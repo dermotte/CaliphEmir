@@ -3,6 +3,7 @@ package net.semanticmetadata.lire.imageanalysis.mser;
 import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.Histogram;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
+import net.semanticmetadata.lire.utils.ConversionUtils;
 import net.semanticmetadata.lire.utils.MetricsUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
@@ -53,7 +54,7 @@ public class MSERFeature extends Histogram implements LireFeature {
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#setByteArrayRepresentation(byte[])
      */
     public byte[] getByteArrayRepresentation() {
-        return SerializationUtils.toBytes(descriptor);
+        return SerializationUtils.toByteArray(descriptor);
     }
 
     /**
@@ -64,6 +65,10 @@ public class MSERFeature extends Histogram implements LireFeature {
      */
     public void setByteArrayRepresentation(byte[] in) {
         descriptor = SerializationUtils.toFloatArray(in);
+    }
+
+    public double[] getDoubleHistogram() {
+        return ConversionUtils.toDouble(descriptor);
     }
 
     @Override

@@ -32,4 +32,15 @@ import at.lux.imageanalysis.ScalableColorImpl;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class ScalableColor extends ScalableColorImpl implements LireFeature {
+    public byte[] getByteArrayRepresentation() {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public double[] getDoubleHistogram() {
+        throw new UnsupportedOperationException("No implemented!");
+    }
 }

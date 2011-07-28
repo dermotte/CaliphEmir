@@ -23,6 +23,8 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 import at.lux.imageanalysis.VisualDescriptor;
+import net.semanticmetadata.lire.utils.ConversionUtils;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
@@ -110,6 +112,18 @@ public class HSVColorHistogram implements LireFeature {
             }
         }
         // normalize(histogram, count);
+    }
+
+    public byte[] getByteArrayRepresentation() {
+        return SerializationUtils.toByteArray(histogram);
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        histogram = SerializationUtils.toIntArray(in);
+    }
+
+    public double[] getDoubleHistogram() {
+        return ConversionUtils.toDouble(histogram);
     }
 
     private void normalize(int[] histogram, int numPixels) {

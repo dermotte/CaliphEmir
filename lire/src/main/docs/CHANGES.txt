@@ -1,6 +1,15 @@
 CHANGES for LIRE
 ================
 
+2011-07-28
+==========
+  - Changed default extraction algorithm in AutoColorCorrelogram
+  - Changed interface LireFeature to support double histograms (for LSA and alike) and byte array representations.
+  - Changed multiple features to fit in with the new interface. Some still need some work, as they
+    just got skeletons with exceptions.
+  - Added option for byte[] representation to GenericDocumentBuilder
+  - Added GenericFastImageSearcher and GenericFastDocumentBuilder
+
 2011-06-30
 ==========
   - Added BasicFeatures and BasicDocumentBuilder (from Thomas Pairitsch).

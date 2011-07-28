@@ -26,6 +26,7 @@ package net.semanticmetadata.lire.imageanalysis;
 
 import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.fcth.*;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.awt.image.BufferedImage;
 import java.util.StringTokenizer;
@@ -334,6 +335,18 @@ public class FCTH implements LireFeature {
 
     public void extract(BufferedImage bimg) {
         histogram = Apply(bimg);
+    }
+
+    public byte[] getByteArrayRepresentation() {
+        return SerializationUtils.toByteArray(histogram);
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        histogram = SerializationUtils.toDoubleArray(in);
+    }
+
+    public double[] getDoubleHistogram() {
+        return histogram;
     }
 
     public float getDistance(VisualDescriptor vd) { // added by mlux

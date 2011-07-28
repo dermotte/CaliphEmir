@@ -13,4 +13,7 @@ import java.awt.image.BufferedImage;
  */
 public interface LireFeature extends VisualDescriptor {
     public void extract(BufferedImage bimg);
+    public byte[] getByteArrayRepresentation();
+    public void setByteArrayRepresentation(byte[] in);
+    public double[] getDoubleHistogram();
 }

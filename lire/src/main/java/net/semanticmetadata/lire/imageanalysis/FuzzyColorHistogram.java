@@ -77,6 +77,18 @@ public class FuzzyColorHistogram implements LireFeature {
             descriptorValues[k] = (int) (histogramA[k] / maxA * 255);
     }
 
+    public byte[] getByteArrayRepresentation() {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public void setByteArrayRepresentation(byte[] in) {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
+    public double[] getDoubleHistogram() {
+        throw new UnsupportedOperationException("No implemented!");
+    }
+
 
     public float getDistance(VisualDescriptor vd) {
         if (!(vd instanceof FuzzyColorHistogram))

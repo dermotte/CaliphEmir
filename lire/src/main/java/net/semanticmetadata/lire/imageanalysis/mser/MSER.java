@@ -12,7 +12,7 @@ import java.util.Stack;
 /**
  * Calculates Maximally stable extremal regions
  * Algorithm based on Linear Time Maximally Stable Extremal Regions
- * by David Nistér and Henrik Stewénius (2008)
+ * by David Nist_r and Henrik Stew_nius (2008)
  *
  * User: Shotty
  * Date: 28.06.2010
