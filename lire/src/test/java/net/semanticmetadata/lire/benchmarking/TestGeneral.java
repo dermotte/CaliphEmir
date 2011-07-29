@@ -34,11 +34,11 @@ package net.semanticmetadata.lire.benchmarking;
 //import Jama.SingularValueDecomposition;
 
 import junit.framework.TestCase;
-import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.ImageSearcher;
+import net.semanticmetadata.lire.*;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
-import net.semanticmetadata.lire.impl.*;
+import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
+import net.semanticmetadata.lire.impl.SimpleImageSearchHits;
+import net.semanticmetadata.lire.impl.SimpleResult;
 import net.semanticmetadata.lire.utils.FileUtils;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
@@ -86,7 +86,9 @@ public class TestGeneral extends TestCase {
 //        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
 //        builder.addBuilder(new GenericDocumentBuilder(SimpleColorHistogram.class, "FIELD_CH"));
 //        builder.addBuilder(new GenericDocumentBuilder(AutoColorCorrelogram.class, "FIELD_ACC"));
-        builder.addBuilder(new SimpleDocumentBuilder(true, true, true));
+        builder.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
 
         // creating test cases ...
         String testcasesDir = "C:\\Temp\\RGA\\cameraShots\\";
@@ -175,7 +177,7 @@ public class TestGeneral extends TestCase {
 //        System.out.println("> ScalableColor");
 //        computeErrorRate(new SimpleImageSearcher(maxHits, 1.0f, 0f, 0f), "ScalableColor");
         System.out.println("> ColorLayout");
-        computeErrorRate(new SimpleImageSearcher(maxHits, 0f, 1f, 0f), "ColorLayout");
+        computeErrorRate(ImageSearcherFactory.createColorLayoutImageSearcher(maxHits), "ColorLayout");
         System.out.println("> ColorLayout (LSA)");
 //        computeErrorRateLsa(new SimpleImageSearcher(maxHits, 0f, 1f, 0f), "ColorLayout-Lsa");
 //        System.out.println("> Edgehist");

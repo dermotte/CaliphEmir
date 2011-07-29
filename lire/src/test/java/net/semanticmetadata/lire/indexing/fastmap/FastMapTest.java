@@ -29,15 +29,10 @@
  */
 package net.semanticmetadata.lire.indexing.fastmap;
 
-import at.lux.imageanalysis.ColorLayoutImpl;
-import at.lux.imageanalysis.EdgeHistogramImplementation;
-import at.lux.imageanalysis.ScalableColorImpl;
-import at.lux.imageanalysis.VisualDescriptor;
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilderFactory;
-import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
-import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
+import net.semanticmetadata.lire.imageanalysis.*;
 import org.apache.lucene.document.Document;
 
 import java.io.FileInputStream;
@@ -77,12 +72,14 @@ public class FastMapTest extends TestCase {
 
     public void testColorLayoutFastMap() {
         // creating the list of user objects ...
-        LinkedList<VisualDescriptor> objs = new LinkedList<VisualDescriptor>();
+        LinkedList<LireFeature> objs = new LinkedList<LireFeature>();
         for (Iterator<Document> documentIterator = docs.iterator(); documentIterator.hasNext(); ) {
             Document document = documentIterator.next();
             String[] cls = document.getValues(DocumentBuilder.FIELD_NAME_COLORLAYOUT);
             if (cls.length > 0) {
-                objs.add(new ColorLayoutImpl(cls[0]));
+                ColorLayout clt = new ColorLayout();
+                clt.setStringRepresentation(cls[0]);
+                objs.add(clt);
             }
         }
         System.out.println("--------------- < COLORLAYOUT > ---------------");
@@ -127,18 +124,18 @@ public class FastMapTest extends TestCase {
         Class descriptor = SimpleColorHistogram.class;
         String fieldName = DocumentBuilder.FIELD_NAME_COLORHISTOGRAM;
 
-        LinkedList<VisualDescriptor> objs = new LinkedList<VisualDescriptor>();
+        LinkedList<LireFeature> objs = new LinkedList<LireFeature>();
         for (Iterator<Document> documentIterator = docs.iterator(); documentIterator.hasNext(); ) {
             Document document = documentIterator.next();
             String[] cls = document.getValues(fieldName);
             if (cls.length > 0) {
-                VisualDescriptor tempDescriptor = (VisualDescriptor) descriptor.newInstance();
+                LireFeature tempDescriptor = (LireFeature) descriptor.newInstance();
                 tempDescriptor.setStringRepresentation(cls[0]);
                 objs.add(tempDescriptor);
             }
         }
         // create set of non mapped objects in the first place:
-        LinkedList<VisualDescriptor> remainingObj = new LinkedList<VisualDescriptor>();
+        LinkedList<LireFeature> remainingObj = new LinkedList<LireFeature>();
         remainingObj.add(objs.removeLast());
 
         System.out.println("--------------- < 1st run of iterative fastmap > ---------------");
@@ -159,12 +156,14 @@ public class FastMapTest extends TestCase {
 
     public void testScalableColorFastMap() {
         // creating the list of user objects ...
-        LinkedList<VisualDescriptor> objs = new LinkedList<VisualDescriptor>();
+        LinkedList<LireFeature> objs = new LinkedList<LireFeature>();
         for (Iterator<Document> documentIterator = docs.iterator(); documentIterator.hasNext(); ) {
             Document document = documentIterator.next();
             String[] cls = document.getValues(DocumentBuilder.FIELD_NAME_SCALABLECOLOR);
             if (cls.length > 0) {
-                objs.add(new ScalableColorImpl(cls[0]));
+                ScalableColor sct = new ScalableColor();
+                sct.setStringRepresentation(cls[0]);
+                objs.add(sct);
             }
         }
         System.out.println("--------------- < ScalableColor > ---------------");
@@ -179,12 +178,15 @@ public class FastMapTest extends TestCase {
 
     public void testEdgeHistogramFastMap() {
         // creating the list of user objects ...
-        LinkedList<VisualDescriptor> objs = new LinkedList<VisualDescriptor>();
+        LinkedList<LireFeature> objs = new LinkedList<LireFeature>();
         for (Iterator<Document> documentIterator = docs.iterator(); documentIterator.hasNext(); ) {
             Document document = documentIterator.next();
             String[] cls = document.getValues(DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM);
             if (cls.length > 0) {
-                objs.add(new EdgeHistogramImplementation(cls[0]));
+                EdgeHistogram eht = new EdgeHistogram();
+                eht.setStringRepresentation(cls[0]);
+
+                objs.add(eht);
             }
         }
         System.out.println("--------------- < EdgeHistogram > ---------------");
@@ -196,7 +198,7 @@ public class FastMapTest extends TestCase {
 
     public void testAutoColorCorrelogramFastMap() {
         // creating the list of user objects ...
-        LinkedList<VisualDescriptor> objs = new LinkedList<VisualDescriptor>();
+        LinkedList<LireFeature> objs = new LinkedList<LireFeature>();
         for (Iterator<Document> documentIterator = docs.iterator(); documentIterator.hasNext(); ) {
             Document document = documentIterator.next();
             String[] cls = document.getValues(DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM);
@@ -213,8 +215,8 @@ public class FastMapTest extends TestCase {
         System.out.println("Time taken: ~ " + (nano / (1000 * 1000)) + " ms");
     }
 
-    private int[][] createArrayFastMapForObjects(LinkedList<VisualDescriptor> objs, int[][] savedPivots) {
-        ArrayFastmapDistanceMatrix fdm = new ArrayFastmapDistanceMatrix(objs, new VisualDescriptorDistanceCalculator());
+    private int[][] createArrayFastMapForObjects(LinkedList<LireFeature> objs, int[][] savedPivots) {
+        ArrayFastmapDistanceMatrix fdm = new ArrayFastmapDistanceMatrix(objs, new FeatureDistanceCalculator());
         // note that fastmap needs at least dimensions*2 objects as it needs enough pivots :)
         FastMap fm;
         if (savedPivots == null) fm = new FastMap(fdm, 3);
@@ -237,8 +239,8 @@ public class FastMapTest extends TestCase {
         return fm.getPivots();
     }
 
-    private int[][] createFastMapForObjects(LinkedList<VisualDescriptor> objs, int[][] savedPivots) {
-        FastmapDistanceMatrix fdm = new NocacheFastmapDistanceMatrix(objs, new VisualDescriptorDistanceCalculator());
+    private int[][] createFastMapForObjects(LinkedList<LireFeature> objs, int[][] savedPivots) {
+        FastmapDistanceMatrix fdm = new NocacheFastmapDistanceMatrix(objs, new FeatureDistanceCalculator());
         // note that fastmap needs at least dimensions*2 objects as it needs enough pivots :)
         FastMap fm;
         if (savedPivots == null) fm = new FastMap(fdm, 3);

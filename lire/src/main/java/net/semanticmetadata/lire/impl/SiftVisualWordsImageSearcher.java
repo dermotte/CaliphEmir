@@ -36,6 +36,7 @@ import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.FieldInvertState;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -95,9 +96,11 @@ public class SiftVisualWordsImageSearcher extends AbstractImageSearcher {
     }
 
     private static class TfIdfSimilarity extends Similarity {
+
+
         @Override
-        public float lengthNorm(String s, int i) {
-            return 1;
+        public float computeNorm(String s, FieldInvertState fieldInvertState) {
+            return 0;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
         @Override

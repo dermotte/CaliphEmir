@@ -90,7 +90,7 @@ public class IndexVisualWordsTest extends TestCase {
 //        documentBuilder.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
 //        documentBuilder.addBuilder(new SimpleDocumentBuilder(false, false, true));
 //        documentBuilder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
-//        documentBuilder.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
+//        documentBuilder.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
 
 
         IndexWriter iw = new IndexWriter(FSDirectory.open(new File(index)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);

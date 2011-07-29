@@ -78,6 +78,7 @@ public class DocumentBuilderFactory {
      *
      * @return a simple and efficient DocumentBuilder.
      * @see net.semanticmetadata.lire.impl.SimpleDocumentBuilder
+     * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
      */
     public static DocumentBuilder getDefaultDocumentBuilder() {
         return new SimpleDocumentBuilder(false, true, true);
@@ -90,18 +91,37 @@ public class DocumentBuilderFactory {
      *
      * @return a fully featured DocumentBuilder.
      * @see net.semanticmetadata.lire.impl.SimpleDocumentBuilder
+     * @deprecated Use ChainedDocumentBuilder instead
      */
     public static DocumentBuilder getExtensiveDocumentBuilder() {
         return new SimpleDocumentBuilder(true, true, true);
     }
 
     /**
-     * Creates a fast (byte[] based) version of the ColorLayout document builder.
+     * Creates a fast (byte[] based) version of the MPEG-7 ColorLayout document builder.
      *
      * @return the document builder.
      */
     public static DocumentBuilder getColorLayoutBuilder() {
         return new GenericFastDocumentBuilder(ColorLayout.class, DocumentBuilder.FIELD_NAME_COLORLAYOUT);
+    }
+
+    /**
+     * Creates a fast (byte[] based) version of the MPEG-7 EdgeHistogram document builder.
+     *
+     * @return the document builder.
+     */
+    public static DocumentBuilder getEdgeHistogramBuilder() {
+        return new GenericFastDocumentBuilder(EdgeHistogram.class, DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM);
+    }
+
+    /**
+     * Creates a fast (byte[] based) version of the MPEG-7 ColorLayout document builder.
+     *
+     * @return the document builder.
+     */
+    public static DocumentBuilder getScalableColorBuilder() {
+        return new GenericFastDocumentBuilder(ColorLayout.class, DocumentBuilder.FIELD_NAME_SCALABLECOLOR);
     }
 
     /**
@@ -111,6 +131,7 @@ public class DocumentBuilderFactory {
      *
      * @return a fully featured DocumentBuilder.
      * @see net.semanticmetadata.lire.impl.SimpleDocumentBuilder
+     * @deprecated Use ColorHistogram instead
      */
     public static DocumentBuilder getColorOnlyDocumentBuilder() {
         return new SimpleDocumentBuilder(true, true, false);
@@ -125,6 +146,7 @@ public class DocumentBuilderFactory {
      *
      * @return a simple and fast DocumentBuilder.
      * @see net.semanticmetadata.lire.impl.SimpleDocumentBuilder
+     * @deprecated use MPEG-7 feature ColorLayout or CEDD, which are both really fast.
      */
     public static DocumentBuilder getFastDocumentBuilder() {
         return new SimpleDocumentBuilder(false, true, false);
@@ -139,7 +161,7 @@ public class DocumentBuilderFactory {
      *
      * @return the created AutoCorrelation feature DocumentBuilder.
      */
-    public static DocumentBuilder getDefaultAutoColorCorrelationDocumentBuilder() {
+    public static DocumentBuilder getAutoColorCorrelogramDocumentBuilder() {
         return new GenericDocumentBuilder(AutoColorCorrelogram.class, DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM, GenericDocumentBuilder.Mode.Fast);
     }
 
@@ -152,6 +174,7 @@ public class DocumentBuilderFactory {
      * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
      *
      * @return the created AutoCorrelation feature DocumentBuilder.
+     * @deprecated Use #getAutoColorCorrelogramDocumentBuilder instead.
      */
     public static DocumentBuilder getFastAutoColorCorrelationDocumentBuilder() {
         return new CorrelogramDocumentBuilder(AutoColorCorrelogram.Mode.SuperFast);
@@ -162,7 +185,7 @@ public class DocumentBuilderFactory {
      * {@link net.semanticmetadata.lire.imageanalysis.CEDD} for more information on the image feature.
      * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
      *
-     * @return the created AutoCorrelation feature DocumentBuilder.
+     * @return the created CEDD feature DocumentBuilder.
      */
     public static DocumentBuilder getCEDDDocumentBuilder() {
         return new CEDDDocumentBuilder();
@@ -175,10 +198,33 @@ public class DocumentBuilderFactory {
      * {@link net.semanticmetadata.lire.imageanalysis.FCTH} for more information on the image feature.
      * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
      *
-     * @return the created AutoCorrelation feature DocumentBuilder.
+     * @return the created FCTH feature DocumentBuilder.
      */
     public static DocumentBuilder getFCTHDocumentBuilder() {
         return new GenericDocumentBuilder(FCTH.class, DocumentBuilder.FIELD_NAME_FCTH, GenericDocumentBuilder.Mode.Fast);
+    }
+
+    /**
+     * Creates a DocumentBuilder for the JCD feature. See
+     * {@link net.semanticmetadata.lire.imageanalysis.JCD} for more information on the image feature.
+     * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @return the created DocumentBuilder
+     */
+    public static DocumentBuilder getJCDDocumentBuilder() {
+        return new GenericDocumentBuilder(JCD.class, DocumentBuilder.FIELD_NAME_JCD, GenericDocumentBuilder.Mode.Fast);
+    }
+
+    /**
+     * Creates a DocumentBuilder for the JpegCoefficientHistogram feature. See
+     * {@link net.semanticmetadata.lire.imageanalysis.JpegCoefficientHistogram} for more
+     * information on the image feature.
+     * Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @return the created DocumentBuilder
+     */
+    public static DocumentBuilder getJpegCoefficientHistogramDocumentBuilder() {
+        return new GenericDocumentBuilder(JpegCoefficientHistogram.class, DocumentBuilder.FIELD_NAME_JPEGCOEFFS, GenericDocumentBuilder.Mode.Fast);
     }
 
     /**
@@ -217,9 +263,10 @@ public class DocumentBuilderFactory {
         return new GenericFastDocumentBuilder(Gabor.class, DocumentBuilder.FIELD_NAME_GABOR);
     }
 
+
     /**
      * Creates and returns a DocumentBuilder, which contains all available features. For
-     * AutoColorCorrelogram the getDefaultAutoColorCorrelationDocumentBuilder() is used. Therefore
+     * AutoColorCorrelogram the getAutoColorCorrelogramDocumentBuilder() is used. Therefore
      * it is compatible with the respective Searcher.
      *
      * @return a combination of all available features.
@@ -227,7 +274,7 @@ public class DocumentBuilderFactory {
     public static DocumentBuilder getFullDocumentBuilder() {
         ChainedDocumentBuilder cdb = new ChainedDocumentBuilder();
         cdb.addBuilder(DocumentBuilderFactory.getExtensiveDocumentBuilder());
-        cdb.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
+        cdb.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());

@@ -30,7 +30,7 @@
 
 package net.semanticmetadata.lire.indexing.fastmap;
 
-import at.lux.imageanalysis.VisualDescriptor;
+import net.semanticmetadata.lire.imageanalysis.LireFeature;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -50,7 +50,7 @@ public class SavedPivots implements Serializable {
     private static final long serialVersionUID = 1L;
     String[][] pivots;
 
-    public SavedPivots(int[][] piv, List<VisualDescriptor> objs) {
+    public SavedPivots(int[][] piv, List<LireFeature> objs) {
         // create a String array holding the two pivots per dimension.
         this.pivots = new String[2][piv[0].length];
         // save string representations for pivots:
@@ -65,20 +65,20 @@ public class SavedPivots implements Serializable {
      * to the list of objects to fastmap.
      *
      * @param objs       the list of objects to fastmap
-     * @param descriptor the actual descriptor class of the VisualDescriptor
+     * @param descriptor the actual descriptor class of the LireFeature
      * @return
      */
-    public int[][] getPivots(List<VisualDescriptor> objs, Class<? extends VisualDescriptor> descriptor) throws IllegalAccessException, InstantiationException {
+    public int[][] getPivots(List<LireFeature> objs, Class<? extends LireFeature> descriptor) throws IllegalAccessException, InstantiationException {
         int[][] retVal = new int[2][pivots[0].length];
-        List<VisualDescriptor> pivs = new LinkedList<VisualDescriptor>();
+        List<LireFeature> pivs = new LinkedList<LireFeature>();
         int countIndex = 0;
         for (int i = 0; i < pivots[0].length; i++) {
-            VisualDescriptor vd1 = (VisualDescriptor) descriptor.newInstance();
+            LireFeature vd1 = (LireFeature) descriptor.newInstance();
             vd1.setStringRepresentation(pivots[0][i]);
             pivs.add(vd1);
             retVal[0][i] = countIndex;
             countIndex++;
-            VisualDescriptor vd2 = (VisualDescriptor) descriptor.newInstance();
+            LireFeature vd2 = (LireFeature) descriptor.newInstance();
             vd2.setStringRepresentation(pivots[1][i]);
             pivs.add(vd2);
             retVal[1][i] = countIndex;

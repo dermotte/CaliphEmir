@@ -29,7 +29,6 @@
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
@@ -287,7 +286,7 @@ public class Gabor implements LireFeature {
         return histogram;
     }
 
-    public float getDistance(VisualDescriptor vd) {   // added by mlux
+    public float getDistance(LireFeature vd) {   // added by mlux
         // Check if instance of the right class ...
         if (!(vd instanceof Gabor))
             throw new UnsupportedOperationException("Wrong descriptor.");

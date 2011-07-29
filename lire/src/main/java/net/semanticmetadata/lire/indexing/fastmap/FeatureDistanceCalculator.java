@@ -27,33 +27,33 @@
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
+package net.semanticmetadata.lire.indexing.fastmap;
 
-package net.semanticmetadata.lire.impl;
 
-import junit.framework.TestCase;
-import net.semanticmetadata.lire.DocumentBuilder;
-import org.apache.lucene.document.Document;
-
-import java.io.FileInputStream;
-import java.io.IOException;
+import net.semanticmetadata.lire.imageanalysis.LireFeature;
 
 /**
- * This file is part of Caliph & Emir
- * Date: 31.01.2006
- * Time: 23:32:20
+ * Date: 13.01.2005
+ * Time: 22:47:01
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class SimpleDocumentBuilderTest extends TestCase {
-    public void testCreateDocuments() throws IOException {
-        SimpleDocumentBuilder builder;
-        builder = new SimpleDocumentBuilder(true, false, true);
-        Document doc = builder.createDocument(new FileInputStream("./src/test/resources/images/img01.JPG"), "img01.JPG");
-        String[] sc = doc.getValues(DocumentBuilder.FIELD_NAME_SCALABLECOLOR);
-        String[] eh = doc.getValues(DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM);
-        String[] id = doc.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER);
-        System.out.println("id = " + id[0]);
-        System.out.println("sc = " + sc[0]);
-        System.out.println("eh = " + eh[0]);
+public class FeatureDistanceCalculator extends DistanceCalculator {
+
+    /**
+     * Allows the distance calculations based on visual descriptors.
+     *
+     * @param o1
+     * @param o2
+     * @return
+     */
+    public double getDistance(Object o1, Object o2) {
+        if (o1 instanceof LireFeature && o2 instanceof LireFeature) {
+            LireFeature c1 = (LireFeature) o1;
+            LireFeature c2 = (LireFeature) o2;
+            return c1.getDistance(c2);
+        } else {
+            return -1d;
+        }
     }
 }

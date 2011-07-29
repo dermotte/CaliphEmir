@@ -159,7 +159,7 @@ public class TestImageSearcher extends TestCase {
         IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
-        ImageSearcher searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(10);
+        ImageSearcher searcher = ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(10);
         FileInputStream imageStream = new FileInputStream(testFilesPath + testFiles[0]);
         BufferedImage bimg = ImageIO.read(imageStream);
         ImageSearchHits hits = null;

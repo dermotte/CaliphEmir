@@ -30,13 +30,13 @@
 
 package net.semanticmetadata.lire.impl;
 
-import at.lux.imageanalysis.ColorLayoutImpl;
-import at.lux.imageanalysis.EdgeHistogramImplementation;
-import at.lux.imageanalysis.ScalableColorImpl;
 import net.semanticmetadata.lire.AbstractImageSearcher;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
+import net.semanticmetadata.lire.imageanalysis.ColorLayout;
+import net.semanticmetadata.lire.imageanalysis.EdgeHistogram;
+import net.semanticmetadata.lire.imageanalysis.ScalableColor;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 
@@ -54,6 +54,7 @@ import java.util.TreeSet;
  * <br>Time: 00:17:02
  *
  * @author Mathias Lux, mathias@juggle.at
+ * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
  */
 public class SimpleImageSearcher extends AbstractImageSearcher {
     private int maxHits = 10;
@@ -79,15 +80,21 @@ public class SimpleImageSearcher extends AbstractImageSearcher {
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {
-        ScalableColorImpl sc = null;
-        ColorLayoutImpl cl = null;
-        EdgeHistogramImplementation eh = null;
-        if (colorHistogramWeight > 0f)
-            sc = new ScalableColorImpl(image);
-        if (colorDistributionWeight > 0f)
-            cl = new ColorLayoutImpl(image);
-        if (textureWeight > 0f)
-            eh = new EdgeHistogramImplementation(image);
+        ScalableColor sc = null;
+        ColorLayout cl = null;
+        EdgeHistogram eh = null;
+        if (colorHistogramWeight > 0f) {
+            sc = new ScalableColor();
+            sc.extract(image);
+        }
+        if (colorDistributionWeight > 0f) {
+            cl = new ColorLayout();
+            cl.extract(image);
+        }
+        if (textureWeight > 0f) {
+            eh = new EdgeHistogram();
+            eh.extract(image);
+        }
 
         float maxDistance = findSimilar(reader, cl, sc, eh);
         return new SimpleImageSearchHits(this.docs, maxDistance);
@@ -101,7 +108,7 @@ public class SimpleImageSearcher extends AbstractImageSearcher {
      * @return the maximum distance found for normalizing.
      * @throws IOException
      */
-    private float findSimilar(IndexReader reader, ColorLayoutImpl cl, ScalableColorImpl sc, EdgeHistogramImplementation eh) throws IOException {
+    private float findSimilar(IndexReader reader, ColorLayout cl, ScalableColor sc, EdgeHistogram eh) throws IOException {
         float maxDistance = -1f, overallMaxDistance = -1f;
         boolean hasDeletions = reader.hasDeletions();
 
@@ -142,14 +149,15 @@ public class SimpleImageSearcher extends AbstractImageSearcher {
         return maxDistance;
     }
 
-    private float getDistance(Document d, ColorLayoutImpl cl, ScalableColorImpl sc, EdgeHistogramImplementation eh) {
+    private float getDistance(Document d, ColorLayout cl, ScalableColor sc, EdgeHistogram eh) {
         float distance = 0f;
         int descriptorCount = 0;
 
         if (cl != null) {
             String[] cls = d.getValues(DocumentBuilder.FIELD_NAME_COLORLAYOUT);
             if (cls != null && cls.length > 0) {
-                ColorLayoutImpl clsi = new ColorLayoutImpl(cls[0]);
+                ColorLayout clsi = new ColorLayout();
+                clsi.setStringRepresentation(cls[0]);
                 distance += cl.getDistance(clsi) * colorDistributionWeight;
                 descriptorCount++;
             }
@@ -158,7 +166,8 @@ public class SimpleImageSearcher extends AbstractImageSearcher {
         if (sc != null) {
             String[] scs = d.getValues(DocumentBuilder.FIELD_NAME_SCALABLECOLOR);
             if (scs != null && scs.length > 0) {
-                ScalableColorImpl scsi = new ScalableColorImpl(scs[0]);
+                ScalableColor scsi = new ScalableColor();
+                scsi.setStringRepresentation(scs[0]);
                 distance += sc.getDistance(scsi) * colorHistogramWeight;
                 descriptorCount++;
             }
@@ -167,7 +176,8 @@ public class SimpleImageSearcher extends AbstractImageSearcher {
         if (eh != null) {
             String[] ehs = d.getValues(DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM);
             if (ehs != null && ehs.length > 0) {
-                EdgeHistogramImplementation ehsi = new EdgeHistogramImplementation(ehs[0]);
+                EdgeHistogram ehsi = new EdgeHistogram();
+                ehsi.setStringRepresentation(ehs[0]);
                 distance += eh.getDistance(ehsi) * textureWeight;
                 descriptorCount++;
             }
@@ -182,19 +192,25 @@ public class SimpleImageSearcher extends AbstractImageSearcher {
     }
 
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
-        ScalableColorImpl sc = null;
-        ColorLayoutImpl cl = null;
-        EdgeHistogramImplementation eh = null;
+        ScalableColor sc = null;
+        ColorLayout cl = null;
+        EdgeHistogram eh = null;
 
         String[] cls = doc.getValues(DocumentBuilder.FIELD_NAME_COLORLAYOUT);
-        if (cls != null && cls.length > 0)
-            cl = new ColorLayoutImpl(cls[0]);
+        if (cls != null && cls.length > 0) {
+            cl = new ColorLayout();
+            cl.setStringRepresentation(cls[0]);
+        }
         String[] scs = doc.getValues(DocumentBuilder.FIELD_NAME_SCALABLECOLOR);
-        if (scs != null && scs.length > 0)
-            sc = new ScalableColorImpl(scs[0]);
+        if (scs != null && scs.length > 0) {
+            sc = new ScalableColor();
+            sc.setStringRepresentation(scs[0]);
+        }
         String[] ehs = doc.getValues(DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM);
-        if (ehs != null && ehs.length > 0)
-            eh = new EdgeHistogramImplementation(ehs[0]);
+        if (ehs != null && ehs.length > 0) {
+            eh = new EdgeHistogram();
+            eh.setStringRepresentation(ehs[0]);
+        }
 
         float maxDistance = findSimilar(reader, cl, sc, eh);
 
@@ -206,19 +222,25 @@ public class SimpleImageSearcher extends AbstractImageSearcher {
         if (!IndexReader.indexExists(reader.directory()))
             throw new FileNotFoundException("No index found at this specific location.");
         Document doc = reader.document(0);
-        ScalableColorImpl sc = null;
-        ColorLayoutImpl cl = null;
-        EdgeHistogramImplementation eh = null;
+        ScalableColor sc = null;
+        ColorLayout cl = null;
+        EdgeHistogram eh = null;
 
         String[] cls = doc.getValues(DocumentBuilder.FIELD_NAME_COLORLAYOUT);
-        if (cls != null && cls.length > 0)
-            cl = new ColorLayoutImpl(cls[0]);
+        if (cls != null && cls.length > 0) {
+            cl = new ColorLayout();
+            cl.setStringRepresentation(cls[0]);
+        }
         String[] scs = doc.getValues(DocumentBuilder.FIELD_NAME_SCALABLECOLOR);
-        if (scs != null && scs.length > 0)
-            sc = new ScalableColorImpl(scs[0]);
+        if (scs != null && scs.length > 0) {
+            sc = new ScalableColor();
+            sc.setStringRepresentation(scs[0]);
+        }
         String[] ehs = doc.getValues(DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM);
-        if (ehs != null && ehs.length > 0)
-            eh = new EdgeHistogramImplementation(ehs[0]);
+        if (ehs != null && ehs.length > 0) {
+            eh = new EdgeHistogram();
+            eh.setStringRepresentation(ehs[0]);
+        }
 
         HashMap<Float, List<String>> duplicates = new HashMap<Float, List<String>>();
 

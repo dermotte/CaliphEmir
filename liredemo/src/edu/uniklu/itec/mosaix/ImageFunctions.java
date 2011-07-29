@@ -1,45 +1,57 @@
-package edu.uniklu.itec.mosaix;
-
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.*;
-import javax.imageio.ImageIO;
-import net.semanticmetadata.lire.*;
-import org.apache.lucene.analysis.*;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.*;
-import edu.uniklu.itec.mosaix.engine.Engine;
-import edu.uniklu.itec.mosaix.engine.LeastUsedWeightingStrategy;
-import edu.uniklu.itec.mosaix.engine.ProportionWeightingStrategy;
-import liredemo.ProgressMonitor;
-import org.apache.lucene.store.FSDirectory;
-
 /*
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
- *
- * Caliph & Emir is free software; you can redistribute it and/or modify
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Caliph & Emir is distributed in the hope that it will be useful,
+ * LIRe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Caliph & Emir; if not, write to the Free Software
+ * along with LIRe; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
  * --------------------
- * (c) 2002-2007 by Mathias Lux (mathias@juggle.at), Lukas Esterle & Manuel Warum.
- * http://www.juggle.at, http://www.SemanticMetadata.net
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
  */
+
+package edu.uniklu.itec.mosaix;
+
+import edu.uniklu.itec.mosaix.engine.Engine;
+import edu.uniklu.itec.mosaix.engine.LeastUsedWeightingStrategy;
+import edu.uniklu.itec.mosaix.engine.ProportionWeightingStrategy;
+import liredemo.ProgressMonitor;
+import net.semanticmetadata.lire.*;
+import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * provides all relevant image-functions for the mosaix project!
+ *
  * @author Lukas Esterle
  * @author Mathias Lux, mathias@juggle.at
  */
@@ -55,14 +67,15 @@ public class ImageFunctions {
 
     /**
      * Scales a BufferedImage to a specified percentage.
-     * @param bi the BufferdImage to be scaled
+     *
+     * @param bi   the BufferdImage to be scaled
      * @param perc the scalig percentage
      * @return a scaled BufferedImage
      */
     public static BufferedImage scale(BufferedImage bi, double perc) {
 
-        int cw = (int) (bi.getWidth()*perc/100);
-        int ch = (int) (bi.getHeight()*perc/100);
+        int cw = (int) (bi.getWidth() * perc / 100);
+        int ch = (int) (bi.getHeight() * perc / 100);
         BufferedImage scaled = new BufferedImage(cw, ch, bi.getType());
 
         Graphics g = scaled.getGraphics();
@@ -73,6 +86,7 @@ public class ImageFunctions {
 
     /**
      * loads an image as BufferedImage
+     *
      * @param file the file to be loaded
      * @return an BufferedImage of the file
      */
@@ -105,7 +119,8 @@ public class ImageFunctions {
     /**
      * Splitts the BufferedImage up into {@code nrRaster} rows and {@code nrRaster} columns.
      * Every element is put into an 2-dimensional array
-     * @param bi the original BufferedImage
+     *
+     * @param bi       the original BufferedImage
      * @param nrRaster number of rows (columns) the image will be splitt
      * @return a 2-dimensional BufferedImage array with the elements
      */
@@ -126,7 +141,8 @@ public class ImageFunctions {
 
     /**
      * this method opens searches for a similar image within the allready indexed image-files
-     * @param bi the image for which a similar one is searched
+     *
+     * @param bi   the image for which a similar one is searched
      * @param path the path to the indexed files
      * @return ImageSearchHits - result from LIRe, max. 10 elements
      */
@@ -139,10 +155,10 @@ public class ImageFunctions {
             if (searcher == null) {
                 if (colorHist > 0f) {
 //              et  System.out.println("Using AutoColorCorrelogram Searcher ...");
-//                    searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(50);
+//                    searcher = ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(50);
                     searcher = ImageSearcherFactory.createCEDDImageSearcher(50);
                 } else if (texture > 0f) {
-                    searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(50);
+                    searcher = ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(50);
                 } else if (colorDist > 0f) {
 //                System.out.println("Using Default Weighted Searcher ...");
                     searcher = ImageSearcherFactory.createWeightedSearcher(50, colorHist, colorDist, texture); //.createSimpleSearcher(10);
@@ -158,6 +174,7 @@ public class ImageFunctions {
     /**
      * uses LIRe to index BufferedImages within the param path. but only if
      * an index does not exist or the user forced the indexing process
+     *
      * @param path the path to the bufferedImages which will be indexed
      * @return the number of indexed images
      */
@@ -195,7 +212,8 @@ public class ImageFunctions {
 
     /**
      * this method returns all images from a directory in an arrayList
-     * @param directory the directory where all images should be found
+     *
+     * @param directory                 the directory where all images should be found
      * @param descendIntoSubDirectories - decides if subdirectories should be used also
      * @return the filenames as ArrayList<String>
      * @throws IOException
@@ -259,7 +277,7 @@ public class ImageFunctions {
                     result = eng.findBestMatch(splitted[i][j], hits, perc);
 //					scaled = this.scale(result, perc);
                     finalImg = this.assemble(finalImg, result, j, i, raster, true);
-                    progress.setProgress((int) (100* ( (float) (i*splitted.length+j+1)) /steps));
+                    progress.setProgress((int) (100 * ((float) (i * splitted.length + j + 1)) / steps));
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -277,16 +295,16 @@ public class ImageFunctions {
     /**
      * This method assembles two bufferedImages to one new Image! the extending image needs to
      * provide enough space for the extender (second) image.
-     *
+     * <p/>
      * posX and posY defines the position of the extender image in an imaginary raster
-     *
+     * <p/>
      * rasternr defines the number of elements in one row (column)
      *
      * @param extending the image which will be extanded
-     * @param extender the image which will extand the extending
-     * @param posX the x-position
-     * @param posY the y-position
-     * @param nrRaster number of elements in one row (column)
+     * @param extender  the image which will extand the extending
+     * @param posX      the x-position
+     * @param posY      the y-position
+     * @param nrRaster  number of elements in one row (column)
      * @return the assembled BufferedImage
      */
     public BufferedImage assemble(BufferedImage extending, BufferedImage extender, int posX, int posY, Dimension nrRaster, boolean scale) {

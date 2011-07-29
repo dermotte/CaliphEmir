@@ -80,6 +80,7 @@ public interface DocumentBuilder {
     public static final String FIELD_NAME_COLORHISTOGRAM = "featureColorHistogram";
     public static final String FIELD_NAME_CEDD = "featureCEDD";
     public static final String FIELD_NAME_FCTH = "featureFCTH";
+    public static final String FIELD_NAME_JCD = "featureJCD";
     public static final String FIELD_NAME_TAMURA = "featureTAMURA";
     public static final String FIELD_NAME_GABOR = "featureGabor";
     public static final String FIELD_NAME_SIFT = "featureSift";
@@ -94,7 +95,8 @@ public interface DocumentBuilder {
     public static final String FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM = "featureMSERHistogram";
     public static final String FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS = "featureMSERHistogramVWords";
     public static final String FIELD_NAME_MSER = "featureMSER";
-    String FIELD_NAME_BASIC_FEATURES = "featureBasic";
+    public static final String FIELD_NAME_BASIC_FEATURES = "featureBasic";
+    public static final String FIELD_NAME_JPEGCOEFFS = "featureJpegCoeffs";
 
 
     /**
@@ -117,4 +119,5 @@ public interface DocumentBuilder {
      * @throws IOException in case the image cannot be retrieved from the InputStream
      */
     public Document createDocument(InputStream image, String identifier) throws IOException;
+
 }

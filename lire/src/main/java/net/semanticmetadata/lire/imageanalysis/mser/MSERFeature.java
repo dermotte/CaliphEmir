@@ -30,7 +30,6 @@
 
 package net.semanticmetadata.lire.imageanalysis.mser;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.Histogram;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.utils.ConversionUtils;
@@ -64,9 +63,9 @@ public class MSERFeature extends Histogram implements LireFeature {
         // does nothing ....
     }
 
-    public float getDistance(VisualDescriptor visualDescriptor) {
-        if (!(visualDescriptor instanceof MSERFeature)) return -1;
-        return MetricsUtils.distL2(descriptor, ((MSERFeature) visualDescriptor).descriptor);
+    public float getDistance(LireFeature feature) {
+        if (!(feature instanceof MSERFeature)) return -1;
+        return MetricsUtils.distL2(descriptor, ((MSERFeature) feature).descriptor);
     }
 
     public String getStringRepresentation() {

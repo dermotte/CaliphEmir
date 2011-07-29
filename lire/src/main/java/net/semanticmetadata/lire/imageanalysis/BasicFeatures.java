@@ -31,7 +31,6 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.utils.ImageUtils;
 
 import java.awt.*;
@@ -230,7 +229,7 @@ public class BasicFeatures implements LireFeature {
     }
 
 
-    public float getDistance(VisualDescriptor arg0) {
+    public float getDistance(LireFeature arg0) {
         if (!(arg0 instanceof BasicFeatures))
             throw new UnsupportedOperationException("Wrong descriptor.");
         BasicFeatures in = (BasicFeatures) arg0;

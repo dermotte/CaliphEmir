@@ -41,7 +41,7 @@ import java.util.Arrays;
 public class SerializationUtils {
     /**
      * Converts a byte array with 4 elements to an int. Used to put ints into a byte[] payload in a convenient
-     * and fast way by shifting without using streams (which is kind of slow).
+     * and fast way by shifting without using streams (which is kind of slow). <br/>
      * Taken from http://www.daniweb.com/code/snippet216874.html
      *
      * @param data the input byte array
@@ -60,11 +60,11 @@ public class SerializationUtils {
 
     /**
      * Converts an int to a byte array with 4 elements. Used to put ints into a byte[] payload in a convenient
-     * and fast way by shifting without using streams (which is kind of slow).
+     * and fast way by shifting without using streams (which is kind of slow). <br/>
      * Taken from http://www.daniweb.com/code/snippet216874.html
      *
      * @param data the int to convert
-     * @return the resulting byte array
+     * @return the resulting byte[] array
      * @see net.semanticmetadata.lire.utils.SerializationUtils#toInt(byte[])
      */
     public static byte[] toBytes(int data) {
@@ -74,6 +74,52 @@ public class SerializationUtils {
                 (byte) ((data >> 8) & 0xff),
                 (byte) ((data >> 0) & 0xff),
         };
+    }
+
+    /**
+     * Converts a long to a byte[] array.<br/>
+     * Taken from http://www.daniweb.com/software-development/java/code/216874
+     *
+     * @param data the long to convert
+     * @return the resulting byte[] array
+     * @see #toLong(byte[])
+     */
+    public static byte[] toBytes(long data) {
+        return new byte[]{
+                (byte) ((data >> 56) & 0xff),
+                (byte) ((data >> 48) & 0xff),
+                (byte) ((data >> 40) & 0xff),
+                (byte) ((data >> 32) & 0xff),
+                (byte) ((data >> 24) & 0xff),
+                (byte) ((data >> 16) & 0xff),
+                (byte) ((data >> 8) & 0xff),
+                (byte) ((data >> 0) & 0xff),
+        };
+    }
+
+    /**
+     * Converts a byte[] array with size 8 to a long. <br/>
+     * Taken from http://www.daniweb.com/software-development/java/code/216874
+     *
+     * @param data the byte[] array to convert
+     * @return the resulting long.
+     * @see #toBytes(long)
+     */
+    public static long toLong(byte[] data) {
+        if (data == null || data.length != 8) return 0x0;
+        // ----------
+        return (long) (
+                // (Below) convert to longs before shift because digits
+                //         are lost with ints beyond the 32-bit limit
+                (long) (0xff & data[0]) << 56 |
+                        (long) (0xff & data[1]) << 48 |
+                        (long) (0xff & data[2]) << 40 |
+                        (long) (0xff & data[3]) << 32 |
+                        (long) (0xff & data[4]) << 24 |
+                        (long) (0xff & data[5]) << 16 |
+                        (long) (0xff & data[6]) << 8 |
+                        (long) (0xff & data[7]) << 0
+        );
     }
 
     /**
@@ -175,7 +221,7 @@ public class SerializationUtils {
      * @see net.semanticmetadata.lire.utils.SerializationUtils#toDouble(byte[])
      */
     public static byte[] toBytes(double data) {
-        return toBytes(Float.floatToRawIntBits((float) data));
+        return toBytes(Double.doubleToLongBits(data));
     }
 
     /**
@@ -189,7 +235,7 @@ public class SerializationUtils {
      * @see net.semanticmetadata.lire.utils.SerializationUtils#toBytes(double)
      */
     public static double toDouble(byte[] data) {
-        return (double) Float.intBitsToFloat(toInt(data));
+        return Double.longBitsToDouble(toLong(data));
     }
 
     /**
@@ -199,10 +245,10 @@ public class SerializationUtils {
      * @return a byte array for serialization.
      */
     public static byte[] toByteArray(double[] data) {
-        byte[] tmp, result = new byte[data.length * 4];
+        byte[] tmp, result = new byte[data.length * 8];
         for (int i = 0; i < data.length; i++) {
             tmp = toBytes(data[i]);
-            System.arraycopy(tmp, 0, result, i * 4, 4);
+            System.arraycopy(tmp, 0, result, i * 8, 8);
         }
         return result;
     }
@@ -214,10 +260,10 @@ public class SerializationUtils {
      * @return
      */
     public static double[] toDoubleArray(byte[] data) {
-        double[] result = new double[data.length / 4];
-        byte[] tmp = new byte[4];
+        double[] result = new double[data.length / 8];
+        byte[] tmp = new byte[8];
         for (int i = 0; i < result.length; i++) {
-            System.arraycopy(data, i * 4, tmp, 0, 4);
+            System.arraycopy(data, i * 8, tmp, 0, 8);
             result[i] = toDouble(tmp);
         }
         return result;

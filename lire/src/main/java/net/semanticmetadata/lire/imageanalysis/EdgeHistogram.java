@@ -29,7 +29,8 @@
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.EdgeHistogramImplementation;
+
+import net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation;
 
 /**
  * Just a wrapper for the use of LireFeature.

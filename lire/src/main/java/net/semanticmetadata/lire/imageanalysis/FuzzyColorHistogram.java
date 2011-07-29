@@ -41,7 +41,6 @@
 
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -120,7 +119,7 @@ public class FuzzyColorHistogram implements LireFeature {
     }
 
 
-    public float getDistance(VisualDescriptor vd) {
+    public float getDistance(LireFeature vd) {
         if (!(vd instanceof FuzzyColorHistogram))
             throw new UnsupportedOperationException("Wrong descriptor.");
         FuzzyColorHistogram target = (FuzzyColorHistogram) vd;

@@ -1,6 +1,21 @@
 CHANGES for LIRE
 ================
 
+2011-07-29
+==========
+  - Added loss less serialization to byte[] for doubles and longs
+  - Implemented byte[] representation for JpegCoefficientHistogram
+  - Added JCD feature to DocumentBuilderFactory and ImageSearcherFactory
+  - Added JpegCoefficientHistogram feature to DocumentBuilderFactory and ImageSearcherFactory
+  - Moved EdgeHistogram, ScalableColor and ColorLayout to Lire trunk, caliph-emir-cbir.jar no longer needed.
+  - Merged VisualDescriptor interface into LireFeature
+  - Edited several classes to remove the VisualDescriptor interface.
+  - Deprecated SimpleDocumentBuilder, WeightedSearch and SimpleImageSearcher. Wasn't quite a thing to use actually.
+  - Deprecated the AutoColorCorrelogram "Fast" Option in DocumentBuilderFactory and ImageSearcherFactory
+  - Added ColorLayout, ScalableColor and EdgeHistogram to DocumentBuilderFactory and ImageSearcherFactory
+  - Updated lucene-core to version 3.3.0
+  - TODO: Change deprecated test files etc.
+
 2011-07-28
 ==========
   - Changed default extraction algorithm in AutoColorCorrelogram
@@ -11,7 +26,7 @@ CHANGES for LIRE
   - Added GenericFastImageSearcher and GenericFastDocumentBuilder
   - Changed DocumentBuilderFactory and ImageSearcherFactory to provide byte[] serialization (fast)
     versions of ACC, RGB Histogram, Tamura, Gabor and FCTH.
-  - Changed all the copyrights.
+  - Changed all the copyrights to be consistent.
 
 2011-06-30
 ==========

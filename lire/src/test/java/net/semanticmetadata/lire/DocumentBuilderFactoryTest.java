@@ -44,21 +44,6 @@ import java.io.IOException;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class DocumentBuilderFactoryTest extends TestCase {
-    public void testGetDefaultDocumentBuilder() {
-        DocumentBuilder builder = DocumentBuilderFactory.getDefaultDocumentBuilder();
-        testBuilder(builder);
-    }
-
-    public void testGetExtensiveDocumentBuilder() {
-        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
-        testBuilder(builder);
-    }
-
-    public void testGetFastDocumentBuilder() {
-        DocumentBuilder builder = DocumentBuilderFactory.getFastDocumentBuilder();
-        testBuilder(builder);
-    }
-
     private void testBuilder(DocumentBuilder builder) {
         assertNotNull(builder);
         try {

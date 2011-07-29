@@ -64,16 +64,26 @@ public class SerializationUtilsTest extends TestCase {
 
             double[] test = new double[100];
             for (int i = 0; i < test.length; i++) {
-                test[i] = (double) (Math.random() * 1000);
+                test[i] = (Math.random() * 1000);
             }
             byte[] bytes = SerializationUtils.toByteArray(test);
             double[] floats = SerializationUtils.toDoubleArray(bytes);
 
             for (int i = 0; i < floats.length; i++) {
                 // need to cast to floats due to the loss in precision in conversion.
-                assertEquals((float) floats[i], (float) test[i]);
+                assertEquals(floats[i], test[i]);
             }
         }
+    }
+
+    public void testLongSerialization() {
+        double[] test = new double[100];
+        for (int i = 0; i < test.length; i++) {
+            test[i] = (Math.random() * 1000);
+            long l = Double.doubleToRawLongBits(test[i]);
+            assertEquals(SerializationUtils.toLong(SerializationUtils.toBytes(l)), l);
+        }
+
     }
 
     /**

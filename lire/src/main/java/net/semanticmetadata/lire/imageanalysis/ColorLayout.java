@@ -29,7 +29,7 @@
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.ColorLayoutImpl;
+import net.semanticmetadata.lire.imageanalysis.mpeg7.ColorLayoutImpl;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
 /**
@@ -129,5 +129,18 @@ public class ColorLayout extends ColorLayoutImpl implements LireFeature {
             result[i + numCCoeff + numYCoeff] = CrCoeff[i];
         }
         return result;
+    }
+
+    /**
+     * Compares one descriptor to another.
+     *
+     * @param descriptor
+     * @return the distance from [0,infinite) or -1 if descriptor type does not match
+     */
+
+    public float getDistance(LireFeature descriptor) {
+        if (!(descriptor instanceof ColorLayoutImpl)) return -1f;
+        ColorLayoutImpl cl = (ColorLayoutImpl) descriptor;
+        return (float) ColorLayoutImpl.getSimilarity(YCoeff, CbCoeff, CrCoeff, cl.YCoeff, cl.CbCoeff, cl.CrCoeff);
     }
 }

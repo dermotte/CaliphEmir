@@ -30,7 +30,6 @@
 
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
@@ -301,13 +300,13 @@ public class Tamura implements LireFeature {
         return histogram;
     }
 
-    public float getDistance(VisualDescriptor vd) {
+    public float getDistance(LireFeature feature) {
         // Check if instance of the right class ...
-        if (!(vd instanceof Tamura))
+        if (!(feature instanceof Tamura))
             throw new UnsupportedOperationException("Wrong descriptor.");
 
         // casting ...
-        Tamura tamura = (Tamura) vd;
+        Tamura tamura = (Tamura) feature;
         return (float) getDistance(tamura.histogram, histogram);
     }
 

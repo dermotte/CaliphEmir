@@ -30,7 +30,6 @@
 
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import net.semanticmetadata.lire.utils.MetricsUtils;
 
@@ -87,13 +86,13 @@ public class GeneralColorLayout implements LireFeature {
         return (qH) * 8 + qS;
     }
 
-    public float getDistance(VisualDescriptor visualDescriptor) {
+    public float getDistance(LireFeature feature) {
         int[] pixel1 = new int[3];
         int[] pixel2 = new int[3];
         float dist = 0;
-        if (visualDescriptor instanceof GeneralColorLayout) {
+        if (feature instanceof GeneralColorLayout) {
 
-            return (float) MetricsUtils.distL1(histogram, ((GeneralColorLayout) visualDescriptor).histogram);
+            return (float) MetricsUtils.distL1(histogram, ((GeneralColorLayout) feature).histogram);
         } else return -1f;
     }
 

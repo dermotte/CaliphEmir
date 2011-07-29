@@ -29,7 +29,6 @@
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.awt.image.BufferedImage;
@@ -74,7 +73,7 @@ public class JCD implements LireFeature {
         data = joinHistograms(c.data, f.histogram);
     }
 
-    public float getDistance(VisualDescriptor vd) {
+    public float getDistance(LireFeature vd) {
         // Check if instance of the right class ...
         if (!(vd instanceof JCD))
             throw new UnsupportedOperationException("Wrong descriptor.");

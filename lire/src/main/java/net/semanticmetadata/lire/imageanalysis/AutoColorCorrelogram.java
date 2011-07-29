@@ -29,7 +29,6 @@
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.correlogram.DynamicProgrammingAutoCorrelogramExtraction;
 import net.semanticmetadata.lire.imageanalysis.correlogram.IAutoCorrelogramFeatureExtractor;
 import net.semanticmetadata.lire.imageanalysis.correlogram.MLuxAutoCorrelogramExtraction;
@@ -42,7 +41,7 @@ import java.awt.image.Raster;
 import java.util.StringTokenizer;
 
 /**
- * <p>VisualDescriptor for the AutoCorrelogram based on color as described in
+ * <p>Feature for the AutoCorrelogram based on color as described in
  * Huang, J.; Kumar, S. R.; Mitra, M.; Zhu, W. & Zabih, R. (2007) "Image
  * Indexing Using Color Correlograms", IEEE Computer Society</p>
  * <p>see also DOI <a href="http://doi.ieeecomputersociety.org/10.1109/CVPR.1997.609412">10.1109/CVPR.1997.609412</a></p>
@@ -348,7 +347,7 @@ public class AutoColorCorrelogram implements LireFeature {
         hsv[2] = max;
     }
 
-    public float getDistance(VisualDescriptor vd) {
+    public float getDistance(LireFeature vd) {
         if (!(vd instanceof AutoColorCorrelogram)) return -1;
         float result;
         float[][] vdCorrelogram = ((AutoColorCorrelogram) vd).correlogram;

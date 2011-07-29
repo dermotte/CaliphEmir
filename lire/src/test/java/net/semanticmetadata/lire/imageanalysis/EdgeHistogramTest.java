@@ -30,7 +30,6 @@
 
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.EdgeHistogramImplementation;
 import junit.framework.TestCase;
 
 import javax.imageio.ImageIO;
@@ -41,7 +40,8 @@ import java.io.IOException;
 public class EdgeHistogramTest extends TestCase {
     public void testExtraction() throws IOException {
         BufferedImage image = ImageIO.read(new File("C:\\Java\\Projects\\Lire\\src\\test\\resources\\images\\Pginas de 060305_b_Pgina_1_Imagem_0004_Pgina_08_Imagem_0002.jpg"));
-        EdgeHistogramImplementation eh = new EdgeHistogramImplementation(image);
+        EdgeHistogram eh = new EdgeHistogram();
+        eh.extract(image);
         System.out.println("eh = " + eh.getStringRepresentation());
     }
 }

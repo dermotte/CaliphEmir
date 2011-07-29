@@ -30,8 +30,8 @@
 
 package net.semanticmetadata.lire.impl;
 
-import at.lux.imageanalysis.ColorLayoutImpl;
 import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.imageanalysis.ColorLayout;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
@@ -67,7 +67,8 @@ public class DocumentFactory {
         g.setColor(color);
         g.fillRect(0, 0, imgWidth, imgWidth);
         // Hand it over to ScalableColor to create a descriptor:
-        ColorLayoutImpl scd = new ColorLayoutImpl(img);
+        ColorLayout scd = new ColorLayout();
+        scd.extract(img);
         // create the string representation
         String sc = scd.getStringRepresentation();
 //        System.out.println("sc = " + sc);

@@ -69,7 +69,7 @@ public class TestPascalVOC2007 extends TestCase {
 //        builder.addBuilder(new GenericDocumentBuilder(JpegCoefficientHistogram.class, "FIELD_JPEGCOEFFHIST"));
 //        builder.addBuilder(new SimpleDocumentBuilder(true, true, true));
 //        builder.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
-//        builder.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
 
         // ----- local features ------------------
 //        builder.addBuilder(new SiftDocumentBuilder());

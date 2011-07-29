@@ -63,7 +63,11 @@ public class RuntimeTest extends TestCase {
     private String testExtensive = "./lire/wang-data-1000";
 
     public void testCreateIndex() throws IOException {
-        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
+        ChainedDocumentBuilder builder = new ChainedDocumentBuilder();
+        builder.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
+
         IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (String identifier : testFiles) {
             System.out.println("Indexing file " + identifier);
@@ -78,7 +82,7 @@ public class RuntimeTest extends TestCase {
         String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
         String testFilesPath = "./lire/src/test/resources/small/";
 
-        DocumentBuilder builder = DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder();
+        DocumentBuilder builder = DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder();
         IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         long ms = System.currentTimeMillis();
         for (String identifier : testFiles) {
@@ -165,11 +169,11 @@ public class RuntimeTest extends TestCase {
         indexFiles("ColorHist: ", images, DocumentBuilderFactory.getColorHistogramDocumentBuilder(), indexPath + "-extensive");
         indexFiles("CEDD: ", images, DocumentBuilderFactory.getCEDDDocumentBuilder(), indexPath + "-extensive");
         indexFiles("ColorHist: ", images, DocumentBuilderFactory.getColorHistogramDocumentBuilder(), indexPath + "-extensive");
-        indexFiles("ACC: ", images, DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder(), indexPath + "-extensive");
+        indexFiles("ACC: ", images, DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder(), indexPath + "-extensive");
         indexFiles("FCTH: ", images, DocumentBuilderFactory.getFCTHDocumentBuilder(), indexPath + "-extensive");
         indexFiles("Gabor: ", images, DocumentBuilderFactory.getGaborDocumentBuilder(), indexPath + "-extensive");
         indexFiles("Tamura: ", images, DocumentBuilderFactory.getTamuraDocumentBuilder(), indexPath + "-extensive");
-        indexFiles("MPEG7: ", images, DocumentBuilderFactory.getExtensiveDocumentBuilder(), indexPath + "-extensive");
+//        indexFiles("MPEG7: ", images, DocumentBuilderFactory.getExtensiveDocumentBuilder(), indexPath + "-extensive");
         indexFiles("All: ", images, DocumentBuilderFactory.getFullDocumentBuilder(), indexPath + "-extensive");
     }
 

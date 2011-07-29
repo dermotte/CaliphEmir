@@ -30,11 +30,11 @@
 
 package net.semanticmetadata.lire.impl;
 
-import at.lux.imageanalysis.ColorLayoutImpl;
-import at.lux.imageanalysis.EdgeHistogramImplementation;
-import at.lux.imageanalysis.ScalableColorImpl;
 import net.semanticmetadata.lire.AbstractDocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.imageanalysis.mpeg7.ColorLayoutImpl;
+import net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation;
+import net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -48,6 +48,7 @@ import java.util.logging.Logger;
  * <br>Time: 23:02:52
  *
  * @author Mathias Lux, mathias@juggle.at
+ * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
  */
 public class SimpleDocumentBuilder extends AbstractDocumentBuilder {
     private Logger logger = Logger.getLogger(SimpleDocumentBuilder.class.getName());
@@ -56,15 +57,15 @@ public class SimpleDocumentBuilder extends AbstractDocumentBuilder {
 
     /**
      * Creates a new SimpleDocumentBuilder using the defined descriptors. Please note that
-     * {@link at.lux.imageanalysis.ColorLayoutImpl} and {@link at.lux.imageanalysis.ScalableColorImpl}
-     * are quite <i>fast</i> while {@link at.lux.imageanalysis.EdgeHistogramImplementation} is quite
+     * {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ColorLayoutImpl} and {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl}
+     * are quite <i>fast</i> while {@link net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation} is quite
      * <i>slow</i>.  <p>
      * Do not use this constructor yourself, use
      * the {@link net.semanticmetadata.lire.DocumentBuilderFactory} instead.
      *
-     * @param scalableColor defines if {@link at.lux.imageanalysis.ScalableColorImpl} should be used.
-     * @param colorLayout   defines if {@link at.lux.imageanalysis.ColorLayoutImpl} should be used.
-     * @param edgeHistogram defines if {@link at.lux.imageanalysis.EdgeHistogramImplementation} should be used.
+     * @param scalableColor defines if {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl} should be used.
+     * @param colorLayout   defines if {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ColorLayoutImpl} should be used.
+     * @param edgeHistogram defines if {@link net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation} should be used.
      * @see net.semanticmetadata.lire.DocumentBuilderFactory
      */
     public SimpleDocumentBuilder(boolean scalableColor, boolean colorLayout, boolean edgeHistogram) {

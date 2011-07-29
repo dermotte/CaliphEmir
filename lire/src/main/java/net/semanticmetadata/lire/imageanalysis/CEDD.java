@@ -30,7 +30,6 @@
 
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.cedd.*;
 
 import java.awt.image.BufferedImage;
@@ -290,7 +289,7 @@ public class CEDD implements LireFeature {
 
     }
 
-    public float getDistance(VisualDescriptor vd) { // added by mlux
+    public float getDistance(LireFeature vd) { // added by mlux
         // Check if instance of the right class ...
         if (!(vd instanceof CEDD))
             throw new UnsupportedOperationException("Wrong descriptor.");

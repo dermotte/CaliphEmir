@@ -31,6 +31,7 @@
 package net.semanticmetadata.lire;
 
 import junit.framework.TestCase;
+import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
 import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
@@ -61,7 +62,10 @@ public class CreateIndexTest extends TestCase {
 //    private String testExtensive = "./lire/wang-data-1000";
 
     public void testCreateIndex() throws IOException {
-        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
+        ChainedDocumentBuilder builder = new ChainedDocumentBuilder();
+        builder.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
         IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (String identifier : testFiles) {
             System.out.println("Indexing file " + identifier);
@@ -76,7 +80,7 @@ public class CreateIndexTest extends TestCase {
         String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
         String testFilesPath = "./lire/src/test/resources/small/";
 
-        DocumentBuilder builder = DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder();
+        DocumentBuilder builder = DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder();
         IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
         long ms = System.currentTimeMillis();
         for (String identifier : testFiles) {
@@ -121,7 +125,7 @@ public class CreateIndexTest extends TestCase {
 //        System.out.println(">> Default DocumentBuilder:");
 //        indexFiles(images, DocumentBuilderFactory.getDefaultDocumentBuilder(), indexPath + "-default");
 //        System.out.println(">> Extensive DocumentBuilder:");
-//        indexFiles(images, DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder(), indexPath + "-extensive");
+//        indexFiles(images, DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder(), indexPath + "-extensive");
         indexFiles(images, DocumentBuilderFactory.getCEDDDocumentBuilder(), indexPath + "-cedd-flickr");
 //        indexFiles(images, DocumentBuilderFactory.getFullDocumentBuilder(), indexPath + "-extensive");
     }

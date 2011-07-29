@@ -30,10 +30,11 @@
 package net.semanticmetadata.lire.imageanalysis.sift;
 
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.Histogram;
+import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
@@ -42,7 +43,7 @@ import java.util.logging.Logger;
 /**
  * SIFT feature container
  */
-public class Feature extends Histogram implements Comparable<Feature>, Serializable, VisualDescriptor {
+public class Feature extends Histogram implements Comparable<Feature>, Serializable, LireFeature {
     /**
      *
      */
@@ -93,8 +94,8 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
         return sb.toString();
     }
 
-    public float getDistance(VisualDescriptor vd) {
-        if (vd instanceof Feature) return descriptorDistance((Feature) vd);
+    public float getDistance(LireFeature feature) {
+        if (feature instanceof Feature) return descriptorDistance((Feature) feature);
         else return -1f;
     }
 
@@ -141,6 +142,10 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
         for (int i = 0; i < descriptor.length; i++) {
             descriptor[i] = descVals.get(i);
         }
+    }
+
+    public void extract(BufferedImage bimg) {
+        throw new UnsupportedOperationException("No implemented!");
     }
 
     /**
@@ -194,6 +199,10 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
             System.arraycopy(in, 16 + i * 4, tmp, 0, 4);
             descriptor[i] = SerializationUtils.toFloat(tmp);
         }
+    }
+
+    public double[] getDoubleHistogram() {
+        return new double[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
 

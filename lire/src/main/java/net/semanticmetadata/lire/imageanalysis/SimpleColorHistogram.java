@@ -29,7 +29,6 @@
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.utils.Quantization;
 import net.semanticmetadata.lire.utils.ConversionUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
@@ -168,7 +167,7 @@ public class SimpleColorHistogram implements LireFeature {
         }
     }
 
-    public float getDistance(VisualDescriptor vd) {
+    public float getDistance(LireFeature vd) {
         // Check if instance of the right class ...
         if (!(vd instanceof SimpleColorHistogram))
             throw new UnsupportedOperationException("Wrong descriptor.");

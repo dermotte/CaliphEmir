@@ -29,7 +29,8 @@
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.ScalableColorImpl;
+
+import net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl;
 
 /**
  * Just a wrapper for the use of LireFeature.

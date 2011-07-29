@@ -29,7 +29,6 @@
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import net.semanticmetadata.lire.imageanalysis.fcth.*;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
@@ -354,7 +353,7 @@ public class FCTH implements LireFeature {
         return histogram;
     }
 
-    public float getDistance(VisualDescriptor vd) { // added by mlux
+    public float getDistance(LireFeature vd) { // added by mlux
         // Check if instance of the right class ...
         if (!(vd instanceof FCTH))
             throw new UnsupportedOperationException("Wrong descriptor.");

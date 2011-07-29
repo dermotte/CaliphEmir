@@ -78,6 +78,7 @@ public class ImageSearcherFactory {
      *
      * @param maximumHits
      * @return the searcher instance
+     * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
      */
     public static ImageSearcher createSimpleSearcher(int maximumHits) {
         return new SimpleImageSearcher(maximumHits);
@@ -88,6 +89,7 @@ public class ImageSearcherFactory {
      * hits defined in the {@link ImageSearcherFactory#NUM_MAX_HITS}
      *
      * @return the searcher instance
+     * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
      */
     public static ImageSearcher createDefaultSearcher() {
         return new SimpleImageSearcher(NUM_MAX_HITS);
@@ -101,6 +103,7 @@ public class ImageSearcherFactory {
      * @param maximumHits defining how many hits are returned in max (e.g. 100 would be ok)
      * @return the ImageSearcher
      * @see ImageSearcher
+     * @deprecated Use ColorHistogram or ScalableColor instead
      */
     public static ImageSearcher createColorOnlySearcher(int maximumHits) {
         return createWeightedSearcher(maximumHits, 1f, 1f, 0f);
@@ -120,6 +123,7 @@ public class ImageSearcherFactory {
      * @param textureWeight           defining the importance of texture (which edges where) in the images
      * @return the searcher instance or NULL if the weights are not appropriate, eg. all 0 or not in [0,1]
      * @see DocumentBuilderFactory
+     * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
      */
     public static ImageSearcher createWeightedSearcher(int maximumHits,
                                                        float colorHistogramWeight,
@@ -141,7 +145,7 @@ public class ImageSearcherFactory {
      * @param maximumHits number of hits returned.
      * @return
      */
-    public static ImageSearcher createDefaultCorrelogramImageSearcher(int maximumHits) {
+    public static ImageSearcher createAutoColorCorrelogramImageSearcher(int maximumHits) {
         return new GenericFastImageSearcher(maximumHits, AutoColorCorrelogram.class, DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM);
 //        return new CorrelogramImageSearcher(maximumHits, AutoColorCorrelogram.Mode.SuperFast);
     }
@@ -152,6 +156,7 @@ public class ImageSearcherFactory {
      *
      * @param maximumHits number of hits returned.
      * @return
+     * @deprecated Use #createAutoColorCorrelogramImageSearcher instead
      */
     public static ImageSearcher createFastCorrelogramImageSearcher(int maximumHits) {
         return new CorrelogramImageSearcher(maximumHits, AutoColorCorrelogram.Mode.SuperFast);
@@ -180,6 +185,30 @@ public class ImageSearcherFactory {
     public static ImageSearcher createFCTHImageSearcher(int maximumHits) {
 //        return new GenericImageSearcher(maximumHits, FCTH.class, DocumentBuilder.FIELD_NAME_FCTH);
         return new GenericFastImageSearcher(maximumHits, FCTH.class, DocumentBuilder.FIELD_NAME_FCTH);
+    }
+
+
+    /**
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.JCD}
+     * image feature. Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @param maximumHits
+     * @return
+     */
+    public static ImageSearcher createJCDImageSearcher(int maximumHits) {
+        return new GenericFastImageSearcher(maximumHits, JCD.class, DocumentBuilder.FIELD_NAME_JCD);
+    }
+
+
+    /**
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.JpegCoefficientHistogram}
+     * image feature. Be sure to use the same options for the ImageSearcher as you used for the DocumentBuilder.
+     *
+     * @param maximumHits
+     * @return
+     */
+    public static ImageSearcher createJpegCoefficientHistogramImageSearcher(int maximumHits) {
+        return new GenericFastImageSearcher(maximumHits, JpegCoefficientHistogram.class, DocumentBuilder.FIELD_NAME_JPEGCOEFFS);
     }
 
 
@@ -215,6 +244,42 @@ public class ImageSearcherFactory {
      */
     public static ImageSearcher createGaborImageSearcher(int maximumHits) {
         return new GenericFastImageSearcher(maximumHits, Gabor.class, DocumentBuilder.FIELD_NAME_GABOR);
+    }
+
+    /**
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.ColorLayout}
+     * image feature using the byte[] serialization. Be sure to use the same options for the ImageSearcher as
+     * you used for the DocumentBuilder.
+     *
+     * @param maximumHits
+     * @return
+     */
+    public static ImageSearcher createColorLayoutImageSearcher(int maximumHits) {
+        return new GenericFastImageSearcher(maximumHits, ColorLayout.class, DocumentBuilder.FIELD_NAME_COLORLAYOUT);
+    }
+
+    /**
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.ScalableColor}
+     * image feature using the byte[] serialization. Be sure to use the same options for the ImageSearcher as
+     * you used for the DocumentBuilder.
+     *
+     * @param maximumHits
+     * @return
+     */
+    public static ImageSearcher createScalableColorImageSearcher(int maximumHits) {
+        return new GenericFastImageSearcher(maximumHits, ScalableColor.class, DocumentBuilder.FIELD_NAME_SCALABLECOLOR);
+    }
+
+    /**
+     * Create and return an ImageSearcher for the {@link net.semanticmetadata.lire.imageanalysis.EdgeHistogram}
+     * image feature using the byte[] serialization. Be sure to use the same options for the ImageSearcher as
+     * you used for the DocumentBuilder.
+     *
+     * @param maximumHits
+     * @return
+     */
+    public static ImageSearcher createEdgeHistogramImageSearcher(int maximumHits) {
+        return new GenericFastImageSearcher(maximumHits, EdgeHistogram.class, DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM);
     }
 
 

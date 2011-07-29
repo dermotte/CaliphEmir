@@ -30,7 +30,6 @@
 
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 import com.stromberglabs.jopensurf.SURFInterestPoint;
 import net.semanticmetadata.lire.utils.ConversionUtils;
 import net.semanticmetadata.lire.utils.MetricsUtils;
@@ -60,9 +59,9 @@ public class SurfFeature extends Histogram implements LireFeature {
         // does nothing ....
     }
 
-    public float getDistance(VisualDescriptor visualDescriptor) {
-        if (!(visualDescriptor instanceof SurfFeature)) return -1;
-        return MetricsUtils.distL2(descriptor, ((SurfFeature) visualDescriptor).descriptor);
+    public float getDistance(LireFeature feature) {
+        if (!(feature instanceof SurfFeature)) return -1;
+        return MetricsUtils.distL2(descriptor, ((SurfFeature) feature).descriptor);
     }
 
     public String getStringRepresentation() {

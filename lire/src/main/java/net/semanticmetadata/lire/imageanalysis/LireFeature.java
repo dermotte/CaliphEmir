@@ -30,18 +30,17 @@
 
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
 
 import java.awt.image.BufferedImage;
 
 /**
- * This interface is a bit more restrictive than VisualDescriptor. It is needed for GenericDocumentBuilder.
+ * This is the basic interface for all content based features. It is needed for GenericDocumentBuilder etc.
  * Date: 28.05.2008
  * Time: 14:44:16
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public interface LireFeature extends VisualDescriptor {
+public interface LireFeature {
     public void extract(BufferedImage bimg);
 
     public byte[] getByteArrayRepresentation();
@@ -49,4 +48,10 @@ public interface LireFeature extends VisualDescriptor {
     public void setByteArrayRepresentation(byte[] in);
 
     public double[] getDoubleHistogram();
+
+    float getDistance(LireFeature feature);
+
+    java.lang.String getStringRepresentation();
+
+    void setStringRepresentation(java.lang.String s);
 }

@@ -42,7 +42,7 @@
 
 package net.semanticmetadata.lire.imageanalysis;
 
-import at.lux.imageanalysis.VisualDescriptor;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
@@ -87,15 +87,19 @@ public class JpegCoefficientHistogram implements LireFeature {
     }
 
     public byte[] getByteArrayRepresentation() {
-        throw new UnsupportedOperationException("Not implemented!");
+        return SerializationUtils.toByteArray(descriptorValues);
     }
 
     public void setByteArrayRepresentation(byte[] in) {
-        throw new UnsupportedOperationException("Not implemented!");
+        descriptorValues = SerializationUtils.toIntArray(in);
     }
 
     public double[] getDoubleHistogram() {
-        throw new UnsupportedOperationException("Not implemented!");
+        double[] result = new double[descriptorValues.length];
+        for (int i = 0; i < descriptorValues.length; i++) {
+            result[i] = (double) descriptorValues[i];
+        }
+        return result;
     }
 
     protected class DctPoint {
@@ -196,7 +200,7 @@ public class JpegCoefficientHistogram implements LireFeature {
     }
 
 
-    public float getDistance(VisualDescriptor vd) {
+    public float getDistance(LireFeature vd) {
         if (!(vd instanceof JpegCoefficientHistogram))
             throw new UnsupportedOperationException("Wrong descriptor.");
         JpegCoefficientHistogram target = (JpegCoefficientHistogram) vd;

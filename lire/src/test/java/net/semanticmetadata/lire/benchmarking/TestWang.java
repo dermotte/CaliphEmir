@@ -93,7 +93,7 @@ public class TestWang extends TestCase {
 //        builder.addBuilder(new SiftDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
-//        builder.addBuilder(DocumentBuilderFactory.getDefaultAutoColorCorrelationDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
     }
 
     public void testIndexWang() throws IOException {
@@ -176,7 +176,7 @@ public class TestWang extends TestCase {
 //        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
 //        computeMAP(ImageSearcherFactory.createTamuraImageSearcher(1000), "Tamura");
 //        computeMAP(ImageSearcherFactory.createGaborImageSearcher(1000), "Gabor");
-//        computeMAP(ImageSearcherFactory.createDefaultCorrelogramImageSearcher(1000), "color correlogram");
+//        computeMAP(ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(1000), "color correlogram");
 //        computeMAP(ImageSearcherFactory.createWeightedSearcher(1000, 1f, 0f, 0f), "scalable color");
 //        computeMAP(ImageSearcherFactory.createWeightedSearcher(1000, 0f, 1f, 0f), "color layout");
 //        computeMAP(ImageSearcherFactory.createWeightedSearcher(1000, 0f, 0f, 1f), "edge Hist");
@@ -199,7 +199,7 @@ public class TestWang extends TestCase {
 //        searcher = new ParallelImageSearcher(maxHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
 //               searcher = ImageSearcherFactory.createFCTHImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createFastCorrelogramImageSearcher(maxHits);
-//        searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(maxHits);
+//        searcher = ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(maxHits);
 //        searcher = new GenericImageSearcher(maxHits, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST");
         Pattern p = Pattern.compile("([0-9]+).jpg");
         double map = 0;
@@ -288,7 +288,7 @@ public class TestWang extends TestCase {
         searcher = new ParallelImageSearcher(maxHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
 //               searcher = ImageSearcherFactory.createFCTHImageSearcher(maxHits);
 //        searcher = ImageSearcherFactory.createFastCorrelogramImageSearcher(maxHits);
-//        searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(maxHits);
+//        searcher = ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(maxHits);
 //        searcher = new GenericImageSearcher(maxHits, FuzzyColorHistogram.class, "FIELD_FUZZYCOLORHIST");
         Pattern p = Pattern.compile("([0-9]+).jpg");
         double map = 0;
