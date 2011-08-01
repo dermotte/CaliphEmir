@@ -132,7 +132,7 @@ public class CEDDImageSearcher extends GenericImageSearcher {
                 } else {
                     numDuplicates++;
                 }
-                duplicates.get(distance).add(d.getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+                duplicates.get(distance).add(d.getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
             }
 
             if (numDuplicates == 0) return null;

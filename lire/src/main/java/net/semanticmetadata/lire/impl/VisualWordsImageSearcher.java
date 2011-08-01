@@ -66,13 +66,13 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
         this.similarity = similarity;
         this.numMaxHits = numMaxHits;
         this.fieldName = fieldName;
-        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer());
+        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer(Version.LUCENE_33));
     }
 
     public VisualWordsImageSearcher(int numMaxHits, String fieldName) {
         this.numMaxHits = numMaxHits;
         this.fieldName = fieldName;
-        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer());
+        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer(Version.LUCENE_33));
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {

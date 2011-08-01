@@ -1,6 +1,20 @@
 CHANGES for LIRE
 ================
 
+2011-08-01
+==========
+  - Changed WhiteSpaceAnalyzer and SimpleAnalyzer to be constructed with version 3.3 (fix deprecation)
+  - Changed new Field(...) constructor for byte[] fields (fix deprecation with Lucene 3.3)
+  - Changed Document.getField(...) to Document.getFieldable(...) (fix deprecation with Lucene 3.3)
+  - Fixed EdgeHistogram (byte[] serialization was not implemented)
+  - Fixed: GenericDocumentBuilder.java - String representation was created either way.
+  - Updated CreateIndexTest to match the current Lire version.
+  - Updated TestImageSearcher to match the current Lire version.
+  - Updated TestWang to use the provided standard features.
+  - TODO: Change deprecated files (mostly IndexWriter) etc.
+  - TODO: Update LireDemo.
+  - TODO: Create index manager for BoVW and metric spaces.
+
 2011-07-29
 ==========
   - Added loss less serialization to byte[] for doubles and longs
@@ -14,7 +28,6 @@ CHANGES for LIRE
   - Deprecated the AutoColorCorrelogram "Fast" Option in DocumentBuilderFactory and ImageSearcherFactory
   - Added ColorLayout, ScalableColor and EdgeHistogram to DocumentBuilderFactory and ImageSearcherFactory
   - Updated lucene-core to version 3.3.0
-  - TODO: Change deprecated test files etc.
 
 2011-07-28
 ==========

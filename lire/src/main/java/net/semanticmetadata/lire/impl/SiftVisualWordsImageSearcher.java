@@ -61,7 +61,7 @@ public class SiftVisualWordsImageSearcher extends AbstractImageSearcher {
 
     public SiftVisualWordsImageSearcher(int numMaxHits) {
         this.numMaxHits = numMaxHits;
-        qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer());
+        qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(Version.LUCENE_33));
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {

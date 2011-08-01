@@ -57,7 +57,7 @@ public class SurfDocumentBuilder extends AbstractDocumentBuilder {
         for (Iterator<SURFInterestPoint> sipi = interestPoints.iterator(); sipi.hasNext(); ) {
             SURFInterestPoint sip = sipi.next();
             SurfFeature sf = new SurfFeature(sip);
-            doc.add(new Field(DocumentBuilder.FIELD_NAME_SURF, sf.getByteArrayRepresentation(), Field.Store.YES));
+            doc.add(new Field(DocumentBuilder.FIELD_NAME_SURF, sf.getByteArrayRepresentation()));
         }
         if (identifier != null)
             doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));

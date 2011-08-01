@@ -42,6 +42,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class GeneralInvertedListTest extends TestCase {
         System.out.println("numRefObjs = " + numRefObjs);
 
         // init reference objects:
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-ro")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-ro")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         HashSet<Integer> referenceObjsIds = new HashSet<Integer>(numRefObjs);
 
         double numDocsDouble = (double) numDocs;
@@ -89,8 +90,8 @@ public class GeneralInvertedListTest extends TestCase {
         IndexReader readerRo = IndexReader.open(FSDirectory.open(new File(indexPath + "-ro")));
         ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(numRefObjsReferenced);
         PerFieldAnalyzerWrapper wrapper =
-                new PerFieldAnalyzerWrapper(new SimpleAnalyzer());
-        wrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer());
+                new PerFieldAnalyzerWrapper(new SimpleAnalyzer(Version.LUCENE_33));
+        wrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer(Version.LUCENE_33));
 
         iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-new")), wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
         StringBuilder sb = new StringBuilder(256);
@@ -353,8 +354,12 @@ class PlainSimilarity extends Similarity {
         return ps;
     }
 
-    public float lengthNorm(String s, int i) {
-        return 1f;
+//    public float lengthNorm(String s, int i) {
+//        return 1f;
+//    }
+
+    public float computeNorm(String s, FieldInvertState fieldInvertState) {
+        return 1f;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public float queryNorm(float v) {

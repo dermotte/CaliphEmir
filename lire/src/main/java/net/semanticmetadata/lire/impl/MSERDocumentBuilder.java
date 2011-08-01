@@ -101,7 +101,7 @@ public class MSERDocumentBuilder extends AbstractDocumentBuilder {
                 }
 
                 if (!skip)
-                    doc.add(new Field(DocumentBuilder.FIELD_NAME_MSER, f.getByteArrayRepresentation(), Field.Store.YES));
+                    doc.add(new Field(DocumentBuilder.FIELD_NAME_MSER, f.getByteArrayRepresentation()));
                 else System.err.println("Found NaN in features in file " + identifier + ". ");
             }
             if (identifier != null) {

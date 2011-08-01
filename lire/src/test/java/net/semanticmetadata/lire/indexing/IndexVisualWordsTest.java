@@ -41,6 +41,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -93,7 +94,7 @@ public class IndexVisualWordsTest extends TestCase {
 //        documentBuilder.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
 
 
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(index)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(index)), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {

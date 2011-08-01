@@ -46,6 +46,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.SimpleFSDirectory;
+import org.apache.lucene.util.Version;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -119,7 +120,7 @@ public class TestGeneral extends TestCase {
 
     private void indexFiles(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         // eventually check if the directory is there or not ...
-        IndexWriter iw = new IndexWriter(SimpleFSDirectory.open(new File(testIndex)), new SimpleAnalyzer(), false, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(SimpleFSDirectory.open(new File(testIndex)), new SimpleAnalyzer(Version.LUCENE_33), false, IndexWriter.MaxFieldLength.UNLIMITED);
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {

@@ -31,14 +31,13 @@
 package net.semanticmetadata.lire;
 
 import junit.framework.TestCase;
-import net.semanticmetadata.lire.impl.DocumentFactory;
+import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
 import net.semanticmetadata.lire.impl.VisualWordsImageSearcher;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -52,15 +51,30 @@ import java.io.*;
 public class TestImageSearcher extends TestCase {
     private String[] testFiles = new String[]{"img01.JPG", "img02.JPG", "img03.JPG", "img04.JPG", "img05.JPG",
             "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG"};
-    private String testFilesPath = "./lire/src/test/resources/images/";
-    private String indexPath = "test-index-extensive";
+    private String testFilesPath = "src/test/resources/images/";
+    private String indexPath = "test-index-big-index";
     private int numsearches = 5;
+
+    private DocumentBuilder getDocumentBuilder() {
+        ChainedDocumentBuilder result = new ChainedDocumentBuilder();
+        result.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+        result.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+        result.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getJCDDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getJpegCoefficientHistogramDocumentBuilder());
+        return result;
+    }
 
     public void testSearch() throws IOException {
         IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
-        ImageSearcher searcher = ImageSearcherFactory.createDefaultSearcher();
+        ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(50);
         FileInputStream imageStream = new FileInputStream(testFilesPath + testFiles[0]);
         BufferedImage bimg = ImageIO.read(imageStream);
         ImageSearchHits hits = null;
@@ -71,7 +85,7 @@ public class TestImageSearcher extends TestCase {
         time = System.currentTimeMillis() - time;
         System.out.println(((float) time / (float) numsearches) + " ms per search with image, averaged on " + numsearches);
         for (int i = 0; i < 5; i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
         }
         Document document = hits.doc(0);
         time = System.currentTimeMillis();
@@ -81,10 +95,10 @@ public class TestImageSearcher extends TestCase {
         time = System.currentTimeMillis() - time;
         System.out.println(((float) time / (float) numsearches) + " ms per search with document, averaged on " + numsearches);
         for (int i = 0; i < 5; i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
         }
 
-        document = DocumentBuilderFactory.getFastDocumentBuilder().createDocument(bimg, testFilesPath + testFiles[0]);
+        document = getDocumentBuilder().createDocument(bimg, testFilesPath + testFiles[0]);
         time = System.currentTimeMillis();
         for (int i = 0; i < numsearches; i++) {
             hits = searcher.search(document, reader);
@@ -92,21 +106,7 @@ public class TestImageSearcher extends TestCase {
         time = System.currentTimeMillis() - time;
         System.out.println(((float) time / (float) numsearches) + " ms per search with document, averaged on " + numsearches);
         for (int i = 0; i < 5; i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
-        }
-    }
-
-    public void testSearchWithDuplicates() throws Exception {
-        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
-        int numDocs = reader.numDocs();
-        System.out.println("numDocs = " + numDocs);
-        ImageSearcher searcher = ImageSearcherFactory.createDefaultSearcher();
-        FileInputStream imageStream = new FileInputStream(testFilesPath + testFiles[0]);
-        BufferedImage bimg = ImageIO.read(imageStream);
-        ImageSearchHits hits = null;
-        hits = searcher.search(bimg, reader);
-        for (int i = 0; i < hits.length(); i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
         }
     }
 
@@ -114,7 +114,7 @@ public class TestImageSearcher extends TestCase {
         IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
-        ImageSearcher searcher = ImageSearcherFactory.createDefaultSearcher();
+        ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(50);
         ImageDuplicates imageDuplicates = searcher.findDuplicates(reader);
         if (imageDuplicates == null) {
             System.out.println("No duplicates found");
@@ -125,35 +125,6 @@ public class TestImageSearcher extends TestCase {
         }
     }
 
-    /**
-     * Tests the search for color ...
-     * Please note that the index has to be built with a DocumentBuilder
-     * obtained by DocumentBuilderFactory.getExtensiveDocumentBuilder() or
-     * DocumentBuilderFactory.getColorOnlyDocumentBuilder().
-     *
-     * @throws Exception in case of exceptions *gg*
-     */
-    public void testColorSearch() throws Exception {
-        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
-        int numDocs = reader.numDocs();
-        System.out.println("numDocs = " + numDocs);
-        // PLEASE NOTE: The index has to be built with a DocumentBuilder
-        // obtained by DocumentBuilderFactory.getExtensiveDocumentBuilder() or
-        // DocumentBuilderFactory.getColorOnlyDocumentBuilder(). Otherwise no color
-        // histogram will be included.
-        ImageSearcher searcher = ImageSearcherFactory.createColorOnlySearcher(15);
-        Document document = DocumentFactory.createColorOnlyDocument(Color.green);
-        ImageSearchHits hits = searcher.search(document, reader);
-        for (int i = 0; i < hits.length(); i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
-        }
-        System.out.println("");
-        document = DocumentFactory.createColorOnlyDocument(Color.red);
-        hits = searcher.search(document, reader);
-        for (int i = 0; i < hits.length(); i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
-        }
-    }
 
     public void testCorrelationSearch() throws IOException {
         IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
@@ -170,7 +141,7 @@ public class TestImageSearcher extends TestCase {
         time = System.currentTimeMillis() - time;
         System.out.println(((float) time / (float) numsearches) + " ms per search with image, averaged on " + numsearches);
         for (int i = 0; i < hits.length(); i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
         }
         Document document = hits.doc(4);
         time = System.currentTimeMillis();
@@ -180,7 +151,7 @@ public class TestImageSearcher extends TestCase {
         time = System.currentTimeMillis() - time;
         System.out.println(((float) time / (float) numsearches) + " ms per search with document, averaged on " + numsearches);
         for (int i = 0; i < hits.length(); i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
         }
 
     }
@@ -200,7 +171,7 @@ public class TestImageSearcher extends TestCase {
         time = System.currentTimeMillis() - time;
         System.out.println(((float) time / (float) numsearches) + " ms per search with image, averaged on " + numsearches);
         for (int i = 0; i < hits.length(); i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
         }
         Document document = hits.doc(4);
         time = System.currentTimeMillis();
@@ -210,7 +181,7 @@ public class TestImageSearcher extends TestCase {
         time = System.currentTimeMillis() - time;
         System.out.println(((float) time / (float) numsearches) + " ms per search with document, averaged on " + numsearches);
         for (int i = 0; i < hits.length(); i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
         }
 
     }
@@ -230,7 +201,7 @@ public class TestImageSearcher extends TestCase {
         time = System.currentTimeMillis() - time;
         System.out.println(((float) time / (float) numsearches) + " ms per search with image, averaged on " + numsearches);
         for (int i = 0; i < hits.length(); i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
         }
         Document document = hits.doc(4);
         time = System.currentTimeMillis();
@@ -240,7 +211,7 @@ public class TestImageSearcher extends TestCase {
         time = System.currentTimeMillis() - time;
         System.out.println(((float) time / (float) numsearches) + " ms per search with document, averaged on " + numsearches);
         for (int i = 0; i < hits.length(); i++) {
-            System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+            System.out.println(hits.score(i) + ": " + hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
         }
 
     }
@@ -266,7 +237,7 @@ public class TestImageSearcher extends TestCase {
     }
 
     private void saveToHtml(String prefix, ImageSearchHits hits, String queryImage) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter("results - " + prefix + ".html"));
+        BufferedWriter bw = new BufferedWriter(new FileWriter("results-" + prefix + ".html"));
         bw.write("<html>\n" +
                 "<head><title>Search Results</title></head>\n" +
                 "<body bgcolor=\"#FFFFFF\">\n");

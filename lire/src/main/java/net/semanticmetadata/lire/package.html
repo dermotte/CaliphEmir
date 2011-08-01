@@ -47,7 +47,7 @@ an index like this:
 <pre>
     System.out.println(">> Indexing " + images.size() + " files.");
     DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
-    IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(), true);
+    IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(Version.LUCENE_33), true);
     int count = 0;
     long time = System.currentTimeMillis();
     for (String identifier : images) {

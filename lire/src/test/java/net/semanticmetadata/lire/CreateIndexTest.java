@@ -36,7 +36,9 @@ import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,18 +57,34 @@ import java.util.concurrent.TimeUnit;
  */
 public class CreateIndexTest extends TestCase {
     private String[] testFiles = new String[]{"img01.JPG", "img02.JPG", "img03.JPG", "img04.JPG", "img05.JPG",
-            "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg", "P�ginas de 060305_b_P�gina_1_Imagem_0004_P�gina_08_Imagem_0002.jpg"};
-    private String testFilesPath = "./lire/src/test/resources/images/";
+            "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg"};
+    private String testFilesPath = "./src/test/resources/images/";
     private String indexPath = "test-index";
-    private String testExtensive = "C:\\Temp\\images";
-//    private String testExtensive = "./lire/wang-data-1000";
+//    private String testExtensive = "C:\\Temp\\images";
+    private String testExtensive = "./wang-1000";
 
+    private DocumentBuilder getDocumentBuilder() {
+        ChainedDocumentBuilder result = new ChainedDocumentBuilder();
+        result.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+        result.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+        result.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getJCDDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getJpegCoefficientHistogramDocumentBuilder());
+        return result;
+    }
+
+    /**
+     * Creates an index with an extensive list of global features.
+     * @throws IOException
+     */
     public void testCreateIndex() throws IOException {
-        ChainedDocumentBuilder builder = new ChainedDocumentBuilder();
-        builder.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        ChainedDocumentBuilder builder = (ChainedDocumentBuilder) getDocumentBuilder();
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
         for (String identifier : testFiles) {
             System.out.println("Indexing file " + identifier);
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -78,10 +96,11 @@ public class CreateIndexTest extends TestCase {
 
     public void testCreateCorrelogramIndex() throws IOException {
         String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
-        String testFilesPath = "./lire/src/test/resources/small/";
+        String testFilesPath = "./src/test/resources/small/";
 
         DocumentBuilder builder = DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder();
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")),
+                new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
         long ms = System.currentTimeMillis();
         for (String identifier : testFiles) {
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -93,48 +112,27 @@ public class CreateIndexTest extends TestCase {
     }
 
     public void testCreateCEDDIndex() throws IOException {
-        String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
-        String testFilesPath = "wang-data-1000";
-//        String testFilesPath = "./lire/src/test/resources/small/";
-        ArrayList<String> images = FileUtils.getAllImages(new File(testFilesPath), true);
+        ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
         DocumentBuilder builder = DocumentBuilderFactory.getCEDDDocumentBuilder();
-//        IndexWriter iw = new IndexWriter("wang-cedd", new SimpleAnalyzer(), true);
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("wang-cedd")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
-//        IndexWriter iw = new IndexWriter(indexPath + "-cedd", new SimpleAnalyzer(), true);
-        long ms = System.currentTimeMillis();
-        int count = 0;
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("wang-cedd")),
+                new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
         for (String identifier : images) {
             Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
             iw.addDocument(doc);
-            // if (++count>250) break;
         }
         iw.optimize();
         iw.close();
     }
 
-//    public void testCreateExtensiveIndex() throws IOException {
-//        ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
-//        indexFiles(images);
-//    }
-
     public void testCreateBigIndex() throws IOException {
         ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
-//        ArrayList<String> images = FileUtils.getAllImages(new File("C:\\Dokumente und Einstellungen\\All Users\\Dokumente\\Eigene Bilder\\2003"), true);
-//        System.out.println(">> Fast DocumentBuilder:");
-//        indexFiles(images, DocumentBuilderFactory.getFastDocumentBuilder(), indexPath + "-fast");
-//        System.out.println(">> Default DocumentBuilder:");
-//        indexFiles(images, DocumentBuilderFactory.getDefaultDocumentBuilder(), indexPath + "-default");
-//        System.out.println(">> Extensive DocumentBuilder:");
-//        indexFiles(images, DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder(), indexPath + "-extensive");
-        indexFiles(images, DocumentBuilderFactory.getCEDDDocumentBuilder(), indexPath + "-cedd-flickr");
-//        indexFiles(images, DocumentBuilderFactory.getFullDocumentBuilder(), indexPath + "-extensive");
+        indexFiles(images, getDocumentBuilder(), indexPath + "-big-index");
     }
 
     private void indexFiles(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         System.out.println(">> Indexing " + images.size() + " files.");
-//        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
-//        DocumentBuilder builder = DocumentBuilderFactory.getFastDocumentBuilder();
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)),
+                new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {
@@ -151,7 +149,7 @@ public class CreateIndexTest extends TestCase {
                 float pct = (float) count / (float) images.size();
                 float tmp = (float) (System.currentTimeMillis() - time) / 1000;
                 float remain = (tmp / pct) * (1f - pct);
-                System.out.println("Remining: <" + ((int) (remain / 60) + 1) + " minutes of <" + ((int) ((tmp / pct) / 60) + 1) + " minutes");
+                System.out.println("Remaining: <" + ((int) (remain / 60) + 1) + " minutes of <" + ((int) ((tmp / pct) / 60) + 1) + " minutes");
             }
             // if (count == 200) break;
         }
@@ -165,9 +163,8 @@ public class CreateIndexTest extends TestCase {
 
     private void indexFilesMultithreaded(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         System.out.println(">> Indexing " + images.size() + " files.");
-//        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
-//        DocumentBuilder builder = DocumentBuilderFactory.getFastDocumentBuilder();
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)),
+                new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
         SynchronizedWriter sw = new SynchronizedWriter(iw);
         ExecutorService pool = Executors.newFixedThreadPool(4);
 
@@ -183,7 +180,7 @@ public class CreateIndexTest extends TestCase {
             try {
                 pool.awaitTermination(5, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
             System.out.println("indexed: " + iw.maxDoc());
         }

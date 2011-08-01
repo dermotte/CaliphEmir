@@ -40,6 +40,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -68,7 +69,7 @@ public class RuntimeTest extends TestCase {
         builder.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
         builder.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
 
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (String identifier : testFiles) {
             System.out.println("Indexing file " + identifier);
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -83,7 +84,7 @@ public class RuntimeTest extends TestCase {
         String testFilesPath = "./lire/src/test/resources/small/";
 
         DocumentBuilder builder = DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder();
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         long ms = System.currentTimeMillis();
         for (String identifier : testFiles) {
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -100,7 +101,7 @@ public class RuntimeTest extends TestCase {
         ChainedDocumentBuilder builder = new ChainedDocumentBuilder();
         builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
         builder.addBuilder(new CEDDDocumentBuilder());
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-cedd")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-cedd")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         int count = 0;
         long ms = System.currentTimeMillis();
         for (String identifier : images) {
@@ -179,7 +180,7 @@ public class RuntimeTest extends TestCase {
 
     private void indexFiles(String prefix, ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         System.out.println(">> Indexing " + images.size() + " files.");
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {

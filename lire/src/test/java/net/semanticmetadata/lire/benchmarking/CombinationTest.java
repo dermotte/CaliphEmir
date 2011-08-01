@@ -42,6 +42,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -71,7 +72,7 @@ public class CombinationTest extends TestCase {
         ArrayList<String> images = FileUtils.getAllImages(new File(dataPath), true);
         System.out.println("-< Indexing " + images.size() + " files >--------------");
 
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {
@@ -120,6 +121,7 @@ public class CombinationTest extends TestCase {
         // ---- ranking:
         ArrayList<SimpleResult> results = new ArrayList<SimpleResult>(numHitsFiltering);
         for (int i = 0; i < searchHits.length(); i++) {
+//            results.add(new SimpleResult(searchHits.score(i), searchHits.doc(i)));
             Document d = searchHits.doc(i);
             ColorLayout cl = new ColorLayout();
             cl.setByteArrayRepresentation(d.getBinaryValue(DocumentBuilder.FIELD_NAME_COLORLAYOUT_FAST));
@@ -138,7 +140,6 @@ public class CombinationTest extends TestCase {
             SimpleResult simpleResult = simpleResultIterator.next();
             String file = simpleResult.getDocument().getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0].split("\\\\")[5].replace(".jpg", "");
             int wangClass = Integer.parseInt(file) / 100;
-//            System.out.println(simpleResult.getDistance() + " -- " + file + "(" + wangClass + ")");
             if (!(simpleResult.getDistance() <= 0f) && count < 10) {
                 if (wangClass == queryClass) goodOnes++;
                 count++;

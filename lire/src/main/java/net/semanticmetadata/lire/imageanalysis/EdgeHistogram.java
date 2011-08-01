@@ -31,6 +31,8 @@ package net.semanticmetadata.lire.imageanalysis;
 
 
 import net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation;
+import net.semanticmetadata.lire.utils.ConversionUtils;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 /**
  * Just a wrapper for the use of LireFeature.
@@ -41,14 +43,14 @@ import net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation
  */
 public class EdgeHistogram extends EdgeHistogramImplementation implements LireFeature {
     public byte[] getByteArrayRepresentation() {
-        throw new UnsupportedOperationException("No implemented!");
+        return SerializationUtils.toByteArray(edgeHistogram);
     }
 
     public void setByteArrayRepresentation(byte[] in) {
-        throw new UnsupportedOperationException("No implemented!");
+        edgeHistogram = SerializationUtils.toIntArray(in);
     }
 
     public double[] getDoubleHistogram() {
-        throw new UnsupportedOperationException("No implemented!");
+        return ConversionUtils.toDouble(edgeHistogram);
     }
 }

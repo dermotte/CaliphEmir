@@ -98,14 +98,14 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
         try {
             LireFeature vd = (LireFeature) descriptorClass.newInstance();
             vd.extract(bimg);
-            featureString = vd.getStringRepresentation();
+//            featureString = vd.getStringRepresentation();
             logger.fine("Extraction finished [" + descriptorClass.getName() + "].");
 
             doc = new Document();
             if (currentMode == Mode.Slow)
-                doc.add(new Field(fieldName, featureString, Field.Store.YES, Field.Index.NO));
+                doc.add(new Field(fieldName, vd.getStringRepresentation(), Field.Store.YES, Field.Index.NO));
             else
-                doc.add(new Field(fieldName, vd.getByteArrayRepresentation(), Field.Store.YES));
+                doc.add(new Field(fieldName, vd.getByteArrayRepresentation()));
 
             if (identifier != null)
                 doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));

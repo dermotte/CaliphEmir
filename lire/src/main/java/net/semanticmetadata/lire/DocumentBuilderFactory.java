@@ -43,7 +43,7 @@ import net.semanticmetadata.lire.impl.*;
  * <pre>
  * System.out.println(">> Indexing " + images.size() + " files.");
  * DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
- * IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(), true);
+ * IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(Version.LUCENE_33), true);
  * int count = 0;
  * long time = System.currentTimeMillis();
  * for (String identifier : images) {
@@ -212,7 +212,7 @@ public class DocumentBuilderFactory {
      * @return the created DocumentBuilder
      */
     public static DocumentBuilder getJCDDocumentBuilder() {
-        return new GenericDocumentBuilder(JCD.class, DocumentBuilder.FIELD_NAME_JCD, GenericDocumentBuilder.Mode.Fast);
+        return new GenericFastDocumentBuilder(JCD.class, DocumentBuilder.FIELD_NAME_JCD);
     }
 
     /**

@@ -67,7 +67,7 @@ public class SiftDocumentBuilder extends AbstractDocumentBuilder {
             for (Iterator<Feature> fit = features.iterator(); fit.hasNext(); ) {
                 Feature f = fit.next();
                 // add each feature to the document:
-                doc.add(new Field(DocumentBuilder.FIELD_NAME_SIFT, f.getByteArrayRepresentation(), Field.Store.YES));
+                doc.add(new Field(DocumentBuilder.FIELD_NAME_SIFT, f.getByteArrayRepresentation()));
             }
             if (identifier != null)
                 doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));

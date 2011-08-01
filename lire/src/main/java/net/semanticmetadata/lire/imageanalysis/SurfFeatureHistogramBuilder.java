@@ -40,6 +40,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.util.Version;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -142,7 +143,7 @@ public class SurfFeatureHistogramBuilder {
         System.out.println("Creating histograms ...");
         int[] tmpHist = new int[numClusters];
         Feature f = new Feature();
-        IndexWriter iw = new IndexWriter(reader.directory(), new WhitespaceAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(reader.directory(), new WhitespaceAnalyzer(Version.LUCENE_33), IndexWriter.MaxFieldLength.UNLIMITED);
         for (int i = 0; i < reader.maxDoc(); i++) {
             if (!reader.isDeleted(i)) {
                 for (int j = 0; j < tmpHist.length; j++) {
@@ -213,7 +214,7 @@ public class SurfFeatureHistogramBuilder {
         // close reader to let IndexWriter work.
         reader.close(); 
         // add new ones ...
-        IndexWriter iw = new IndexWriter(reader.directory(), new WhitespaceAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(reader.directory(), new WhitespaceAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (Iterator<Document> documentIterator = toAdd.iterator(); documentIterator.hasNext();) {
             iw.addDocument( documentIterator.next());
         }

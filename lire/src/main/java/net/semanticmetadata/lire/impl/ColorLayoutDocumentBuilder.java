@@ -65,7 +65,7 @@ public class ColorLayoutDocumentBuilder extends AbstractDocumentBuilder {
         logger.fine("Extraction finished [ColorLayout - fast].");
 
         doc = new Document();
-        doc.add(new Field(DocumentBuilder.FIELD_NAME_COLORLAYOUT_FAST, vd.getByteArrayRepresentation(), Field.Store.YES));
+        doc.add(new Field(DocumentBuilder.FIELD_NAME_COLORLAYOUT_FAST, vd.getByteArrayRepresentation()));
         if (identifier != null)
             doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
 

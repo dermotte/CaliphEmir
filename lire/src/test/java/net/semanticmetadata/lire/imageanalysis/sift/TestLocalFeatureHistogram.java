@@ -39,6 +39,7 @@ import net.semanticmetadata.lire.utils.FileUtils;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.FieldInvertState;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryParser.ParseException;
@@ -142,7 +143,7 @@ public class TestLocalFeatureHistogram extends TestCase {
         ChainedDocumentBuilder db = new ChainedDocumentBuilder();
         db.addBuilder(new SiftDocumentBuilder());
         db.addBuilder(new CEDDDocumentBuilder());
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("sift-idx")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("sift-idx")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (int i = 0; i < images.size(); i++) {
 //            int sampleQuery = sampleQueries[i];
 //            String s = testExtensive + "/" + sampleQuery + ".jpg";
@@ -160,7 +161,7 @@ public class TestLocalFeatureHistogram extends TestCase {
         ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
         ChainedDocumentBuilder db = new ChainedDocumentBuilder();
         db.addBuilder(new SurfDocumentBuilder());
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("surf-idx")), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("surf-idx")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
         for (int i = 0; i < images.size(); i++) {
 //            int sampleQuery = sampleQueries[i];
 //            String s = testExtensive + "/" + sampleQuery + ".jpg";
@@ -205,12 +206,12 @@ public class TestLocalFeatureHistogram extends TestCase {
         // test based on the Lucene scoring function:
         String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
         System.out.println("query = " + query);
-        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer());
+        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(Version.LUCENE_33));
         IndexSearcher isearcher = new IndexSearcher(reader);
         isearcher.setSimilarity(new Similarity() {
             @Override
-            public float lengthNorm(String s, int i) {
-                return 1;  //To change body of implemented methods use File | Settings | File Templates.
+            public float computeNorm(String s, FieldInvertState fieldInvertState) {
+                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
@@ -267,12 +268,12 @@ public class TestLocalFeatureHistogram extends TestCase {
 
         String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
         System.out.println("query = " + query);
-        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer());
+        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(Version.LUCENE_33));
         IndexSearcher isearcher = new IndexSearcher(reader);
         isearcher.setSimilarity(new Similarity() {
             @Override
-            public float lengthNorm(String s, int i) {
-                return 1;  //To change body of implemented methods use File | Settings | File Templates.
+            public float computeNorm(String s, FieldInvertState fieldInvertState) {
+                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
