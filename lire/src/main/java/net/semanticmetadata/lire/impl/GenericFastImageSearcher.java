@@ -59,15 +59,24 @@ public class GenericFastImageSearcher extends AbstractImageSearcher {
     protected Logger logger = Logger.getLogger(getClass().getName());
     Class<?> descriptorClass;
     String fieldName;
+    private LireFeature cachedInstance = null;
 
     private int maxHits = 10;
     protected TreeSet<SimpleResult> docs;
+    private byte[] tempBinaryValue;
 
     public GenericFastImageSearcher(int maxHits, Class<?> descriptorClass, String fieldName) {
         this.maxHits = maxHits;
         docs = new TreeSet<SimpleResult>();
         this.descriptorClass = descriptorClass;
         this.fieldName = fieldName;
+        try {
+            this.cachedInstance = (LireFeature) this.descriptorClass.newInstance();
+        } catch (InstantiationException e) {
+            logger.log(Level.SEVERE, "Error instantiating class for generic image searcher (" + descriptorClass.getName() + "): " + e.getMessage());
+        } catch (IllegalAccessException e) {
+            logger.log(Level.SEVERE, "Error instantiating class for generic image searcher (" + descriptorClass.getName() + "): " + e.getMessage());
+        }
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {
@@ -142,25 +151,22 @@ public class GenericFastImageSearcher extends AbstractImageSearcher {
         return maxDistance;
     }
 
-    protected float getDistance(Document d, LireFeature lireFeature) {
-        float distance = 0f;
-        LireFeature lf;
-        try {
-            lf = (LireFeature) descriptorClass.newInstance();
-            byte[] cls = d.getBinaryValue(fieldName);
-            if (cls != null && cls.length > 0) {
-                lf.setByteArrayRepresentation(cls);
-                distance = lireFeature.getDistance(lf);
-            } else {
-                logger.warning("No feature stored in this document!");
-            }
-        } catch (InstantiationException e) {
-            logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
-        } catch (IllegalAccessException e) {
-            logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
+    /**
+     * Main similarity method called for each and every document in the index.
+     *
+     * @param document
+     * @param lireFeature
+     * @return the distance between the given feature and the feature stored in the document.
+     */
+    protected float getDistance(Document document, LireFeature lireFeature) {
+        tempBinaryValue = document.getBinaryValue(fieldName);
+        if (tempBinaryValue != null && tempBinaryValue.length > 0) {
+            cachedInstance.setByteArrayRepresentation(tempBinaryValue);
+            return lireFeature.getDistance(cachedInstance);
+        } else {
+            logger.warning("No feature stored in this document! (" + descriptorClass.getName() + ")");
         }
-
-        return distance;
+        return 0f;
     }
 
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {

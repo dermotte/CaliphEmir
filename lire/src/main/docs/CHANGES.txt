@@ -11,6 +11,8 @@ CHANGES for LIRE
   - Updated CreateIndexTest to match the current Lire version.
   - Updated TestImageSearcher to match the current Lire version.
   - Updated TestWang to use the provided standard features.
+  - Bug fixes in SimpleColorHistogram
+  - Fix in GenericFastImageSearcher to make it faster (cached instance and less objects)
   - TODO: Change deprecated files (mostly IndexWriter) etc.
   - TODO: Update LireDemo.
   - TODO: Create index manager for BoVW and metric spaces.

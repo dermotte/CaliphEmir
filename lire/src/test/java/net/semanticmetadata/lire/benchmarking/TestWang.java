@@ -43,6 +43,7 @@ import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -80,12 +81,12 @@ public class TestWang extends TestCase {
         }
         // Setting up DocumentBuilder:
         builder = new ChainedDocumentBuilder();
-        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getJCDDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getJpegCoefficientHistogramDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getJCDDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getJpegCoefficientHistogramDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
         builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
 //        builder.addBuilder(new SurfDocumentBuilder());
 //        builder.addBuilder(new MSERDocumentBuilder());
     }
@@ -106,7 +107,7 @@ public class TestWang extends TestCase {
 
         System.out.println("-< Indexing finished >--------------");
 //        System.out.println("SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 1000);");
-//        testMAP();
+        testMAP();
     }
 
     public void testProgram() throws IOException {
@@ -140,10 +141,10 @@ public class TestWang extends TestCase {
     }
 
     private void indexFiles(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
-        System.out.println(">> Indexing " + images.size() + " files.");
+//        System.out.println(">> Indexing " + images.size() + " files.");
 //        DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
 //        DocumentBuilder builder = DocumentBuilderFactory.getFastDocumentBuilder();
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {
@@ -165,10 +166,10 @@ public class TestWang extends TestCase {
         computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram");
 //        computeMAP(ImageSearcherFactory.createTamuraImageSearcher(1000), "Tamura");
 //        computeMAP(ImageSearcherFactory.createGaborImageSearcher(1000), "Gabor");
-        computeMAP(ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(1000), "Color Correlogram");
-        computeMAP(ImageSearcherFactory.createColorLayoutImageSearcher(1000), "Scalable Color");
-        computeMAP(ImageSearcherFactory.createCEDDImageSearcher(1000), "CEDD");
-        computeMAP(ImageSearcherFactory.createJCDImageSearcher(1000), "JCD");
+//        computeMAP(ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(1000), "Color Correlogram");
+//        computeMAP(ImageSearcherFactory.createColorLayoutImageSearcher(1000), "Scalable Color");
+//        computeMAP(ImageSearcherFactory.createCEDDImageSearcher(1000), "CEDD");
+//        computeMAP(ImageSearcherFactory.createJCDImageSearcher(1000), "JCD");
 //        computeMAP(ImageSearcherFactory.createFCTHImageSearcher(1000), "FCTH");
 //        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "MSER BoVW");    // used for MSER!!!
 //        computeMAP(new SiftVisualWordsImageSearcher(1000), "Sift BoVW");

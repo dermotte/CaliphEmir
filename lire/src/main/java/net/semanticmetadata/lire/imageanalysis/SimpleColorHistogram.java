@@ -53,10 +53,11 @@ public class SimpleColorHistogram implements LireFeature {
     public static HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.RGB;
     public static DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.L1;
 
-    private static final int[] quantTable = {1, 32, 4, 8, 16, 4, 16, 4, 16, 4,             // Hue, Sum - subspace 0,1,2,3,4 for 256 levels
+    private static final int[] quantTable = {
+            1, 32, 4, 8, 16, 4, 16, 4, 16, 4,            // Hue, Sum - subspace 0,1,2,3,4 for 256 levels
             1, 16, 4, 4, 8, 4, 8, 4, 8, 4,            // Hue, Sum - subspace 0,1,2,3,4 for 128 levels
             1, 8, 4, 4, 4, 4, 8, 2, 8, 1,            // Hue, Sum - subspace 0,1,2,3,4 for  64 levels
-            1, 8, 4, 4, 4, 4, 4, 1, 4, 1};        // Hue, Sum - subspace 0,1,2,3,4 for  32 levels
+            1, 8, 4, 4, 4, 4, 4, 1, 4, 1};           // Hue, Sum - subspace 0,1,2,3,4 for  32 levels
 
 
     /**
@@ -141,11 +142,6 @@ public class SimpleColorHistogram implements LireFeature {
     }
 
     private void normalize(int[] histogram, int numPixels) {
-        // find max:
-        int max = 0;
-//        for (int i = 0; i < histogram.length; i++) {
-//            max = Math.max(histogram[i], max);
-//        }
         for (int i = 0; i < histogram.length; i++) {
             histogram[i] = (histogram[i] * 1024) / numPixels;
         }
@@ -153,17 +149,18 @@ public class SimpleColorHistogram implements LireFeature {
 
     private int quant(int[] pixel) {
         if (histogramType == HistogramType.HSV) {
-            // Todo: tune this one ...
-            int qH = (pixel[0] * 16) / 360;    // more granularity in color
+            // Todo: tune this one ... now it's just built for 1024 bins
+            int qH = (pixel[0] * 64) / 360;    // more granularity in color
+            int qV = (pixel[1] * 4) / 360;
             int qS = (pixel[2] * 4) / 100;
-            return qH * qS + qS;
+            return qH * 16 + qV * 4 + qS;
         } else if (histogramType == HistogramType.HMMD) {
-            return quantHmmd(rgb2hmmd(pixel[0], pixel[1], pixel[2]), 256);
+            return quantHmmd(rgb2hmmd(pixel[0], pixel[1], pixel[2]), 255);
         } else if (histogramType == HistogramType.Luminance) {
             return (pixel[0] * histogram.length) / (256);
         } else {
-//            return Quantization.quantDistributionBased(pixel, histogram.length, 512);
-            return Quantization.quantUniformly(pixel, DEFAULT_NUMBER_OF_BINS, 256);
+//            return Quantization.quantDistributionBased(pixel, histogram.length, 255);
+            return Quantization.quantUniformly(pixel, DEFAULT_NUMBER_OF_BINS, 255);
         }
     }
 

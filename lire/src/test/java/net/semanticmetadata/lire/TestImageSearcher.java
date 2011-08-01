@@ -53,7 +53,7 @@ public class TestImageSearcher extends TestCase {
             "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG"};
     private String testFilesPath = "src/test/resources/images/";
     private String indexPath = "test-index-big-index";
-    private int numsearches = 5;
+    private int numsearches = 25;
 
     private DocumentBuilder getDocumentBuilder() {
         ChainedDocumentBuilder result = new ChainedDocumentBuilder();
