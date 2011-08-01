@@ -1,16 +1,14 @@
 package edu.uniklu.itec.mosaix.engine;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.HashMap;
-
-
-import org.apache.lucene.document.Document;
-
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageSearchHits;
+import org.apache.lucene.document.Document;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
  *
@@ -141,7 +139,7 @@ public final class Engine {
 
 		for(int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
-			String file = doc.getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
+			String file = doc.getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
 //			BufferedImage repl = ImageIO.read(new File(file));
 			WeightingData data = weightingDataFactory_.newInstance(doc);
 			data.setRelevancy(hits.score(i));

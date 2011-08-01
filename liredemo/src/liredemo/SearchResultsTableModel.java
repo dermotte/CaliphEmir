@@ -9,26 +9,24 @@
 
 package liredemo;
 
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifDirectory;
+import com.drew.metadata.exif.ExifReader;
+import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.ImageSearchHits;
+import net.semanticmetadata.lire.utils.ImageUtils;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.File;
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.net.URL;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
-import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.utils.ImageUtils;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifReader;
-import com.drew.metadata.exif.ExifDirectory;
 
 /*
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net.
@@ -101,9 +99,9 @@ public class SearchResultsTableModel extends DefaultTableModel {
 
     public Object getValueAt(int row, int col) {
         if (col == 0) {
-            String text = hits.doc(row).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
-            if (hits.doc(row).getField("FlickrURL") != null) {
-                text = hits.doc(row).getField("FlickrTitle").stringValue() + " - " + hits.doc(row).getField("FlickrURL").stringValue();
+            String text = hits.doc(row).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
+            if (hits.doc(row).getFieldable("FlickrURL") != null) {
+                text = hits.doc(row).getFieldable("FlickrTitle").stringValue() + " - " + hits.doc(row).getFieldable("FlickrURL").stringValue();
             }
             return df.format(hits.score(row)) + ": " + text;
 //        } else if (col == 1) {
@@ -126,7 +124,7 @@ public class SearchResultsTableModel extends DefaultTableModel {
             ImageIcon icon = null;
             try {
                 BufferedImage img = null;
-                String fileIdentifier = hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
+                String fileIdentifier = hits.doc(i).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
                 if (!fileIdentifier.startsWith("http:")) {
                     // check isf it is a jpg file ...
                     if (fileIdentifier.toLowerCase().endsWith(".jpg")) {

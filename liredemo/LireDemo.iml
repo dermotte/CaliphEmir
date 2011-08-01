@@ -34,19 +34,11 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="Main" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/lucene-core-3.0.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/lire.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Lire/lib/lucene-core-3.3.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

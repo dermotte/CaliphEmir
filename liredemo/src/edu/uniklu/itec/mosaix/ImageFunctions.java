@@ -141,8 +141,7 @@ public class ImageFunctions {
 
     /**
      * this method opens searches for a similar image within the allready indexed image-files
-     *
-     * @param bi   the image for which a similar one is searched
+     * @param bi the image for which a similar one is searched
      * @param path the path to the indexed files
      * @return ImageSearchHits - result from LIRe, max. 10 elements
      */
@@ -155,7 +154,7 @@ public class ImageFunctions {
             if (searcher == null) {
                 if (colorHist > 0f) {
 //              et  System.out.println("Using AutoColorCorrelogram Searcher ...");
-//                    searcher = ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(50);
+//                    searcher = ImageSearcherFactory.createDefaultCorrelogramImageSearcher(50);
                     searcher = ImageSearcherFactory.createCEDDImageSearcher(50);
                 } else if (texture > 0f) {
                     searcher = ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(50);
@@ -174,7 +173,6 @@ public class ImageFunctions {
     /**
      * uses LIRe to index BufferedImages within the param path. but only if
      * an index does not exist or the user forced the indexing process
-     *
      * @param path the path to the bufferedImages which will be indexed
      * @return the number of indexed images
      */
@@ -212,8 +210,7 @@ public class ImageFunctions {
 
     /**
      * this method returns all images from a directory in an arrayList
-     *
-     * @param directory                 the directory where all images should be found
+     * @param directory the directory where all images should be found
      * @param descendIntoSubDirectories - decides if subdirectories should be used also
      * @return the filenames as ArrayList<String>
      * @throws IOException
@@ -277,7 +274,7 @@ public class ImageFunctions {
                     result = eng.findBestMatch(splitted[i][j], hits, perc);
 //					scaled = this.scale(result, perc);
                     finalImg = this.assemble(finalImg, result, j, i, raster, true);
-                    progress.setProgress((int) (100 * ((float) (i * splitted.length + j + 1)) / steps));
+                    progress.setProgress((int) (100* ( (float) (i*splitted.length+j+1)) /steps));
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -295,16 +292,16 @@ public class ImageFunctions {
     /**
      * This method assembles two bufferedImages to one new Image! the extending image needs to
      * provide enough space for the extender (second) image.
-     * <p/>
+     *
      * posX and posY defines the position of the extender image in an imaginary raster
-     * <p/>
+     *
      * rasternr defines the number of elements in one row (column)
      *
      * @param extending the image which will be extanded
-     * @param extender  the image which will extand the extending
-     * @param posX      the x-position
-     * @param posY      the y-position
-     * @param nrRaster  number of elements in one row (column)
+     * @param extender the image which will extand the extending
+     * @param posX the x-position
+     * @param posY the y-position
+     * @param nrRaster number of elements in one row (column)
      * @return the assembled BufferedImage
      */
     public BufferedImage assemble(BufferedImage extending, BufferedImage extender, int posX, int posY, Dimension nrRaster, boolean scale) {

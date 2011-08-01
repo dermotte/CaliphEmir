@@ -42,8 +42,9 @@ import liredemo.flickr.FlickrIndexingThread;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
 import net.semanticmetadata.lire.ImageSearcherFactory;
-import net.semanticmetadata.lire.imageanalysis.sift.SiftFeatureHistogramBuilder;
-import net.semanticmetadata.lire.impl.SiftVisualWordsImageSearcher;
+import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
+import net.semanticmetadata.lire.impl.ColorLayoutImageSearcher;
+import net.semanticmetadata.lire.impl.SurfVisualWordsImageSearcher;
 import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
@@ -1467,7 +1468,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
     private void fileMenuApproxIndexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuApproxIndexActionPerformed
         System.out.println("Starting to index");
         try {
-            SiftFeatureHistogramBuilder sh = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(textfieldIndexName.getText())), false), 1000);
+            SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(textfieldIndexName.getText())), false), 1000, 10000);
             sh.index();
         } catch (IOException e) {
             e.printStackTrace();
@@ -1525,7 +1526,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 2) {
             searcher = ImageSearcherFactory.createWeightedSearcher(numResults, 0f, 0f, 1f);
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 3) {
-            searcher = ImageSearcherFactory.createWeightedSearcher(numResults, 0f, 1f, 0f);
+            searcher = new ColorLayoutImageSearcher(numResults);
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 4) {
             searcher = ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(numResults);
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 5) {
@@ -1539,7 +1540,7 @@ public class LireDemoFrame extends javax.swing.JFrame {
         } else if (selectboxDocumentBuilder.getSelectedIndex() == 9) {
             searcher = ImageSearcherFactory.createGaborImageSearcher(numResults);
         } else if (selectboxDocumentBuilder.getSelectedIndex() > 9) {
-            searcher = new SiftVisualWordsImageSearcher(numResults);
+            searcher = new SurfVisualWordsImageSearcher(numResults);
         }
         return searcher;
     }

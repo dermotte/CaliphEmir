@@ -9,6 +9,7 @@ import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
@@ -106,7 +107,7 @@ public class FlickrIndexingThread extends Thread {
                 e.printStackTrace();
             }
             PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(new SimpleAnalyzer());
-            wrapper.addAnalyzer("tags", new WhitespaceAnalyzer());
+            wrapper.addAnalyzer("tags", new WhitespaceAnalyzer(Version.LUCENE_33));
 
 //        iw = new IndexWriter(indexPath + "-new", wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
 
