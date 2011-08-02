@@ -1,6 +1,17 @@
 CHANGES for LIRE
 ================
 
+2011-08-02
+==========
+  - Liredemo: new result list (grid view)
+  - Liredemo: Menu for fast switch between descriptor (Alt-1 to Alt-9)
+  - Liredemo: Re-worked set of descriptors
+  - Liredemo: Fixed catch {} in ParallelIndexer that missed specific Exceptions, killed threads, and stopped indexing.
+  - Added byte[] serialization to ScalableColor
+  - TODO: Change deprecated files (mostly IndexWriter) etc.
+  - TODO: Create index manager for BoVW and metric spaces.
+  - TODO: Fix bug with ScalableColor in LireDemo!!
+
 2011-08-01
 ==========
   - Changed WhiteSpaceAnalyzer and SimpleAnalyzer to be constructed with version 3.3 (fix deprecation)
@@ -13,9 +24,6 @@ CHANGES for LIRE
   - Updated TestWang to use the provided standard features.
   - Bug fixes in SimpleColorHistogram
   - Fix in GenericFastImageSearcher to make it faster (cached instance and less objects)
-  - TODO: Change deprecated files (mostly IndexWriter) etc.
-  - TODO: Update LireDemo.
-  - TODO: Create index manager for BoVW and metric spaces.
 
 2011-07-29
 ==========

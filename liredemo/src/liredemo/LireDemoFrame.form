@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
@@ -69,16 +69,6 @@
             </Property>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="fileMenuApproxIndex">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Create approximate search index"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fileMenuApproxIndexActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator1">
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="fileMenuExit">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
@@ -135,6 +125,120 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewMenuOptionsActionPerformed"/>
               </Events>
             </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="devMenu">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Developer"/>
+          </Properties>
+          <SubComponents>
+            <Menu class="javax.swing.JMenu" name="researchMenu">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Re-do search with ..."/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="accSearch">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Alt+1"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Auto Color Correlogram"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchWithAcc"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="ceddSearch">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Alt+2"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="CEDD"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchWithCedd"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="clSearch">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Alt+3"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Color Layout"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchWithColorLayout"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="ehSearch">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Alt+4"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Edge Histogram"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchWithEdgeHistogram"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="fcthSearch">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Alt+5"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="FCTH"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchWithFCTH"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jcdSearch">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Alt+6"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="JCD"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchWithJcd"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jpegCoeffSearch">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Alt+7"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="JPEG Coefficient Histogram"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchWithJpegCoeffs"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="colorhistSearch">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Alt+8"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="RGB Color Histogram"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchWithColorHist"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="scSearch">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Alt+9"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Scalable Color"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchWithScalableColor"/>
+                  </Events>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="helpMenu">
@@ -415,8 +519,8 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="100" max="32767" attributes="0"/>
+                              <Component id="jLabel8" pref="678" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -438,7 +542,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="507" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="288" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -503,7 +607,7 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel8">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;b&gt;Hints:&lt;/b&gt;&#xa;&lt;ul&gt;&#xa;&lt;li&gt; Only images in the selected directory but also all &lt;i&gt;subdirectories&lt;/i&gt; will be indexed.&#xa;&lt;li&gt; If you don&apos;t specify a directory images are downloaded from &lt;i&gt;Flickr&lt;/i&gt;. Configure in options panel the actual number&#xa;&lt;/ul&gt;"/>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;b&gt;Hints:&lt;/b&gt;&#xa;&lt;ul&gt;&#xa;&lt;li&gt; JPEG images in the selected directory and all &lt;i&gt;subdirectories&lt;/i&gt; will be indexed.&#xa;&lt;li&gt; If you don&apos;t specify a directory and press &lt;i&gt;start&lt;/i&gt; photos are downloaded from &lt;i&gt;Flickr&lt;/i&gt;.Use options panel to configure how many.&#xa;&lt;/ul&gt;"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="checkBoxAddToExisintgIndex">
@@ -792,7 +896,7 @@
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="textfieldMosaicImage" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="mosaicImageLable" pref="381" max="32767" attributes="0"/>
+                                      <Component id="mosaicImageLable" pref="382" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="1">
                                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
@@ -813,7 +917,7 @@
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="checkboxMosaicAdvanceOptions" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="mosaicAdvanceOptionsPanel" pref="190" max="32767" attributes="0"/>
+                                      <Component id="mosaicAdvanceOptionsPanel" pref="191" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="buttonMosaicSave" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -951,7 +1055,7 @@
                             </DimensionLayout>
                             <DimensionLayout dim="1">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="190" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="191" max="32767" attributes="0"/>
                               </Group>
                             </DimensionLayout>
                           </Layout>
@@ -994,7 +1098,7 @@
                                       <Component id="mosaicOptionsAutocolorcorrelogram" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="mosaicOptionsCedd" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="108" max="32767" attributes="0"/>
+                                      <EmptySpace pref="109" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                             </DimensionLayout>
@@ -1149,17 +1253,17 @@
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="11">
-                            <StringItem index="0" value="All MPEG-7 Descriptors"/>
+                            <StringItem index="0" value="Color Layout (MPEG-7)"/>
                             <StringItem index="1" value="Scalable Color (MPEG-7)"/>
                             <StringItem index="2" value="Edge Histogram (MPEG-7)"/>
-                            <StringItem index="3" value="Color Layout (MPEG-7)"/>
-                            <StringItem index="4" value="Auto Color Correlogram"/>
-                            <StringItem index="5" value="CEDD"/>
-                            <StringItem index="6" value="FCTH"/>
+                            <StringItem index="3" value="Auto Color Correlogram"/>
+                            <StringItem index="4" value="CEDD"/>
+                            <StringItem index="5" value="FCTH"/>
+                            <StringItem index="6" value="JCD"/>
                             <StringItem index="7" value="RGB Color Histogram"/>
-                            <StringItem index="8" value="Tamura"/>
-                            <StringItem index="9" value="Gabor"/>
-                            <StringItem index="10" value="Metric Spaces (approximate CEDD)"/>
+                            <StringItem index="8" value="Tamura Texture Features"/>
+                            <StringItem index="9" value="GaborTexture Features"/>
+                            <StringItem index="10" value="JPEG Coefficients Histogram"/>
                           </StringArray>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">

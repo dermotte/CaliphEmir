@@ -31,6 +31,8 @@ package net.semanticmetadata.lire.imageanalysis;
 
 
 import net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl;
+import net.semanticmetadata.lire.utils.ConversionUtils;
+import net.semanticmetadata.lire.utils.SerializationUtils;
 
 /**
  * Just a wrapper for the use of LireFeature.
@@ -41,14 +43,41 @@ import net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl;
  */
 public class ScalableColor extends ScalableColorImpl implements LireFeature {
     public byte[] getByteArrayRepresentation() {
-        throw new UnsupportedOperationException("No implemented!");
+        /*
+        builder.append("scalablecolor;");
+        builder.append(NumberOfBitplanesDiscarded);
+        builder.append(';');
+        builder.append(NumberOfCoefficients);
+        builder.append(';');
+        for (int i = 0; i < NumberOfCoefficients; i++) {
+            builder.append(haarTransformedHistogram[i]);
+            if ((i + 1) < NumberOfCoefficients) builder.append(' ');
+        }
+        return builder.toString();
+        */
+        int[] result = new int[NumberOfCoefficients+2];
+        result[0] = NumberOfBitplanesDiscarded;
+        result[1] = NumberOfCoefficients;
+        for (int i = 2; i < result.length; i++) {
+            result[i] = haarTransformedHistogram[i-2];
+        }
+        return SerializationUtils.toByteArray(result);
     }
 
     public void setByteArrayRepresentation(byte[] in) {
-        throw new UnsupportedOperationException("No implemented!");
+        int[] result = SerializationUtils.toIntArray(in);
+        NumberOfBitplanesDiscarded = result[0];
+        NumberOfCoefficients = result[1];
+        for (int i = 2; i < result.length; i++) {
+            haarTransformedHistogram[i-2] = result[i];
+        }
     }
 
     public double[] getDoubleHistogram() {
-        throw new UnsupportedOperationException("No implemented!");
+        int[] result = new int[NumberOfCoefficients];
+        for (int i = 2; i < result.length; i++) {
+            result[i] = haarTransformedHistogram[i];
+        }
+        return ConversionUtils.toDouble(result);
     }
 }

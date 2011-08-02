@@ -70,12 +70,12 @@ public class SearchResultsTableModel extends DefaultTableModel {
     }
 
     public int getColumnCount() {
-        return 2;
+        return 3;
     }
 
     public String getColumnName(int col) {
         if (col == 0) {
-            return "File";
+            return "Preview";
         } else if (col == 1) {
             return "Preview";
         } else if (col == 2) {
@@ -85,20 +85,20 @@ public class SearchResultsTableModel extends DefaultTableModel {
     }
 
     public Class getColumnClass(int column) {
-        if (column == 0) {
-            return String.class;
-        } else {
+//        if (column == 0) {
+//            return String.class;
+//        } else {
             return ImageIcon.class;
-        }
+//        }
     }
 
     public int getRowCount() {
         if (hits == null) return 0;
-        return hits.length();
+        return hits.length()/3+1;
     }
 
     public Object getValueAt(int row, int col) {
-        if (col == 0) {
+        /*if (col == 0) {
             String text = hits.doc(row).getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
             if (hits.doc(row).getFieldable("FlickrURL") != null) {
                 text = hits.doc(row).getFieldable("FlickrTitle").stringValue() + " - " + hits.doc(row).getFieldable("FlickrURL").stringValue();
@@ -108,8 +108,10 @@ public class SearchResultsTableModel extends DefaultTableModel {
 //            return hits.doc(row).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
         } else if (col == 1) {
             return icons.get(row);
-        }
-        return null;
+        } */
+        int imageID = row*3+col;
+        if (imageID<hits.length()) return icons.get(imageID);
+        else return null;
     }
 
     /**
@@ -142,7 +144,7 @@ public class SearchResultsTableModel extends DefaultTableModel {
                 } else {
                     img = ImageIO.read(new URL(fileIdentifier));
                 }
-                icon = new ImageIcon(ImageUtils.scaleImage(img, 128));
+                icon = new ImageIcon(ImageUtils.scaleImage(img, 200));
                 progress.setValue((i * 100) / hits.length());
             } catch (Exception ex) {
                 Logger.getLogger("global").log(Level.SEVERE, null, ex);

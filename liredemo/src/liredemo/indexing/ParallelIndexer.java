@@ -1,25 +1,21 @@
 package liredemo.indexing;
 
-import net.semanticmetadata.lire.DocumentBuilder;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.ByteArrayInputStream;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.awt.image.BufferedImage;
-
+import com.drew.imaging.jpeg.JpegProcessingException;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
-import com.drew.metadata.exif.ExifReader;
 import com.drew.metadata.exif.ExifDirectory;
-import com.drew.imaging.jpeg.JpegProcessingException;
+import com.drew.metadata.exif.ExifReader;
+import net.semanticmetadata.lire.DocumentBuilder;
+import org.apache.lucene.document.Document;
 
 import javax.imageio.ImageIO;
-
-import org.apache.lucene.document.Document;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * ...
@@ -30,7 +26,7 @@ import org.apache.lucene.document.Document;
  */
 public class ParallelIndexer implements Runnable {
     List<String> imageFiles;
-    private int NUMBER_OF_SYNC_THREADS = 3;
+    private int NUMBER_OF_SYNC_THREADS = 6;
     Hashtable<String, Boolean> indexThreads = new Hashtable<String, Boolean>(3);
     DocumentBuilder builder;
     LinkedList<Document> finished = new LinkedList<Document>();
@@ -105,7 +101,7 @@ public class ParallelIndexer implements Runnable {
                 try {
                     Document doc = parent.builder.createDocument(readFile(photo), photo);
                     parent.addDoc(doc, photo);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     parent.addDoc(null, photo);
                 }
