@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -42,6 +42,7 @@ import net.semanticmetadata.lire.utils.SerializationUtils;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class ScalableColor extends ScalableColorImpl implements LireFeature {
+
     public byte[] getByteArrayRepresentation() {
         /*
         builder.append("scalablecolor;");
@@ -55,11 +56,11 @@ public class ScalableColor extends ScalableColorImpl implements LireFeature {
         }
         return builder.toString();
         */
-        int[] result = new int[NumberOfCoefficients+2];
+        int[] result = new int[NumberOfCoefficients + 2];
         result[0] = NumberOfBitplanesDiscarded;
         result[1] = NumberOfCoefficients;
         for (int i = 2; i < result.length; i++) {
-            result[i] = haarTransformedHistogram[i-2];
+            result[i] = haarTransformedHistogram[i - 2];
         }
         return SerializationUtils.toByteArray(result);
     }
@@ -68,8 +69,9 @@ public class ScalableColor extends ScalableColorImpl implements LireFeature {
         int[] result = SerializationUtils.toIntArray(in);
         NumberOfBitplanesDiscarded = result[0];
         NumberOfCoefficients = result[1];
+        haarTransformedHistogram = new int[result.length - 2];
         for (int i = 2; i < result.length; i++) {
-            haarTransformedHistogram[i-2] = result[i];
+            haarTransformedHistogram[i - 2] = result[i];
         }
     }
 

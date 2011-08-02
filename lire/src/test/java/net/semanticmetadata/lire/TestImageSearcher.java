@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -52,12 +52,13 @@ public class TestImageSearcher extends TestCase {
     private String[] testFiles = new String[]{"img01.JPG", "img02.JPG", "img03.JPG", "img04.JPG", "img05.JPG",
             "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG"};
     private String testFilesPath = "src/test/resources/images/";
-    private String indexPath = "test-index-big-index";
+    private String indexPath = "test-index-small";
     private int numsearches = 25;
 
     private DocumentBuilder getDocumentBuilder() {
         ChainedDocumentBuilder result = new ChainedDocumentBuilder();
         result.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
         result.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
         result.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
         result.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
@@ -74,7 +75,7 @@ public class TestImageSearcher extends TestCase {
         IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
         int numDocs = reader.numDocs();
         System.out.println("numDocs = " + numDocs);
-        ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(50);
+        ImageSearcher searcher = ImageSearcherFactory.createScalableColorImageSearcher(50);
         FileInputStream imageStream = new FileInputStream(testFilesPath + testFiles[0]);
         BufferedImage bimg = ImageIO.read(imageStream);
         ImageSearchHits hits = null;

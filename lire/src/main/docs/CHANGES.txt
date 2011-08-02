@@ -7,10 +7,14 @@ CHANGES for LIRE
   - Liredemo: Menu for fast switch between descriptor (Alt-1 to Alt-9)
   - Liredemo: Re-worked set of descriptors
   - Liredemo: Fixed catch {} in ParallelIndexer that missed specific Exceptions, killed threads, and stopped indexing.
+  - Liredemo: Fixed sync in ParallelIndexer to make it more understandable.
   - Added byte[] serialization to ScalableColor
+  - Fixed bug in DocumentBuilderFactory
+  - Fixed bug in TestImageSearcher
+  - Fixed bug in byte[] serialization to ScalableColor
   - TODO: Change deprecated files (mostly IndexWriter) etc.
   - TODO: Create index manager for BoVW and metric spaces.
-  - TODO: Fix bug with ScalableColor in LireDemo!!
+  - TODO: Create filter mechanism for re-ranking and LSA.
 
 2011-08-01
 ==========

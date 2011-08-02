@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -34,6 +34,7 @@ import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 
 /**
  * ScalableColor
@@ -41,6 +42,8 @@ import java.util.StringTokenizer;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class ScalableColorImpl {
+    protected Logger logger = Logger.getLogger(getClass().getName());
+
     protected BufferedImage img;
     protected int NumberOfCoefficients = 256;
     protected int NumberOfBitplanesDiscarded = 0;
@@ -516,12 +519,14 @@ public class ScalableColorImpl {
                 diffsum += diff;
             }
         } else {
+            // there is a problem, we cannot compare the descriptors.
             if (haarTransformedHistogram != null && secHist.haarTransformedHistogram != null)
-                throw new UnsupportedOperationException("NumberOfBitplanesDiscarded and/or NumberOfCoefficients not matching");
+                logger.info("NumberOfBitplanesDiscarded and/or NumberOfCoefficients not matching");
             else
-                throw new UnsupportedOperationException("One of the Descriptor histograms is NULL");
+                logger.info("One of the Descriptor histograms is NULL");
+            return -1;
         }
-        // Summe der Differenzen als Mass der �hnlichkeit
+        // sum of differences, L1
         return diffsum;
     }
 

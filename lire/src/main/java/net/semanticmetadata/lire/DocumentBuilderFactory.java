@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -121,7 +121,7 @@ public class DocumentBuilderFactory {
      * @return the document builder.
      */
     public static DocumentBuilder getScalableColorBuilder() {
-        return new GenericFastDocumentBuilder(ColorLayout.class, DocumentBuilder.FIELD_NAME_SCALABLECOLOR);
+        return new GenericFastDocumentBuilder(ScalableColor.class, DocumentBuilder.FIELD_NAME_SCALABLECOLOR);
     }
 
     /**

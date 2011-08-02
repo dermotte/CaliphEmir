@@ -1,3 +1,33 @@
+/*
+ * This file is part of the LIRe project: http://www.semanticmetadata.net/lire
+ * LIRe is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LIRe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LIRe; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * We kindly ask you to refer the following paper in any publication mentioning Lire:
+ *
+ * Lux Mathias, Savvas A. Chatzichristofis. Lire: Lucene Image Retrieval –
+ * An Extensible Java CBIR Library. In proceedings of the 16th ACM International
+ * Conference on Multimedia, pp. 1085-1088, Vancouver, Canada, 2008
+ *
+ * http://doi.acm.org/10.1145/1459359.1459577
+ *
+ * Copyright statement:
+ * ~~~~~~~~~~~~~~~~~~~~
+ * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
+ *     http://www.semanticmetadata.net/lire
+ */
+
 package liredemo.indexing;
 
 import com.drew.imaging.jpeg.JpegProcessingException;
@@ -14,8 +44,10 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * ...
@@ -25,38 +57,41 @@ import java.util.List;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class ParallelIndexer implements Runnable {
-    List<String> imageFiles;
-    private int NUMBER_OF_SYNC_THREADS = 6;
+    // Vectors are already synchronized, so that's the cheap solution.
+    Vector<String> imageFiles;
+    private int NUMBER_OF_SYNC_THREADS = 10;
     Hashtable<String, Boolean> indexThreads = new Hashtable<String, Boolean>(3);
     DocumentBuilder builder;
-    LinkedList<Document> finished = new LinkedList<Document>();
+    Vector<Document> finished = new Vector<Document>();
     private boolean started = false;
+    private final ExecutorService pool;
+
 
     public ParallelIndexer(List<String> imageFiles, DocumentBuilder b) {
-        this.imageFiles = new LinkedList<String>();
-        assert(imageFiles!=null);
+        this.imageFiles = new Vector<String>();
+        assert (imageFiles != null);
         this.imageFiles.addAll(imageFiles);
         builder = b;
+        pool = Executors.newFixedThreadPool(NUMBER_OF_SYNC_THREADS);
     }
 
     public void run() {
         for (int i = 1; i < NUMBER_OF_SYNC_THREADS; i++) {
             PhotoIndexer runnable = new PhotoIndexer(this);
-            Thread t = new Thread(runnable);
-            t.start();
-            indexThreads.put(t.getName(), false);
+//            Thread t = new Thread(runnable);
+//            t.start();
+//            indexThreads.put(t.getName(), false);
+            pool.submit(runnable);
         }
         started = true;
     }
 
     public void addDoc(Document doc, String photofile) {
-        synchronized (finished) {
-            if (doc != null) finished.add(doc);
-            Thread.yield();
-        }
+        if (doc != null) finished.add(doc);
+        Thread.yield();
     }
 
-    public synchronized Document getNext() {
+    public Document getNext() {
         if (imageFiles.size() < 1) {
             boolean fb = true;
             for (String t : indexThreads.keySet()) {
@@ -73,17 +108,14 @@ public class ParallelIndexer implements Runnable {
                 e.printStackTrace();
             }
         }
-        return finished.removeFirst();
+        return finished.remove(0);
     }
 
     private String getNextImage() {
-        synchronized (imageFiles) {
-            if (imageFiles.size() > 0) {
-                return imageFiles.remove(0);
+        if (imageFiles.size() > 0) {
+            return imageFiles.remove(0);
 
-            } else return null;
-        }
-
+        } else return null;
     }
 
     class PhotoIndexer implements Runnable {
@@ -106,7 +138,7 @@ public class ParallelIndexer implements Runnable {
                     parent.addDoc(null, photo);
                 }
             }
-            parent.indexThreads.put(Thread.currentThread().getName(),true);
+            parent.indexThreads.put(Thread.currentThread().getName(), true);
         }
 
         private BufferedImage readFile(String path) throws IOException {
@@ -118,8 +150,8 @@ public class ParallelIndexer implements Runnable {
                     new ExifReader(jpegFile).extract(metadata);
                     byte[] thumb = ((ExifDirectory) metadata.getDirectory(ExifDirectory.class)).getThumbnailData();
                     if (thumb != null) image = ImageIO.read(new ByteArrayInputStream(thumb));
-    //            System.out.print("Read from thumbnail data ... ");
-    //            System.out.println(image.getWidth() + " x " + image.getHeight());
+                    //            System.out.print("Read from thumbnail data ... ");
+                    //            System.out.println(image.getWidth() + " x " + image.getHeight());
                 } catch (JpegProcessingException e) {
                     System.err.println("Could not extract thumbnail");
                     e.printStackTrace();
@@ -134,10 +166,6 @@ public class ParallelIndexer implements Runnable {
             // Fallback & PNGs:
             if (image == null) image = ImageIO.read(new FileInputStream(path));
             return image;
-        }
-
-        public boolean hasFinished() {
-            return hasFinished;
         }
     }
 

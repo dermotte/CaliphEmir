@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -60,12 +60,13 @@ public class CreateIndexTest extends TestCase {
             "img06.JPG", "img07.JPG", "img08.JPG", "img08a.JPG", "error.jpg"};
     private String testFilesPath = "./src/test/resources/images/";
     private String indexPath = "test-index";
-//    private String testExtensive = "C:\\Temp\\images";
+    //    private String testExtensive = "C:\\Temp\\images";
     private String testExtensive = "./wang-1000";
 
     private DocumentBuilder getDocumentBuilder() {
         ChainedDocumentBuilder result = new ChainedDocumentBuilder();
         result.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
+        result.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
         result.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
         result.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
         result.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
@@ -80,6 +81,7 @@ public class CreateIndexTest extends TestCase {
 
     /**
      * Creates an index with an extensive list of global features.
+     *
      * @throws IOException
      */
     public void testCreateIndex() throws IOException {
