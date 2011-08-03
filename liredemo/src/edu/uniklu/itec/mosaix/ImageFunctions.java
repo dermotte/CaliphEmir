@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -35,7 +35,7 @@ import edu.uniklu.itec.mosaix.engine.LeastUsedWeightingStrategy;
 import edu.uniklu.itec.mosaix.engine.ProportionWeightingStrategy;
 import liredemo.ProgressMonitor;
 import net.semanticmetadata.lire.*;
-import org.apache.lucene.analysis.SimpleAnalyzer;
+import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -141,7 +141,8 @@ public class ImageFunctions {
 
     /**
      * this method opens searches for a similar image within the allready indexed image-files
-     * @param bi the image for which a similar one is searched
+     *
+     * @param bi   the image for which a similar one is searched
      * @param path the path to the indexed files
      * @return ImageSearchHits - result from LIRe, max. 10 elements
      */
@@ -173,6 +174,7 @@ public class ImageFunctions {
     /**
      * uses LIRe to index BufferedImages within the param path. but only if
      * an index does not exist or the user forced the indexing process
+     *
      * @param path the path to the bufferedImages which will be indexed
      * @return the number of indexed images
      */
@@ -191,8 +193,9 @@ public class ImageFunctions {
         if (force || (hasIndex == false)) {
             try {
                 java.util.ArrayList<java.lang.String> images = getAllImages(new java.io.File(path), true);
-                IndexWriter iw = new IndexWriter(FSDirectory.open(new File(path)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
-                DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder(); //.getFullDocumentBuilder();
+                IndexWriter iw = LuceneUtils.createIndexWriter(path, true);
+//                IndexWriter iw = new IndexWriter(FSDirectory.open(new File(path)), new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+                DocumentBuilder builder = DocumentBuilderFactory.getFullDocumentBuilder();
                 for (String identifier : images) {
                     Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
                     iw.addDocument(doc);
@@ -210,7 +213,8 @@ public class ImageFunctions {
 
     /**
      * this method returns all images from a directory in an arrayList
-     * @param directory the directory where all images should be found
+     *
+     * @param directory                 the directory where all images should be found
      * @param descendIntoSubDirectories - decides if subdirectories should be used also
      * @return the filenames as ArrayList<String>
      * @throws IOException
@@ -274,7 +278,7 @@ public class ImageFunctions {
                     result = eng.findBestMatch(splitted[i][j], hits, perc);
 //					scaled = this.scale(result, perc);
                     finalImg = this.assemble(finalImg, result, j, i, raster, true);
-                    progress.setProgress((int) (100* ( (float) (i*splitted.length+j+1)) /steps));
+                    progress.setProgress((int) (100 * ((float) (i * splitted.length + j + 1)) / steps));
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -292,16 +296,16 @@ public class ImageFunctions {
     /**
      * This method assembles two bufferedImages to one new Image! the extending image needs to
      * provide enough space for the extender (second) image.
-     *
+     * <p/>
      * posX and posY defines the position of the extender image in an imaginary raster
-     *
+     * <p/>
      * rasternr defines the number of elements in one row (column)
      *
      * @param extending the image which will be extanded
-     * @param extender the image which will extand the extending
-     * @param posX the x-position
-     * @param posY the y-position
-     * @param nrRaster number of elements in one row (column)
+     * @param extender  the image which will extand the extending
+     * @param posX      the x-position
+     * @param posY      the y-position
+     * @param nrRaster  number of elements in one row (column)
      * @return the assembled BufferedImage
      */
     public BufferedImage assemble(BufferedImage extending, BufferedImage extender, int posX, int posY, Dimension nrRaster, boolean scale) {

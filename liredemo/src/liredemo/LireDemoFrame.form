@@ -239,6 +239,15 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
+            <MenuItem class="javax.swing.JMenuItem" name="rerank">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Re-rank results"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rerankActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="helpMenu">
@@ -1200,11 +1209,13 @@
                                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel17" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel14" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="selectboxRerankFeature" pref="540" max="32767" attributes="0"/>
                                           <Component id="textfieldNumSearchResults" alignment="0" pref="540" max="32767" attributes="0"/>
-                                          <Component id="selectboxDocumentBuilder" pref="540" max="32767" attributes="0"/>
+                                          <Component id="selectboxDocumentBuilder" alignment="0" pref="540" max="32767" attributes="0"/>
                                           <Component id="textfieldIndexName" alignment="0" pref="540" max="32767" attributes="0"/>
                                           <Component id="textFieldFlickrDownloadMax" alignment="0" pref="540" max="32767" attributes="0"/>
                                       </Group>
@@ -1238,7 +1249,12 @@
                                   <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="textFieldFlickrDownloadMax" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="333" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="selectboxRerankFeature" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="307" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1300,7 +1316,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="textfieldNumSearchResults">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="25"/>
+                        <Property name="text" type="java.lang.String" value="100"/>
                         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="Bundle.properties" key="options.tooltip.numsearchresults" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
@@ -1324,9 +1340,30 @@
                         <Property name="text" type="java.lang.String" value="100"/>
                         <Property name="toolTipText" type="java.lang.String" value="If no directory to index is given images can be downloaded from Flickr. This is the maximum of images retrieved in one batch."/>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldFlickrDownloadMaxActionPerformed"/>
-                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel14">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Re-ranking feature:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="selectboxRerankFeature">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="11">
+                            <StringItem index="0" value="Color Layout (MPEG-7)"/>
+                            <StringItem index="1" value="Scalable Color (MPEG-7)"/>
+                            <StringItem index="2" value="Edge Histogram (MPEG-7)"/>
+                            <StringItem index="3" value="Auto Color Correlogram"/>
+                            <StringItem index="4" value="CEDD"/>
+                            <StringItem index="5" value="FCTH"/>
+                            <StringItem index="6" value="JCD"/>
+                            <StringItem index="7" value="RGB Color Histogram"/>
+                            <StringItem index="8" value="Tamura Texture Features"/>
+                            <StringItem index="9" value="GaborTexture Features"/>
+                            <StringItem index="10" value="JPEG Coefficients Histogram"/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1409,7 +1446,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="18" style="1"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Search Results:"/>
+                    <Property name="text" type="java.lang.String" value="Search Results"/>
                     <Property name="componentPopupMenu" type="javax.swing.JPopupMenu" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection component="sameSearchMenu" name="popupMenu" type="property"/>
                     </Property>
@@ -1447,6 +1484,33 @@
                         </Constraint>
                       </Constraints>
                     </Component>
+                    <Container class="javax.swing.JPanel" name="jPanel3">
+                      <Constraints>
+                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                          <BorderConstraints direction="Center"/>
+                        </Constraint>
+                      </Constraints>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+                      <SubComponents>
+                        <Component class="javax.swing.JButton" name="jButton1">
+                          <Properties>
+                            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                              <Image iconType="3" name="/resources/filter16.png"/>
+                            </Property>
+                            <Property name="toolTipText" type="java.lang.String" value="Filter search results."/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rerankActionPerformed"/>
+                          </Events>
+                          <Constraints>
+                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                              <BorderConstraints direction="East"/>
+                            </Constraint>
+                          </Constraints>
+                        </Component>
+                      </SubComponents>
+                    </Container>
                   </SubComponents>
                 </Container>
               </SubComponents>
