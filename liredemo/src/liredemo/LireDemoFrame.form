@@ -60,6 +60,8 @@
     </Container>
     <Component class="javax.swing.ButtonGroup" name="mosaicButtons">
     </Component>
+    <Component class="liredemo.ImagePanel" name="browseImagePanel">
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="frameMenu">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="fileMenu">
@@ -97,6 +99,9 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Alt+S"/>
                 </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/resources/run16.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Start page"/>
               </Properties>
               <Events>
@@ -118,6 +123,9 @@
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Alt+O"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/resources/configure16.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Options"/>
               </Properties>
@@ -241,6 +249,9 @@
             </Menu>
             <MenuItem class="javax.swing.JMenuItem" name="rerank">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/resources/filter16.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Re-rank results"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
@@ -273,6 +284,52 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="helpMenuAboutActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="helpMenuHomepage">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/resources/browser16.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Homepage"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="helpMenuHomepageActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="helpMenuWiki">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/resources/editcopy16.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Developer Wiki"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="helpMenuWikiActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="helpMenuMailinglist">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/resources/mail_generic16.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Mailing List"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="helpMenuMailinglistActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="helpMenuDonate">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/resources/money16.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Donate"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="helpMenuDonateActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
       </SubComponents>
@@ -301,7 +358,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,40,0,0,2,-60"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,40,0,0,2,-56"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
@@ -511,10 +568,15 @@
                           <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="progressBarIndexing" alignment="0" pref="678" max="32767" attributes="0"/>
+                              <Component id="jLabel8" pref="682" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="progressBarIndexing" alignment="0" pref="682" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="textfieldIndexDir" pref="565" max="32767" attributes="0"/>
+                                      <Component id="textfieldIndexDir" pref="569" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="buttonOpenDir" min="-2" pref="107" max="-2" attributes="1"/>
                                   </Group>
@@ -524,11 +586,6 @@
                                       <Component id="buttonStartIndexing" min="-2" pref="108" max="-2" attributes="1"/>
                                   </Group>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel8" pref="678" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -543,7 +600,7 @@
                                   <Component id="textfieldIndexDir" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="progressBarIndexing" min="-2" max="-2" attributes="1"/>
+                              <Component id="progressBarIndexing" min="-2" pref="17" max="-2" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="buttonStartIndexing" alignment="3" max="32767" attributes="1"/>
@@ -654,9 +711,9 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="progressSearch" alignment="0" pref="678" max="32767" attributes="0"/>
+                                  <Component id="progressSearch" alignment="0" pref="682" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="textfieldSearchImage" pref="567" max="32767" attributes="0"/>
+                                      <Component id="textfieldSearchImage" pref="571" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="buttonOpenImage" min="-2" max="-2" attributes="1"/>
                                   </Group>
@@ -667,7 +724,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="158" max="32767" attributes="0"/>
+                              <EmptySpace pref="162" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -751,32 +808,25 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Group type="102" attributes="1">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="imageLabel" max="32767" attributes="1"/>
-                                  </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="spinnerCurrentDocNum" min="-2" pref="53" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="labelDocCount" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="spinnerMaxDocCount" min="-2" pref="48" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="spinnerCurrentDocNum" min="-2" pref="75" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="labelDocCount" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="spinnerMaxDocCount" min="-2" pref="79" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="buttonSearchFromBrowse" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="409" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="354" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="browseImageContainerPanel" alignment="0" pref="702" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -787,13 +837,12 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="spinnerCurrentDocNum" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="labelDocCount" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="spinnerMaxDocCount" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="buttonSearchFromBrowse" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="spinnerMaxDocCount" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelDocCount" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="imageLabel" min="-2" pref="266" max="-2" attributes="0"/>
-                              <EmptySpace pref="136" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="browseImageContainerPanel" pref="397" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -827,23 +876,6 @@
                         <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="imageLabel">
-                      <Properties>
-                        <Property name="horizontalAlignment" type="int" value="0"/>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="org.netbeans.modules.form.compat2.border.CompoundBorderInfo">
-                            <CompoundBorder>
-                              <Border PropertyName="outside" info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                                <LineBorder/>
-                              </Border>
-                              <Border PropertyName="inside" info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
-                                <EmptyBorder bottom="5" left="5" right="5" top="5"/>
-                              </Border>
-                            </CompoundBorder>
-                          </Border>
-                        </Property>
-                      </Properties>
-                    </Component>
                     <Component class="javax.swing.JButton" name="buttonSearchFromBrowse">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Search"/>
@@ -852,6 +884,10 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSearchFromBrowseActionPerformed"/>
                       </Events>
                     </Component>
+                    <Container class="javax.swing.JPanel" name="browseImageContainerPanel">
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+                    </Container>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="mosaicPanel">
@@ -871,8 +907,8 @@
                                   <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="mosaicImageLable" alignment="0" pref="460" max="32767" attributes="0"/>
-                                          <Component id="textfieldMosaicImage" alignment="1" pref="460" max="32767" attributes="2"/>
+                                          <Component id="mosaicImageLable" alignment="0" pref="462" max="32767" attributes="0"/>
+                                          <Component id="textfieldMosaicImage" alignment="1" pref="462" max="32767" attributes="2"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                   </Group>
@@ -881,16 +917,16 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel12" min="-2" max="-2" attributes="1"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="labelMosaicSliderValue" pref="118" max="32767" attributes="0"/>
+                                      <Component id="labelMosaicSliderValue" pref="120" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="buttonStartMosaicing" alignment="0" pref="212" max="32767" attributes="2"/>
-                                  <Component id="buttonOpenMosaicImage" alignment="1" pref="212" max="32767" attributes="2"/>
-                                  <Component id="mosaicTileCountSlider" alignment="1" pref="212" max="32767" attributes="0"/>
+                                  <Component id="buttonStartMosaicing" alignment="0" pref="214" max="32767" attributes="2"/>
+                                  <Component id="buttonOpenMosaicImage" alignment="1" pref="214" max="32767" attributes="2"/>
+                                  <Component id="mosaicTileCountSlider" alignment="1" pref="214" max="32767" attributes="0"/>
                                   <Component id="checkboxAvoidDuplicates" min="-2" max="-2" attributes="0"/>
                                   <Component id="checkboxMosaicAdvanceOptions" min="-2" max="-2" attributes="0"/>
-                                  <Component id="buttonMosaicSave" alignment="1" pref="212" max="32767" attributes="0"/>
-                                  <Component id="progressMosaic" alignment="1" pref="212" max="32767" attributes="0"/>
-                                  <Component id="mosaicAdvanceOptionsPanel" alignment="1" pref="212" max="32767" attributes="0"/>
+                                  <Component id="buttonMosaicSave" alignment="1" pref="214" max="32767" attributes="0"/>
+                                  <Component id="progressMosaic" alignment="1" pref="214" max="32767" attributes="0"/>
+                                  <Component id="mosaicAdvanceOptionsPanel" alignment="1" pref="214" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -1059,7 +1095,7 @@
                           <Layout>
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="212" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="214" max="32767" attributes="0"/>
                               </Group>
                             </DimensionLayout>
                             <DimensionLayout dim="1">
@@ -1094,7 +1130,7 @@
                                               <Component id="mosaicOptionsCedd" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace pref="73" max="32767" attributes="0"/>
+                                      <EmptySpace pref="75" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                             </DimensionLayout>
@@ -1213,11 +1249,11 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="selectboxRerankFeature" pref="540" max="32767" attributes="0"/>
-                                          <Component id="textfieldNumSearchResults" alignment="0" pref="540" max="32767" attributes="0"/>
-                                          <Component id="selectboxDocumentBuilder" alignment="0" pref="540" max="32767" attributes="0"/>
-                                          <Component id="textfieldIndexName" alignment="0" pref="540" max="32767" attributes="0"/>
-                                          <Component id="textFieldFlickrDownloadMax" alignment="0" pref="540" max="32767" attributes="0"/>
+                                          <Component id="selectboxRerankFeature" pref="544" max="32767" attributes="0"/>
+                                          <Component id="textfieldNumSearchResults" alignment="0" pref="544" max="32767" attributes="0"/>
+                                          <Component id="selectboxDocumentBuilder" alignment="0" pref="544" max="32767" attributes="0"/>
+                                          <Component id="textfieldIndexName" alignment="0" pref="544" max="32767" attributes="0"/>
+                                          <Component id="textFieldFlickrDownloadMax" alignment="0" pref="544" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>

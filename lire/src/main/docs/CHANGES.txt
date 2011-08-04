@@ -1,6 +1,12 @@
 CHANGES for LIRE
 ================
 
+2011-08-04
+==========
+  - Liredemo: Changed browsing behaviour and introduced image rendering component.
+  - Liredemo: Added menu icons
+  - Liredemo: Added documentation and donate links to hekp menu
+
 2011-08-02
 ==========
   - Liredemo: new result list (grid view)
