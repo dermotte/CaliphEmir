@@ -9,6 +9,10 @@ CHANGES for LIRE
   - Removed ImageJ library (with according source code changes)
   - Added test for LsaFilter
   - Liredemo: Added menu item to try out LsaFilter
+  - Fixed RGB and HSV Quantization in SimpleColorHistogram, now it works fine.
+  - Removed QuantizationUtils
+  - Added formatting to TestWang
+  - TODO: Create index manager for BoVW and metric spaces.
 
 2011-08-04
 ==========
@@ -24,7 +28,6 @@ CHANGES for LIRE
   - Created filter interface and re-rank filter implementation
   - Liredemo: integrated re-ranking filter
   - deprecated CeddImageSearcher and CeddDocumentbuilder as they are no longer needed.
-  - TODO: Create index manager for BoVW and metric spaces.
 
 2011-08-02
 ==========

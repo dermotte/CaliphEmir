@@ -32,10 +32,7 @@ package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.*;
-import net.semanticmetadata.lire.imageanalysis.CEDD;
-import net.semanticmetadata.lire.imageanalysis.FCTH;
-import net.semanticmetadata.lire.imageanalysis.JCD;
-import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
+import net.semanticmetadata.lire.imageanalysis.*;
 import net.semanticmetadata.lire.imageanalysis.sift.SiftFeatureHistogramBuilder;
 import net.semanticmetadata.lire.impl.*;
 import net.semanticmetadata.lire.utils.FileUtils;
@@ -161,7 +158,14 @@ public class TestWang extends TestCase {
     }
 
     public void testMAP() throws IOException {
-        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram");
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L1;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L1");
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L2;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.JSD;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - JSD");
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.TANIMOTO;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - Tanimoto");
 //        computeMAP(ImageSearcherFactory.createTamuraImageSearcher(1000), "Tamura");
 //        computeMAP(ImageSearcherFactory.createGaborImageSearcher(1000), "Gabor");
 //        computeMAP(ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(1000), "Color Correlogram");
@@ -236,15 +240,17 @@ public class TestWang extends TestCase {
         errorRate = errorRate / sampleQueries.length;
         precision10 = precision10 / sampleQueries.length;
         System.out.print(prefix + " - ");
-        System.out.print("map = " + map);
-        System.out.print(" precision@10 = " + precision10);
-        System.out.println(" - errorRate = " + errorRate);
+        System.out.print("map = " + String.format("%.5f", map));
+        System.out.print(" precision@10 = " + String.format("%.5f", precision10));
+        System.out.println(" - errorRate = " + String.format("%.5f", errorRate));
         // precision@10 per category
         for (int i = 0; i < pr10cat.length; i++) {
             double v = 0;
             if (pr10cnt[i] > 0)
                 v = pr10cat[i] / pr10cnt[i];
-            System.out.println(i + ": " + v);
+            System.out.print(i + ": ");
+            System.out.printf("%.5f%n", v);
+
         }
     }
 

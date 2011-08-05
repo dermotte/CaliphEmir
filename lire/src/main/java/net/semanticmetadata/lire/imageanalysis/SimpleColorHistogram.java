@@ -23,13 +23,12 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
 package net.semanticmetadata.lire.imageanalysis;
 
-import net.semanticmetadata.lire.imageanalysis.utils.Quantization;
 import net.semanticmetadata.lire.utils.ConversionUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
@@ -49,7 +48,7 @@ import java.util.StringTokenizer;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SimpleColorHistogram implements LireFeature {
-    public static final int DEFAULT_NUMBER_OF_BINS = 1024;
+    public static final int DEFAULT_NUMBER_OF_BINS = 512;
     public static HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.RGB;
     public static DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.L1;
 
@@ -118,6 +117,7 @@ public class SimpleColorHistogram implements LireFeature {
                 raster.getPixel(x, y, pixel);
                 if (histogramType == HistogramType.HSV) {
                     rgb2hsv(pixel[0], pixel[1], pixel[2], pixel);
+                    histogram[quant(pixel)]++;
                 } else if (histogramType == HistogramType.Luminance) {
                     rgb2yuv(pixel[0], pixel[1], pixel[2], pixel);
                 } else if (histogramType == HistogramType.HMMD) {
@@ -149,18 +149,20 @@ public class SimpleColorHistogram implements LireFeature {
 
     private int quant(int[] pixel) {
         if (histogramType == HistogramType.HSV) {
-            // Todo: tune this one ... now it's just built for 1024 bins
-            int qH = (pixel[0] * 64) / 360;    // more granularity in color
-            int qV = (pixel[1] * 4) / 360;
-            int qS = (pixel[2] * 4) / 100;
+            int qH = (int) Math.floor(pixel[0] / 11.25);    // more granularity in color
+            if (qH == 32) qH--;
+            int qV = pixel[1] / 90;
+            if (qV == 4) qV--;
+            int qS = pixel[2] / 25;
+            if (qS == 4) qS--;
             return qH * 16 + qV * 4 + qS;
         } else if (histogramType == HistogramType.HMMD) {
             return quantHmmd(rgb2hmmd(pixel[0], pixel[1], pixel[2]), 255);
         } else if (histogramType == HistogramType.Luminance) {
             return (pixel[0] * histogram.length) / (256);
         } else {
-//            return Quantization.quantDistributionBased(pixel, histogram.length, 255);
-            return Quantization.quantUniformly(pixel, DEFAULT_NUMBER_OF_BINS, 255);
+            // just for 512 bins ...
+            return (pixel[0] >> 5) + (pixel[1] >> 5) * 8 + (pixel[2] >> 5) * 8 * 8;
         }
     }
 
