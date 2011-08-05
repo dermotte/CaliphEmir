@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -35,19 +35,16 @@ import net.semanticmetadata.lire.ImageSearcher;
 import net.semanticmetadata.lire.imageanalysis.CEDD;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.impl.GenericImageSearcher;
+import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermPositions;
+import org.apache.lucene.index.*;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -120,7 +117,7 @@ public class MetricSpacesInvertedListIndexing {
         boolean hasDeletions = reader.hasDeletions();
 
         // init reference objects:
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-ro")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = LuceneUtils.createIndexWriter(indexPath + "-ro", true);
         HashSet<Integer> referenceObjsIds = new HashSet<Integer>(numReferenceObjects);
 
         double numDocsDouble = (double) numDocs;
@@ -154,10 +151,10 @@ public class MetricSpacesInvertedListIndexing {
         IndexReader readerRo = IndexReader.open(FSDirectory.open(new File(indexPath + "-ro")));
         ImageSearcher searcher = new GenericImageSearcher(numReferenceObjectsUsed, featureClass, featureFieldName);
         PerFieldAnalyzerWrapper aWrapper =
-                new PerFieldAnalyzerWrapper(new SimpleAnalyzer(Version.LUCENE_33));
-        aWrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer(Version.LUCENE_33));
+                new PerFieldAnalyzerWrapper(new SimpleAnalyzer(LuceneUtils.LUCENE_VERSION));
+        aWrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
 
-        iw = new IndexWriter(FSDirectory.open(new File(indexPath)), aWrapper, false, IndexWriter.MaxFieldLength.UNLIMITED);
+        iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new IndexWriterConfig(LuceneUtils.LUCENE_VERSION, aWrapper).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
         StringBuilder sb = new StringBuilder(256);
         for (int i = 0; i < numDocs; i++) {
             if (hasDeletions && reader.isDeleted(i)) {
@@ -204,10 +201,10 @@ public class MetricSpacesInvertedListIndexing {
         IndexReader readerRo = IndexReader.open(FSDirectory.open(new File(indexPath + "-ro")));
         ImageSearcher searcher = new GenericImageSearcher(numReferenceObjectsUsed, featureClass, featureFieldName);
         PerFieldAnalyzerWrapper aWrapper =
-                new PerFieldAnalyzerWrapper(new SimpleAnalyzer(Version.LUCENE_33));
-        aWrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer(Version.LUCENE_33));
+                new PerFieldAnalyzerWrapper(new SimpleAnalyzer(LuceneUtils.LUCENE_VERSION));
+        aWrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
 
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), aWrapper, false, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)), new IndexWriterConfig(LuceneUtils.LUCENE_VERSION, aWrapper).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
         StringBuilder sb = new StringBuilder(256);
         for (int i = 0; i < numDocs; i++) {
             if (hasDeletions && reader.isDeleted(i)) {

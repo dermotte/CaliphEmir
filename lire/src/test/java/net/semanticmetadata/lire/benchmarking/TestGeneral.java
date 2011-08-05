@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -41,12 +41,11 @@ import net.semanticmetadata.lire.impl.SimpleImageSearchHits;
 import net.semanticmetadata.lire.impl.SimpleResult;
 import net.semanticmetadata.lire.utils.FileUtils;
 import net.semanticmetadata.lire.utils.ImageUtils;
-import org.apache.lucene.analysis.SimpleAnalyzer;
+import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.SimpleFSDirectory;
-import org.apache.lucene.util.Version;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -120,7 +119,7 @@ public class TestGeneral extends TestCase {
 
     private void indexFiles(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         // eventually check if the directory is there or not ...
-        IndexWriter iw = new IndexWriter(SimpleFSDirectory.open(new File(testIndex)), new SimpleAnalyzer(Version.LUCENE_33), false, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = LuceneUtils.createIndexWriter(testIndex, false);
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {

@@ -5,7 +5,18 @@ CHANGES for LIRE
 ==========
   - Liredemo: Changed browsing behaviour and introduced image rendering component.
   - Liredemo: Added menu icons
-  - Liredemo: Added documentation and donate links to hekp menu
+  - Liredemo: Added documentation and donate links to help menu
+  
+2011-08-03
+==========
+  - Fixed (most) deprecations coming from the switch to Lucene 3.3
+  - Added LuceneUtils as (i) a central place to configure the Lucene Version
+    employed in Lire and LireDemo and (ii) as factory for the IndexWriter objects
+  - Created filter interface and re-rank filter implementation
+  - Liredemo: integrated re-ranking filter
+  - deprecated CeddImageSearcher and CeddDocumentbuilder as they are no longer needed.
+  - TODO: Create index manager for BoVW and metric spaces.
+  - TODO: Create filter for LSA.
 
 2011-08-02
 ==========
@@ -18,9 +29,6 @@ CHANGES for LIRE
   - Fixed bug in DocumentBuilderFactory
   - Fixed bug in TestImageSearcher
   - Fixed bug in byte[] serialization to ScalableColor
-  - TODO: Change deprecated files (mostly IndexWriter) etc.
-  - TODO: Create index manager for BoVW and metric spaces.
-  - TODO: Create filter mechanism for re-ranking and LSA.
 
 2011-08-01
 ==========

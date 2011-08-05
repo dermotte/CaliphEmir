@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -34,6 +34,7 @@ import net.semanticmetadata.lire.AbstractImageSearcher;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
+import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.FieldInvertState;
@@ -63,12 +64,12 @@ public class SurfVisualWordsImageSearcher extends AbstractImageSearcher {
     public SurfVisualWordsImageSearcher(int numMaxHits, Similarity similarity) {
         this.similarity = similarity;
         this.numMaxHits = numMaxHits;
-        qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(Version.LUCENE_33));
+        qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
     }
 
     public SurfVisualWordsImageSearcher(int numMaxHits) {
         this.numMaxHits = numMaxHits;
-        qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(Version.LUCENE_33));
+        qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {

@@ -31,36 +31,14 @@
 package net.semanticmetadata.lire;
 
 import net.semanticmetadata.lire.imageanalysis.*;
-import net.semanticmetadata.lire.impl.*;
+import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
+import net.semanticmetadata.lire.impl.CorrelogramDocumentBuilder;
+import net.semanticmetadata.lire.impl.GenericDocumentBuilder;
+import net.semanticmetadata.lire.impl.GenericFastDocumentBuilder;
 
 /**
- * <h2>Creating an Index</h2>
- * <p/>
  * Use DocumentBuilderFactory to create a DocumentBuilder, which
- * will create Lucene Documents from images. Add this documents to
- * an index like this:
- * <p/>
- * <pre>
- * System.out.println(">> Indexing " + images.size() + " files.");
- * DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
- * IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(Version.LUCENE_33), true);
- * int count = 0;
- * long time = System.currentTimeMillis();
- * for (String identifier : images) {
- * Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
- * iw.addDocument(doc);
- * count ++;
- * if (count % 25 == 0) System.out.println(count + " files indexed.");
- * }
- * long timeTaken = (System.currentTimeMillis() - time);
- * float sec = ((float) timeTaken) / 1000f;
- *
- * System.out.println(sec + " seconds taken, " + (timeTaken / count) + " ms per image.");
- * iw.optimize();
- * iw.close();
- * </pre>
- * <p/>
- * <p/>
+ * will create Lucene Documents from images.  <br/>
  * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
  * <br>Date: 31.01.2006
  * <br>Time: 23:00:32
@@ -70,31 +48,31 @@ import net.semanticmetadata.lire.impl.*;
 public class DocumentBuilderFactory {
     /**
      * Creates a simple version of a DocumentBuilder. In this case the
-     * {@link net.semanticmetadata.lire.impl.SimpleDocumentBuilder} is used, only ColorLayout and ScalableColor are
-     * used to index the images. Note that the color histogram weight in
-     * {@link ImageSearcherFactory#createWeightedSearcher(int, float, float, float)}
-     * won't have any effect on documents created with a DocumentBuilder like this. Only the color distribution
-     * weight and the texture weight are used in such a case.
+     * {@link net.semanticmetadata.lire.imageanalysis.CEDD} is used as a feature
      *
      * @return a simple and efficient DocumentBuilder.
-     * @see net.semanticmetadata.lire.impl.SimpleDocumentBuilder
-     * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
+     * @see net.semanticmetadata.lire.imageanalysis.CEDD
      */
     public static DocumentBuilder getDefaultDocumentBuilder() {
-        return new SimpleDocumentBuilder(false, true, true);
+        return new GenericFastDocumentBuilder(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
     }
 
     /**
-     * Creates a simple version of a DocumentBuilder. In this case the
-     * {@link net.semanticmetadata.lire.impl.SimpleDocumentBuilder} is used,
+     * Creates a simple version of a DocumentBuilder using the MPEG/-7 visual features features
      * all available descriptors are used.
      *
      * @return a fully featured DocumentBuilder.
-     * @see net.semanticmetadata.lire.impl.SimpleDocumentBuilder
+     * @see net.semanticmetadata.lire.imageanalysis.ColorLayout
+     * @see net.semanticmetadata.lire.imageanalysis.EdgeHistogram
+     * @see net.semanticmetadata.lire.imageanalysis.ScalableColor
      * @deprecated Use ChainedDocumentBuilder instead
      */
     public static DocumentBuilder getExtensiveDocumentBuilder() {
-        return new SimpleDocumentBuilder(true, true, true);
+        ChainedDocumentBuilder cb = new ChainedDocumentBuilder();
+        cb.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+        cb.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+        cb.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
+        return cb;
     }
 
     /**
@@ -125,31 +103,26 @@ public class DocumentBuilderFactory {
     }
 
     /**
-     * Creates a simple version of a DocumentBuilder. In this case the
-     * {@link net.semanticmetadata.lire.impl.SimpleDocumentBuilder} is used,
-     * only ColorLayout is used. So this can be taken for color only images.
+     * Creates a simple version of a DocumentBuilder using ScalableColor.
      *
      * @return a fully featured DocumentBuilder.
-     * @see net.semanticmetadata.lire.impl.SimpleDocumentBuilder
-     * @deprecated Use ColorHistogram instead
+     * @see net.semanticmetadata.lire.imageanalysis.ScalableColor
+     * @deprecated Use ColorHistogram and the respective factory methods to get it instead
      */
     public static DocumentBuilder getColorOnlyDocumentBuilder() {
-        return new SimpleDocumentBuilder(true, true, false);
+        return DocumentBuilderFactory.getScalableColorBuilder();
     }
 
     /**
-     * Creates a simple version of a DocumentBuilder. In this case the
-     * {@link net.semanticmetadata.lire.impl.SimpleDocumentBuilder} is used,
-     * only ColorLayout is used to index the images. Note that the weights in
-     * {@link ImageSearcherFactory#createWeightedSearcher(int, float, float, float)}
-     * won't have any effect on documents created with a DocumentBuilder like this, as only color distribution is used.
+     * Creates a simple version of a DocumentBuilder using the ColorLayout feature. Don't use this method any more but
+     * use the respective feature bound method instead.
      *
      * @return a simple and fast DocumentBuilder.
-     * @see net.semanticmetadata.lire.impl.SimpleDocumentBuilder
+     * @see net.semanticmetadata.lire.imageanalysis.ColorLayout
      * @deprecated use MPEG-7 feature ColorLayout or CEDD, which are both really fast.
      */
     public static DocumentBuilder getFastDocumentBuilder() {
-        return new SimpleDocumentBuilder(false, true, false);
+        return DocumentBuilderFactory.getColorLayoutBuilder();
     }
 
     /**
@@ -188,8 +161,8 @@ public class DocumentBuilderFactory {
      * @return the created CEDD feature DocumentBuilder.
      */
     public static DocumentBuilder getCEDDDocumentBuilder() {
-        return new CEDDDocumentBuilder();
-//        return new GenericDocumentBuilder(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
+//        return new CEDDDocumentBuilder();
+        return new GenericFastDocumentBuilder(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
     }
 
 

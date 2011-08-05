@@ -23,14 +23,18 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
 
 package net.semanticmetadata.lire.utils;
 
+import net.semanticmetadata.lire.ImageSearchHits;
+
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -68,6 +72,23 @@ public class FileUtils {
             return resultList;
         else
             return null;
+    }
+
+    public static void saveImageResultsToHtml(String prefix, ImageSearchHits hits, String queryImage) throws IOException {
+        long l = System.currentTimeMillis() / 1000;
+        BufferedWriter bw = new BufferedWriter(new FileWriter("results-" + prefix + "-" + l + ".html"));
+        bw.write("<html>\n" +
+                "<head><title>Search Results</title></head>\n" +
+                "<body bgcolor=\"#FFFFFF\">\n");
+        bw.write("<h3>query</h3>\n");
+        bw.write("<a href=\"file://" + queryImage + "\"><img src=\"file://" + queryImage + "\"></a><p>\n");
+        bw.write("<h3>results</h3>\n");
+        for (int i = 0; i < hits.length(); i++) {
+            bw.write(hits.score(i) + " - <a href=\"file://" + hits.doc(i).get("descriptorImageIdentifier") + "\"><img src=\"file://" + hits.doc(i).get("descriptorImageIdentifier") + "\"></a><p>\n");
+        }
+        bw.write("</body>\n" +
+                "</html>");
+        bw.close();
     }
 
 

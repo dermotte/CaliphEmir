@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -46,6 +46,9 @@ import java.util.logging.Logger;
  * User: Mathias Lux, mathias@juggle.at
  * Date: 12.03.2010
  * Time: 13:21:35
+ *
+ * @see GenericFastDocumentBuilder
+ * @deprecated use GenericFastDocumentBuilder instead.
  */
 public class CEDDDocumentBuilder extends AbstractDocumentBuilder {
     private Logger logger = Logger.getLogger(getClass().getName());
@@ -66,7 +69,7 @@ public class CEDDDocumentBuilder extends AbstractDocumentBuilder {
         logger.fine("Extraction finished [CEDD - fast].");
 
         doc = new Document();
-        doc.add(new Field(DocumentBuilder.FIELD_NAME_CEDD_FAST, vd.getByteArrayRepresentation()));
+        doc.add(new Field(DocumentBuilder.FIELD_NAME_CEDD, vd.getByteArrayRepresentation()));
         if (identifier != null)
             doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
 

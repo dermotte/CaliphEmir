@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -34,6 +34,7 @@ import junit.framework.TestCase;
 import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.ImageSearcher;
 import net.semanticmetadata.lire.ImageSearcherFactory;
+import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
@@ -42,7 +43,6 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,15 +68,16 @@ public class GeneralInvertedListTest extends TestCase {
         System.out.println("numRefObjs = " + numRefObjs);
 
         // init reference objects:
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-ro")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
-        HashSet<Integer> referenceObjsIds = new HashSet<Integer>(numRefObjs);
+
+        IndexWriter iw = LuceneUtils.createIndexWriter(indexPath + "-ro", true);
+        HashSet<Integer> referenceObjectIds = new HashSet<Integer>(numRefObjs);
 
         double numDocsDouble = (double) numDocs;
-        while (referenceObjsIds.size() < numRefObjs) {
-            referenceObjsIds.add((int) (numDocsDouble * Math.random()));
+        while (referenceObjectIds.size() < numRefObjs) {
+            referenceObjectIds.add((int) (numDocsDouble * Math.random()));
         }
         int count = 0;
-        for (int i : referenceObjsIds) {
+        for (int i : referenceObjectIds) {
             count++;
             // todo: check if deleted ...
             Document document = reader.document(i);
@@ -90,10 +91,11 @@ public class GeneralInvertedListTest extends TestCase {
         IndexReader readerRo = IndexReader.open(FSDirectory.open(new File(indexPath + "-ro")));
         ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(numRefObjsReferenced);
         PerFieldAnalyzerWrapper wrapper =
-                new PerFieldAnalyzerWrapper(new SimpleAnalyzer(Version.LUCENE_33));
-        wrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer(Version.LUCENE_33));
+                new PerFieldAnalyzerWrapper(new SimpleAnalyzer(LuceneUtils.LUCENE_VERSION));
+        wrapper.addAnalyzer("ro-order", new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
 
-        iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-new")), wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
+        iw = LuceneUtils.createIndexWriter(indexPath + "-new", true);
+//        iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-new")), wrapper, true, IndexWriter.MaxFieldLength.UNLIMITED);
         StringBuilder sb = new StringBuilder(256);
         for (int i = 0; i < docs; i++) {
             if (hasDeletions && reader.isDeleted(i)) {

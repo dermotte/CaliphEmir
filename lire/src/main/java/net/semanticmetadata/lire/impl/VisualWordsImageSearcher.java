@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -33,6 +33,7 @@ package net.semanticmetadata.lire.impl;
 import net.semanticmetadata.lire.AbstractImageSearcher;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
+import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.FieldInvertState;
@@ -66,13 +67,13 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
         this.similarity = similarity;
         this.numMaxHits = numMaxHits;
         this.fieldName = fieldName;
-        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer(Version.LUCENE_33));
+        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
     }
 
     public VisualWordsImageSearcher(int numMaxHits, String fieldName) {
         this.numMaxHits = numMaxHits;
         this.fieldName = fieldName;
-        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer(Version.LUCENE_33));
+        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {

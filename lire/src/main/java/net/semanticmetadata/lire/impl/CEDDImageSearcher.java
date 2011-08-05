@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -54,10 +54,13 @@ import java.util.logging.Level;
  * User: Mathias Lux, mathias@juggle.at
  * Date: 12.03.2010
  * Time: 13:21:50
+ *
+ * @see GenericFastImageSearcher
+ * @deprecated use GenericFastImageSearcher instead
  */
 public class CEDDImageSearcher extends GenericImageSearcher {
     public CEDDImageSearcher(int maxHits) {
-        super(maxHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD_FAST);
+        super(maxHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
     }
 
     protected float getDistance(Document d, LireFeature lireFeature) {

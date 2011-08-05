@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -36,7 +36,7 @@ import net.semanticmetadata.lire.imageanalysis.Histogram;
 import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
 import net.semanticmetadata.lire.impl.*;
 import net.semanticmetadata.lire.utils.FileUtils;
-import org.apache.lucene.analysis.SimpleAnalyzer;
+import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.FieldInvertState;
@@ -143,7 +143,8 @@ public class TestLocalFeatureHistogram extends TestCase {
         ChainedDocumentBuilder db = new ChainedDocumentBuilder();
         db.addBuilder(new SiftDocumentBuilder());
         db.addBuilder(new CEDDDocumentBuilder());
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("sift-idx")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = LuceneUtils.createIndexWriter("sift-idx", true);
+
         for (int i = 0; i < images.size(); i++) {
 //            int sampleQuery = sampleQueries[i];
 //            String s = testExtensive + "/" + sampleQuery + ".jpg";
@@ -161,7 +162,7 @@ public class TestLocalFeatureHistogram extends TestCase {
         ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
         ChainedDocumentBuilder db = new ChainedDocumentBuilder();
         db.addBuilder(new SurfDocumentBuilder());
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("surf-idx")), new SimpleAnalyzer(Version.LUCENE_33), true, IndexWriter.MaxFieldLength.UNLIMITED);
+        IndexWriter iw = LuceneUtils.createIndexWriter("sift-idx", true);
         for (int i = 0; i < images.size(); i++) {
 //            int sampleQuery = sampleQueries[i];
 //            String s = testExtensive + "/" + sampleQuery + ".jpg";
@@ -206,7 +207,7 @@ public class TestLocalFeatureHistogram extends TestCase {
         // test based on the Lucene scoring function:
         String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
         System.out.println("query = " + query);
-        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(Version.LUCENE_33));
+        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
         IndexSearcher isearcher = new IndexSearcher(reader);
         isearcher.setSimilarity(new Similarity() {
             @Override
@@ -268,7 +269,7 @@ public class TestLocalFeatureHistogram extends TestCase {
 
         String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
         System.out.println("query = " + query);
-        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(Version.LUCENE_33));
+        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
         IndexSearcher isearcher = new IndexSearcher(reader);
         isearcher.setSimilarity(new Similarity() {
             @Override

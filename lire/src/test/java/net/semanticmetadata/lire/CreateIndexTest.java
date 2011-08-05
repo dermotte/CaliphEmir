@@ -33,12 +33,9 @@ package net.semanticmetadata.lire;
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
 import net.semanticmetadata.lire.utils.FileUtils;
-import org.apache.lucene.analysis.SimpleAnalyzer;
+import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,7 +83,8 @@ public class CreateIndexTest extends TestCase {
      */
     public void testCreateIndex() throws IOException {
         ChainedDocumentBuilder builder = (ChainedDocumentBuilder) getDocumentBuilder();
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")), new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
+
+        IndexWriter iw = LuceneUtils.createIndexWriter(indexPath + "-small", true);
         for (String identifier : testFiles) {
             System.out.println("Indexing file " + identifier);
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -101,8 +99,7 @@ public class CreateIndexTest extends TestCase {
         String testFilesPath = "./src/test/resources/small/";
 
         DocumentBuilder builder = DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder();
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath + "-small")),
-                new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
+        IndexWriter iw = LuceneUtils.createIndexWriter(indexPath + "-small", true);
         long ms = System.currentTimeMillis();
         for (String identifier : testFiles) {
             Document doc = builder.createDocument(new FileInputStream(testFilesPath + identifier), identifier);
@@ -116,8 +113,7 @@ public class CreateIndexTest extends TestCase {
     public void testCreateCEDDIndex() throws IOException {
         ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
         DocumentBuilder builder = DocumentBuilderFactory.getCEDDDocumentBuilder();
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File("wang-cedd")),
-                new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
+        IndexWriter iw = LuceneUtils.createIndexWriter("wang-cedd", true);
         for (String identifier : images) {
             Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
             iw.addDocument(doc);
@@ -133,8 +129,8 @@ public class CreateIndexTest extends TestCase {
 
     private void indexFiles(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         System.out.println(">> Indexing " + images.size() + " files.");
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)),
-                new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
+
+        IndexWriter iw = LuceneUtils.createIndexWriter(indexPath, true);
         int count = 0;
         long time = System.currentTimeMillis();
         for (String identifier : images) {
@@ -165,8 +161,7 @@ public class CreateIndexTest extends TestCase {
 
     private void indexFilesMultithreaded(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         System.out.println(">> Indexing " + images.size() + " files.");
-        IndexWriter iw = new IndexWriter(FSDirectory.open(new File(indexPath)),
-                new IndexWriterConfig(Version.LUCENE_33, new SimpleAnalyzer(Version.LUCENE_33)).setOpenMode(IndexWriterConfig.OpenMode.CREATE));
+        IndexWriter iw = LuceneUtils.createIndexWriter(indexPath, true);
         SynchronizedWriter sw = new SynchronizedWriter(iw);
         ExecutorService pool = Executors.newFixedThreadPool(4);
 

@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -46,7 +46,7 @@ import java.io.InputStream;
  * <pre>
  * System.out.println(">> Indexing " + images.size() + " files.");
  * DocumentBuilder builder = DocumentBuilderFactory.getExtensiveDocumentBuilder();
- * IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(Version.LUCENE_33), true);
+ * IndexWriter iw = new IndexWriter(indexPath, new SimpleAnalyzer(LuceneUtils.LUCENE_VERSION), true);
  * int count = 0;
  * long time = System.currentTimeMillis();
  * for (String identifier : images) {

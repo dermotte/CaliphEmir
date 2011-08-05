@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -31,7 +31,6 @@
 package net.semanticmetadata.lire;
 
 import net.semanticmetadata.lire.imageanalysis.*;
-import net.semanticmetadata.lire.impl.CEDDImageSearcher;
 import net.semanticmetadata.lire.impl.CorrelogramImageSearcher;
 import net.semanticmetadata.lire.impl.GenericFastImageSearcher;
 import net.semanticmetadata.lire.impl.SimpleImageSearcher;
@@ -81,18 +80,17 @@ public class ImageSearcherFactory {
      * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
      */
     public static ImageSearcher createSimpleSearcher(int maximumHits) {
-        return new SimpleImageSearcher(maximumHits);
+        return ImageSearcherFactory.createColorLayoutImageSearcher(maximumHits);
     }
 
     /**
      * Returns a new default ImageSearcher with a predefined number of maximum
-     * hits defined in the {@link ImageSearcherFactory#NUM_MAX_HITS}
+     * hits defined in the {@link ImageSearcherFactory#NUM_MAX_HITS} based on the {@link net.semanticmetadata.lire.imageanalysis.CEDD} feature
      *
      * @return the searcher instance
-     * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
      */
     public static ImageSearcher createDefaultSearcher() {
-        return new SimpleImageSearcher(NUM_MAX_HITS);
+        return new GenericFastImageSearcher(NUM_MAX_HITS, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
     }
 
     /**
@@ -106,7 +104,7 @@ public class ImageSearcherFactory {
      * @deprecated Use ColorHistogram or ScalableColor instead
      */
     public static ImageSearcher createColorOnlySearcher(int maximumHits) {
-        return createWeightedSearcher(maximumHits, 1f, 1f, 0f);
+        return ImageSearcherFactory.createScalableColorImageSearcher(maximumHits);
     }
 
     /**
@@ -170,8 +168,8 @@ public class ImageSearcherFactory {
      * @return
      */
     public static ImageSearcher createCEDDImageSearcher(int maximumHits) {
-        return new CEDDImageSearcher(maximumHits);
-//        return new GenericImageSearcher(maximumHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
+//        return new CEDDImageSearcher(maximumHits);
+        return new GenericFastImageSearcher(maximumHits, CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
     }
 
 
