@@ -32,6 +32,7 @@ package net.semanticmetadata.lire.filter;
 
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.*;
+import net.semanticmetadata.lire.imageanalysis.CEDD;
 import net.semanticmetadata.lire.imageanalysis.ColorLayout;
 import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
 import net.semanticmetadata.lire.utils.FileUtils;
@@ -58,7 +59,6 @@ import java.util.Iterator;
 public class FilterTest extends TestCase {
 
     private String indexPath = "test-filters";
-    ;
 
     private DocumentBuilder getDocumentBuilder() {
         ChainedDocumentBuilder result = new ChainedDocumentBuilder();
@@ -80,6 +80,24 @@ public class FilterTest extends TestCase {
         // rerank
         System.out.println("---< filtering >-------------------------");
         RerankFilter filter = new RerankFilter(ColorLayout.class, DocumentBuilder.FIELD_NAME_COLORLAYOUT);
+        hits = filter.filter(hits, document);
+
+        // output
+        FileUtils.saveImageResultsToHtml("filtertest", hits, document.getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+    }
+
+    public void testLsaFilter() throws IOException {
+        // index images
+//        indexFiles();
+        // search
+        System.out.println("---< searching >-------------------------");
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
+        Document document = reader.document(0);
+        ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(100);
+        ImageSearchHits hits = searcher.search(document, reader);
+        // rerank
+        System.out.println("---< filtering >-------------------------");
+        LsaFilter filter = new LsaFilter(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
         hits = filter.filter(hits, document);
 
         // output

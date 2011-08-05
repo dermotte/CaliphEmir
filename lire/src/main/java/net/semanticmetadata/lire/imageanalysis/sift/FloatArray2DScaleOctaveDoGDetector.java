@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -65,7 +65,9 @@ package net.semanticmetadata.lire.imageanalysis.sift;
  * @version 0.1b
  */
 
-import Jama.Matrix;
+import org.apache.commons.math.linear.Array2DRowRealMatrix;
+import org.apache.commons.math.linear.LUDecompositionImpl;
+import org.apache.commons.math.linear.RealMatrix;
 
 import java.util.Vector;
 
@@ -302,17 +304,17 @@ public class FloatArray2DScaleOctaveDoGDetector {
                         dyi = (e122 - e102 - e120 + e100) / 4.0f;
 
                         // invert hessian
-                        Matrix H = new Matrix(new double[][]{
+                        Array2DRowRealMatrix H = new Array2DRowRealMatrix(new double[][]{
                                 {(double) dxx, (double) dxy, (double) dxi},
                                 {(double) dxy, (double) dyy, (double) dyi},
-                                {(double) dxi, (double) dyi, (double) dii}}, 3, 3);
-                        Matrix H_inv;
+                                {(double) dxi, (double) dyi, (double) dii}});
+                        RealMatrix H_inv;
                         try {
-                            H_inv = H.inverse();
+                            H_inv = new LUDecompositionImpl(H).getSolver().getInverse();
                         } catch (RuntimeException e) {
                             continue X;
                         }
-                        double[][] h_inv = H_inv.getArray();
+                        double[][] h_inv = H_inv.getData();
 
                         // estimate the location of zero crossing being the offset of the extremum
 

@@ -23,14 +23,13 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
 
 package net.semanticmetadata.lire.imageanalysis.mser;
 
-import ij.ImagePlus;
 import net.semanticmetadata.lire.imageanalysis.mser.fourier.Fourier;
 
 import java.awt.geom.Point2D;
@@ -89,7 +88,7 @@ public class MSER {
 
     }
 
-    public MSERGrowthHistory[] extractMSER(ImagePlus image) {
+    public MSERGrowthHistory[] extractMSER(BufferedImage image) {
         ers.clear();
 //        ersp = null;
         mers = null;
@@ -396,7 +395,7 @@ public class MSER {
     }
 
     public List<MSERFeature> computeMSERFeatures(BufferedImage image) {
-        MSERGrowthHistory[] msers = extractMSER(new ImagePlus("", image));
+        MSERGrowthHistory[] msers = extractMSER(image);
         return computeFourier(msers, image.getWidth(), image.getHeight());
     }
 

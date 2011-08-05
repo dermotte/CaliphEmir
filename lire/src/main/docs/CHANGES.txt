@@ -1,6 +1,15 @@
 CHANGES for LIRE
 ================
 
+2011-08-05
+==========
+  - Added filter for LSA: LsaFilter
+  - Cleaned up libraries, removed Jama in favour of commons-math
+  - Updated commons-math and jopensurf libraries
+  - Removed ImageJ library (with according source code changes)
+  - Added test for LsaFilter
+  - Liredemo: Added menu item to try out LsaFilter
+
 2011-08-04
 ==========
   - Liredemo: Changed browsing behaviour and introduced image rendering component.
@@ -16,7 +25,6 @@ CHANGES for LIRE
   - Liredemo: integrated re-ranking filter
   - deprecated CeddImageSearcher and CeddDocumentbuilder as they are no longer needed.
   - TODO: Create index manager for BoVW and metric spaces.
-  - TODO: Create filter for LSA.
 
 2011-08-02
 ==========

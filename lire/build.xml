@@ -23,7 +23,7 @@
   ~ http://doi.acm.org/10.1145/1459359.1459577
   ~
   ~ Copyright statement:
-  ~ ~~~~~~~~~~~~~~~~~~~~
+  ~ ~~~~~~~~~~~~~~~~~~~
   ~ (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
   ~     http://www.semanticmetadata.net/lire
   -->
@@ -80,8 +80,7 @@
             <entry key="build-number" type="int" value="1" operation="+"/>
         </propertyfile>
         <property file="${config}/build.properties"/>
-        <echo file="default.mf" append="false">Class-Path: lib/lucene-core-3.0.1.jar lib/caliph-emir-cbir.jar
-            Build-Date: ${touch.time}
+        <echo file="default.mf" append="false">Build-Date: ${touch.time}
             Build-Number: ${build-number}
         </echo>
         <javac srcdir="${src}" destdir="${build}">

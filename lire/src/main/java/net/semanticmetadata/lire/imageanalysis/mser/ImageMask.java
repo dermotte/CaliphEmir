@@ -23,15 +23,15 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
 
 package net.semanticmetadata.lire.imageanalysis.mser;
 
-import ij.ImagePlus;
-import ij.process.ImageProcessor;
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,18 +46,18 @@ public class ImageMask {
 
     int[] pixels;
     int[] accessible;
-    ImagePlus image;
+    BufferedImage image;
 
-    public ImageMask(ImagePlus image) {
+    public ImageMask(BufferedImage image) {
         this.image = image;
         int[] pixels = new int[image.getHeight() * image.getWidth()];
 
-        ImageProcessor ip = image.getProcessor();
+        Raster ip = image.getRaster();
         // fill all the pixels into the int-Array
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
                 // get the value of the Pixel
-                pixels[getIndex(x, y)] = ip.getPixel(x, y);
+                pixels[getIndex(x, y)] = image.getRGB(x, y);
             }
         }
 

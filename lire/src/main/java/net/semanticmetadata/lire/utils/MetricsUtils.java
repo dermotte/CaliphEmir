@@ -23,7 +23,7 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
@@ -44,6 +44,14 @@ public class MetricsUtils {
      * @return
      */
     public static double distL1(int[] h1, int[] h2) {
+        double sum = 0d;
+        for (int i = 0; i < h1.length; i++) {
+            sum += Math.abs(h1[i] - h2[i]);
+        }
+        return sum / h1.length;
+    }
+
+    public static double distL1(double[] h1, double[] h2) {
         double sum = 0d;
         for (int i = 0; i < h1.length; i++) {
             sum += Math.abs(h1[i] - h2[i]);

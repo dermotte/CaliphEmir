@@ -23,14 +23,12 @@
  * http://doi.acm.org/10.1145/1459359.1459577
  *
  * Copyright statement:
- * --------------------
+ * ~~~~~~~~~~~~~~~~~~~~
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
 package net.semanticmetadata.lire.impl;
 
-import ij.ImagePlus;
-import ij.process.ImageConverter;
 import net.semanticmetadata.lire.AbstractDocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.imageanalysis.mser.MSER;
@@ -75,14 +73,13 @@ public class MSERDocumentBuilder extends AbstractDocumentBuilder {
         Document doc = null;
         try {
             // convert to grey ...
-            ImagePlus imgPlus = new ImagePlus(identifier, image);
-            ImageConverter iconv = new ImageConverter(imgPlus);
-            iconv.convertToGray8();
+            ColorConvertOp toGreyscale = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+            BufferedImage image1 = toGreyscale.filter(image, null);
             // extract features from image:
-            List<MSERFeature> features = extractor.computeMSERFeatures(imgPlus.getBufferedImage());
+            List<MSERFeature> features = extractor.computeMSERFeatures(image1);
 
             // invert grey
-            features.addAll(extractor.computeMSERFeatures(rop.filter(imgPlus.getBufferedImage(), null)));
+            features.addAll(extractor.computeMSERFeatures(rop.filter(image1, null)));
 
 
             // create new document:
