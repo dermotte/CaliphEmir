@@ -1,6 +1,10 @@
 CHANGES for LIRE
 ================
 
+2011-09-07
+==========
+  - Liredemo: bugfix in ParallelIndexer.java submitted by Simon Micollier
+   c
 2011-08-05
 ==========
   - Added filter for LSA: LsaFilter

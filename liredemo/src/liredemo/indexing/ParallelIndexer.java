@@ -162,6 +162,7 @@ public class ParallelIndexer implements Runnable {
                     System.err.println("Could not extract thumbnail");
                     e.printStackTrace();
                 }
+                jpegFile.close();    // patch by Simon Micollier
             }
             // Fallback & PNGs:
             if (image == null) image = ImageIO.read(new FileInputStream(path));
