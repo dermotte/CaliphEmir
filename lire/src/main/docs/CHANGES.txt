@@ -1,10 +1,16 @@
 CHANGES for LIRE
 ================
 
+2011-10-13
+==========
+  - Added ParallelKMeans for utilizing 4 Threads in the course of KMeans clustering
+  - Utilized ParallelKMeans in SurfFeatureHistogramBuilder
+  - Added SurfFeatureHistogramBuilder.indexMissing() for incremental index updates
+
 2011-09-07
 ==========
   - Liredemo: bugfix in ParallelIndexer.java submitted by Simon Micollier
-   c
+
 2011-08-05
 ==========
   - Added filter for LSA: LsaFilter

@@ -30,10 +30,10 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.clustering.Cluster;
+import net.semanticmetadata.lire.clustering.KMeans;
 import net.semanticmetadata.lire.imageanalysis.mser.MSERFeature;
-import net.semanticmetadata.lire.imageanalysis.sift.Cluster;
 import net.semanticmetadata.lire.imageanalysis.sift.Feature;
-import net.semanticmetadata.lire.imageanalysis.sift.KMeans;
 import net.semanticmetadata.lire.utils.LuceneUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 import org.apache.lucene.document.Document;

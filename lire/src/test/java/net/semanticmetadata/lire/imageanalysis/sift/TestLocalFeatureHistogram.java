@@ -32,7 +32,8 @@ package net.semanticmetadata.lire.imageanalysis.sift;
 import junit.framework.TestCase;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.imageanalysis.Histogram;
+import net.semanticmetadata.lire.clustering.Cluster;
+import net.semanticmetadata.lire.clustering.KMeans;
 import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
 import net.semanticmetadata.lire.impl.*;
 import net.semanticmetadata.lire.utils.FileUtils;
@@ -54,8 +55,9 @@ import javax.imageio.ImageIO;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+
+//import net.semanticmetadata.lire.clustering.Image;
 
 /**
  * ...
@@ -79,55 +81,55 @@ public class TestLocalFeatureHistogram extends TestCase {
     }
 
     public void testKMeans() throws IOException {
-        ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
-        KMeans k = new KMeans();
-        int count = 0;
-        for (int i = 0; i < sampleQueries.length; i++) {
-            int id = sampleQueries[i];
-//            System.out.print("id = " + id + ": ");
-            String s = testExtensive + "/" + id + ".jpg";
-            System.out.println("s = " + s);
-            List<Feature> features = extractor.computeSiftFeatures(ImageIO.read(new File(s)));
-            List<Histogram> tmpList = new LinkedList<Histogram>();
-            for (Iterator<Feature> histogramIterator = features.iterator(); histogramIterator.hasNext(); ) {
-                Feature feature = histogramIterator.next();
-                tmpList.add(feature);
-            }
-            k.addImage(s, tmpList);
-//            if (count > 20) break;
-            count++;
-        }
-        System.out.println("Init clustering");
-        k.init();
-        System.out.println("First step");
-        double laststress = k.clusteringStep();
-        System.out.println("2nd step");
-        double newstress = k.clusteringStep();
-        while (newstress > laststress) {
-            System.out.println("newstress-laststress = " + (newstress - laststress));
-            laststress = newstress;
-            newstress = k.clusteringStep();
-            System.out.print(".");
-        }
-        System.out.println("\nfinished");
-        printClusters(k);
-
-        // create histograms ...
-        List<Image> imgs = k.getImages();
-        Cluster[] clusters = k.getClusters();
-        for (Iterator<Image> imageIterator = imgs.iterator(); imageIterator.hasNext(); ) {
-            Image image = imageIterator.next();
-            image.initHistogram(k.getNumClusters());
-            for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext(); ) {
-                Histogram feat = iterator.next();
-                image.getLocalFeatureHistogram()[k.getClusterOfFeature(feat)]++;
-//                image.normalizeFeatureHistogram();
-            }
-        }
-
-        for (Image i : imgs) {
-            i.printHistogram();
-        }
+//        ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
+//        KMeans k = new KMeans();
+//        int count = 0;
+//        for (int i = 0; i < sampleQueries.length; i++) {
+//            int id = sampleQueries[i];
+////            System.out.print("id = " + id + ": ");
+//            String s = testExtensive + "/" + id + ".jpg";
+//            System.out.println("s = " + s);
+//            List<Feature> features = extractor.computeSiftFeatures(ImageIO.read(new File(s)));
+//            List<Histogram> tmpList = new LinkedList<Histogram>();
+//            for (Iterator<Feature> histogramIterator = features.iterator(); histogramIterator.hasNext(); ) {
+//                Feature feature = histogramIterator.next();
+//                tmpList.add(feature);
+//            }
+//            k.addImage(s, tmpList);
+////            if (count > 20) break;
+//            count++;
+//        }
+//        System.out.println("Init clustering");
+//        k.init();
+//        System.out.println("First step");
+//        double laststress = k.clusteringStep();
+//        System.out.println("2nd step");
+//        double newstress = k.clusteringStep();
+//        while (newstress > laststress) {
+//            System.out.println("newstress-laststress = " + (newstress - laststress));
+//            laststress = newstress;
+//            newstress = k.clusteringStep();
+//            System.out.print(".");
+//        }
+//        System.out.println("\nfinished");
+//        printClusters(k);
+//
+//        // create histograms ...
+//        List<Image> imgs = k.getImages();
+//        Cluster[] clusters = k.getClusters();
+//        for (Iterator<Image> imageIterator = imgs.iterator(); imageIterator.hasNext(); ) {
+//            Image image = imageIterator.next();
+//            image.initHistogram(k.getNumClusters());
+//            for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext(); ) {
+//                Histogram feat = iterator.next();
+//                image.getLocalFeatureHistogram()[k.getClusterOfFeature(feat)]++;
+////                image.normalizeFeatureHistogram();
+//            }
+//        }
+//
+//        for (Image i : imgs) {
+//            i.printHistogram();
+//        }
     }
 
     private void printClusters(KMeans k) {

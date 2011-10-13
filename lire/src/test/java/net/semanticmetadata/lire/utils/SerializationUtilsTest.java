@@ -31,7 +31,7 @@
 package net.semanticmetadata.lire.utils;
 
 import junit.framework.TestCase;
-import net.semanticmetadata.lire.imageanalysis.sift.Cluster;
+import net.semanticmetadata.lire.clustering.Cluster;
 
 import java.io.IOException;
 

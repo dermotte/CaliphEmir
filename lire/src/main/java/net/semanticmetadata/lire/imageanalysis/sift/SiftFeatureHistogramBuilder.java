@@ -30,6 +30,8 @@
 package net.semanticmetadata.lire.imageanalysis.sift;
 
 import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.clustering.Cluster;
+import net.semanticmetadata.lire.clustering.KMeans;
 import net.semanticmetadata.lire.imageanalysis.Histogram;
 import net.semanticmetadata.lire.utils.LuceneUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;

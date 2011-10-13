@@ -27,7 +27,7 @@
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
-package net.semanticmetadata.lire.imageanalysis.sift;
+package net.semanticmetadata.lire.clustering;
 
 import net.semanticmetadata.lire.imageanalysis.Histogram;
 
@@ -41,11 +41,11 @@ import java.util.*;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class KMeans {
-    private List<Image> images = new LinkedList<Image>();
-    private int count = 0, numClusters = 256;
-    private ArrayList<Histogram> features = null;
-    private Cluster[] clusters = null;
-    private HashMap<Histogram, Integer> featureIndex = null;
+    protected List<Image> images = new LinkedList<Image>();
+    protected int countAllFeatures = 0, numClusters = 256;
+    protected ArrayList<Histogram> features = null;
+    protected Cluster[] clusters = null;
+    protected HashMap<Histogram, Integer> featureIndex = null;
 
     public KMeans() {
 
@@ -57,37 +57,23 @@ public class KMeans {
 
     public void addImage(String identifier, List<Histogram> features) {
         images.add(new Image(identifier, features));
-        count += features.size();
+        countAllFeatures += features.size();
     }
 
     public int getFeatureCount() {
-        return count;
+        return countAllFeatures;
     }
 
     public void init() {
         // create a set of all features:
-        features = new ArrayList<Histogram>(count);
-        for (Iterator<Image> imageIterator = images.iterator(); imageIterator.hasNext(); ) {
-            Image image = imageIterator.next();
+        features = new ArrayList<Histogram>(countAllFeatures);
+        for (Image image : images) {
             if (image.features.size() > 0)
-                for (Iterator<Histogram> iterator = image.features.iterator(); iterator.hasNext(); ) {
-                    Histogram histogram = iterator.next();
-                    for (int i = 0; i < histogram.descriptor.length; i++) {
-                        if (Float.isNaN(histogram.descriptor[i])) {
-                            System.err.println("Found a NaN in init");
-                            System.out.println("image.identifier = " + image.identifier);
-                            for (int j = 0; j < histogram.descriptor.length; j++) {
-                                float v = histogram.descriptor[j];
-                                System.out.print(v + ", ");
-                            }
-                            System.out.println("");
-                        }
-
-                    }
-                    features.add(histogram);
+                for (Histogram histogram : image.features) {
+                    if (!hasNaNs(histogram)) features.add(histogram);
                 }
             else {
-                System.err.println("Image with no MSER features: " + image.identifier);
+                System.err.println("Image with no features: " + image.identifier);
             }
         }
         // find first clusters:
@@ -97,15 +83,8 @@ public class KMeans {
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new Cluster();
             float[] descriptor = features.get(mediansIterator.next()).descriptor;
-            for (int j = 0; j < descriptor.length; j++) {
-                if (Float.isNaN(descriptor[j]))
-                    System.err.println("There is a NaN in the init medians!");
-
-            }
             System.arraycopy(descriptor, 0, clusters[i].mean, 0, descriptor.length);
         }
-//        reOrganizeFeatures();
-//        recomputeMeans();
     }
 
     private Set<Integer> selectInitialMedians(int numClusters) {
@@ -131,10 +110,30 @@ public class KMeans {
         return overallStress();
     }
 
+    private boolean hasNaNs(Histogram histogram) {
+        boolean hasNaNs = false;
+        for (int i = 0; i < histogram.descriptor.length; i++) {
+            if (Float.isNaN(histogram.descriptor[i])) {
+                hasNaNs = true;
+                break;
+            }
+        }
+        if (hasNaNs) {
+            System.err.println("Found a NaN in init");
+//            System.out.println("image.identifier = " + image.identifier);
+            for (int j = 0; j < histogram.descriptor.length; j++) {
+                float v = histogram.descriptor[j];
+                System.out.print(v + ", ");
+            }
+            System.out.println("");
+        }
+        return hasNaNs;
+    }
+
     /**
      * Re-shuffle all features.
      */
-    private void reOrganizeFeatures() {
+    protected void reOrganizeFeatures() {
         for (int k = 0; k < features.size(); k++) {
             Histogram f = features.get(k);
             Cluster best = clusters[0];
@@ -153,17 +152,17 @@ public class KMeans {
     /**
      * Computes the mean per cluster (averaged vector)
      */
-    private void recomputeMeans() {
+    protected void recomputeMeans() {
         int length = features.get(0).descriptor.length;
-        for (int i = 0; i < clusters.length; i++) {
-            float[] mean = clusters[i].mean;
+        for (Cluster cluster : clusters) {
+            float[] mean = cluster.mean;
             for (int j = 0; j < length; j++) {
                 mean[j] = 0;
-                for (Integer member : clusters[i].members) {
+                for (Integer member : cluster.members) {
                     mean[j] += features.get(member).descriptor[j];
                 }
-                if (clusters[i].members.size() > 1)
-                    mean[j] = mean[j] / clusters[i].members.size();
+                if (cluster.members.size() > 1)
+                    mean[j] = mean[j] / cluster.members.size();
             }
         }
     }

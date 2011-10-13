@@ -31,8 +31,13 @@
 package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
-import net.semanticmetadata.lire.*;
-import net.semanticmetadata.lire.imageanalysis.*;
+import net.semanticmetadata.lire.DocumentBuilder;
+import net.semanticmetadata.lire.ImageSearchHits;
+import net.semanticmetadata.lire.ImageSearcher;
+import net.semanticmetadata.lire.imageanalysis.CEDD;
+import net.semanticmetadata.lire.imageanalysis.FCTH;
+import net.semanticmetadata.lire.imageanalysis.JCD;
+import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
 import net.semanticmetadata.lire.imageanalysis.sift.SiftFeatureHistogramBuilder;
 import net.semanticmetadata.lire.impl.*;
 import net.semanticmetadata.lire.utils.FileUtils;
@@ -78,11 +83,16 @@ public class TestWang extends TestCase {
         builder = new ChainedDocumentBuilder();
 //        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getJCDDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getJpegCoefficientHistogramDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
-        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
-//        builder.addBuilder(new SurfDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+//        builder.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
+        builder.addBuilder(new SurfDocumentBuilder());
 //        builder.addBuilder(new MSERDocumentBuilder());
     }
 
@@ -91,12 +101,12 @@ public class TestWang extends TestCase {
         System.out.println("-< Getting files to index >--------------");
         ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
         System.out.println("-< Indexing " + images.size() + " files >--------------");
-        indexFiles(images, builder, indexPath);
+//        indexFiles(images, builder, indexPath);
 //        in case of sift ...
 //        SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
 //        sh1.index();
-//        SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
-//        sh.index();
+        SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
+        sh.index();
 //        MSERFeatureHistogramBuilder sh = new MSERFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
 //        sh.index();
 
@@ -158,22 +168,25 @@ public class TestWang extends TestCase {
     }
 
     public void testMAP() throws IOException {
-        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L1;
-        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L1");
-        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L2;
-        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
-        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.JSD;
-        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - JSD");
-        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.TANIMOTO;
-        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - Tanimoto");
+//        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L1;
+//        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L1");
+//        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L2;
+//        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
+//        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.JSD;
+//        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - JSD");
+//        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.TANIMOTO;
+//        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - Tanimoto");
 //        computeMAP(ImageSearcherFactory.createTamuraImageSearcher(1000), "Tamura");
 //        computeMAP(ImageSearcherFactory.createGaborImageSearcher(1000), "Gabor");
 //        computeMAP(ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(1000), "Color Correlogram");
-//        computeMAP(ImageSearcherFactory.createColorLayoutImageSearcher(1000), "Scalable Color");
+//        computeMAP(ImageSearcherFactory.createColorLayoutImageSearcher(1000), "Color Layout");
+//        computeMAP(ImageSearcherFactory.createScalableColorImageSearcher(1000), "Scalable Color");
+//        computeMAP(ImageSearcherFactory.createEdgeHistogramImageSearcher(1000), "Edge Histogram");
 //        computeMAP(ImageSearcherFactory.createCEDDImageSearcher(1000), "CEDD");
 //        computeMAP(ImageSearcherFactory.createJCDImageSearcher(1000), "JCD");
 //        computeMAP(ImageSearcherFactory.createFCTHImageSearcher(1000), "FCTH");
-//        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "MSER BoVW");    // used for MSER!!!
+//        computeMAP(ImageSearcherFactory.createJpegCoefficientHistogramImageSearcher(1000), "JPEG Coeffs");
+        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "SURF BoVW");    // used for MSER!!!
 //        computeMAP(new SiftVisualWordsImageSearcher(1000), "Sift BoVW");
 
     }
@@ -191,6 +204,7 @@ public class TestWang extends TestCase {
             pr10cat[i] = 0d;
             pr10cnt[i] = 0d;
         }
+        System.out.println("name\tmap\tp@10\terror rate");
         for (int i = 0; i < sampleQueries.length; i++) {
             int id = sampleQueries[i];
             String file = testExtensive + "/" + id + ".jpg";
@@ -239,19 +253,20 @@ public class TestWang extends TestCase {
         map = map / sampleQueries.length;
         errorRate = errorRate / sampleQueries.length;
         precision10 = precision10 / sampleQueries.length;
-        System.out.print(prefix + " - ");
-        System.out.print("map = " + String.format("%.5f", map));
-        System.out.print(" precision@10 = " + String.format("%.5f", precision10));
-        System.out.println(" - errorRate = " + String.format("%.5f", errorRate));
+        System.out.print(prefix + "\t");
+        System.out.print(String.format("%.5f", map) + '\t');
+        System.out.print(String.format("%.5f", precision10) + '\t');
+        System.out.print(String.format("%.5f", errorRate) + '\t');
         // precision@10 per category
         for (int i = 0; i < pr10cat.length; i++) {
             double v = 0;
             if (pr10cnt[i] > 0)
                 v = pr10cat[i] / pr10cnt[i];
-            System.out.print(i + ": ");
-            System.out.printf("%.5f%n", v);
+//            System.out.print(i + ": ");
+            System.out.printf("%.5f\t", v);
 
         }
+        System.out.println();
     }
 
     public void testParallelMAP() throws IOException {

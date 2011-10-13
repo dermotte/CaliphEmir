@@ -47,7 +47,7 @@
  *
  * (c) 2008-2010 by Mathias Lux, mathias@juggle.at
  */
-package net.semanticmetadata.lire.imageanalysis.sift;
+package net.semanticmetadata.lire.clustering;
 
 import net.semanticmetadata.lire.imageanalysis.Histogram;
 import net.semanticmetadata.lire.utils.SerializationUtils;
@@ -67,6 +67,8 @@ import java.util.HashSet;
 public class Cluster implements Comparable<Object> {
     float[] mean;
     HashSet<Integer> members = new HashSet<Integer>();
+
+    private double stress = 0;
 
     public Cluster() {
         this.mean = new float[4 * 4 * 8];
@@ -140,5 +142,14 @@ public class Cluster implements Comparable<Object> {
         fin.close();
         return result;
     }
+
+    public double getStress() {
+        return stress;
+    }
+
+    public void setStress(double stress) {
+        this.stress = stress;
+    }
+
 
 }
