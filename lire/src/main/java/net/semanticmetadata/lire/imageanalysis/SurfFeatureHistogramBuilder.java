@@ -141,9 +141,32 @@ public class SurfFeatureHistogramBuilder {
         Cluster.writeClusters(clusters, "./clusters.dat");
         //  create & store histograms:
         System.out.println("Creating histograms ...");
+        time = System.currentTimeMillis();
         int[] tmpHist = new int[numClusters];
         Feature f = new Feature();
         IndexWriter iw = LuceneUtils.createIndexWriter(reader.directory(), true, LuceneUtils.AnalyzerType.WhitespaceAnalyzer);
+        // parallelized indexing
+        LinkedList<Thread> threads = new LinkedList<Thread>();
+        int numThreads = 4;
+        int step = reader.maxDoc() / numThreads;
+        for (int part = 0; part < numThreads; part++) {
+            Indexer indexer = null;
+            if (part < numThreads - 1) indexer = new Indexer(part * step, (part + 1) * step, iw);
+            else indexer = new Indexer(part * step, reader.maxDoc(), iw);
+            Thread t = new Thread(indexer);
+            threads.add(t);
+            t.start();
+        }
+        for (Iterator<Thread> iterator = threads.iterator(); iterator.hasNext(); ) {
+            Thread next = iterator.next();
+            try {
+                next.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(df.format((System.currentTimeMillis() - time) / (1000 * 60)) + " min. ");
+        /*
         for (int i = 0; i < reader.maxDoc(); i++) {
             if (!reader.isDeleted(i)) {
                 for (int j = 0; j < tmpHist.length; j++) {
@@ -165,6 +188,7 @@ public class SurfFeatureHistogramBuilder {
                 iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
             }
         }
+        */
         iw.optimize();
         iw.close();
         System.out.println("Finished.");
@@ -258,5 +282,48 @@ public class SurfFeatureHistogramBuilder {
                 throw new UnsupportedOperationException("Could not get the documents, maybe there are not enough documents in the index?");
         }
         return result;
+    }
+
+    private class Indexer implements Runnable {
+        int start, end;
+        IndexWriter iw;
+
+        private Indexer(int start, int end, IndexWriter iw) {
+            this.start = start;
+            this.end = end;
+            this.iw = iw;
+        }
+
+        public void run() {
+            int[] tmpHist = new int[numClusters];
+            Feature f = new Feature();
+            for (int i = start; i < end; i++) {
+                try {
+                    if (!reader.isDeleted(i)) {
+                        for (int j = 0; j < tmpHist.length; j++) {
+                            tmpHist[j] = 0;
+                        }
+                        Document d = reader.document(i);
+                        byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SURF);
+                        // remove the fields if they are already there ...
+                        d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
+                        d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM);
+
+                        // find the appropriate cluster for each feature:
+                        for (int j = 0; j < binaryValues.length; j++) {
+                            f.setByteArrayRepresentation(binaryValues[j]);
+                            tmpHist[clusterForFeature(f)]++;
+                        }
+                        d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                        d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                        // now write the new one. we use the identifier to update ;)
+                        iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

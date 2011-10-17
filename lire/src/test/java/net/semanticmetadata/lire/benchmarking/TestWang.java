@@ -101,7 +101,7 @@ public class TestWang extends TestCase {
         System.out.println("-< Getting files to index >--------------");
         ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
         System.out.println("-< Indexing " + images.size() + " files >--------------");
-//        indexFiles(images, builder, indexPath);
+        indexFiles(images, builder, indexPath);
 //        in case of sift ...
 //        SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
 //        sh1.index();
@@ -112,7 +112,7 @@ public class TestWang extends TestCase {
 
         System.out.println("-< Indexing finished >--------------");
 //        System.out.println("SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 1000);");
-        testMAP();
+//        testMAP();
     }
 
     public void testProgram() throws IOException {

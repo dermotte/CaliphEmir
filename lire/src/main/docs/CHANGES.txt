@@ -1,6 +1,10 @@
 CHANGES for LIRE
 ================
 
+2011-10-17
+==========
+  - Parallelled histogram creation for SURF BoVWs
+
 2011-10-13
 ==========
   - Added ParallelKMeans for utilizing 4 Threads in the course of KMeans clustering
