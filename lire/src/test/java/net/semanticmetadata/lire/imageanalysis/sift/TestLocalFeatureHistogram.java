@@ -30,32 +30,24 @@
 package net.semanticmetadata.lire.imageanalysis.sift;
 
 import junit.framework.TestCase;
-import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.ImageSearchHits;
 import net.semanticmetadata.lire.clustering.Cluster;
 import net.semanticmetadata.lire.clustering.KMeans;
-import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
-import net.semanticmetadata.lire.impl.*;
+import net.semanticmetadata.lire.imageanalysis.bovw.SiftFeatureHistogramBuilder;
+import net.semanticmetadata.lire.imageanalysis.bovw.SurfFeatureHistogramBuilder;
+import net.semanticmetadata.lire.impl.CEDDDocumentBuilder;
+import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
+import net.semanticmetadata.lire.impl.SiftDocumentBuilder;
+import net.semanticmetadata.lire.impl.SurfDocumentBuilder;
 import net.semanticmetadata.lire.utils.FileUtils;
 import net.semanticmetadata.lire.utils.LuceneUtils;
-import org.apache.lucene.analysis.WhitespaceAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.FieldInvertState;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Similarity;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
-import javax.imageio.ImageIO;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 //import net.semanticmetadata.lire.clustering.Image;
 
@@ -195,159 +187,159 @@ public class TestLocalFeatureHistogram extends TestCase {
     }
 
     public void testFindimages() throws IOException {
-        IndexReader reader = IndexReader.open(FSDirectory.open(new File("sift-idx")));
-        int docID = 700;
-        // test with plain L1:
-        SiftLocalFeatureHistogramImageSearcher searcher = new SiftLocalFeatureHistogramImageSearcher(11);
-        ImageSearchHits searchHits = searcher.search(reader.document(docID), reader);
-        for (int i = 0; i < searchHits.length(); i++) {
-            Document document = searchHits.doc(i);
-            String file = document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
-            System.out.println(searchHits.score(i) + ": " + file);
-        }
-        System.out.println("----");
-        // test based on the Lucene scoring function:
-        String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
-        System.out.println("query = " + query);
-        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
-        IndexSearcher isearcher = new IndexSearcher(reader);
-        isearcher.setSimilarity(new Similarity() {
-            @Override
-            public float computeNorm(String s, FieldInvertState fieldInvertState) {
-                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float queryNorm(float v) {
-                return 1;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float sloppyFreq(int i) {
-                return 0;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float tf(float v) {
-                return v;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float idf(int docfreq, int numdocs) {
+//        IndexReader reader = IndexReader.open(FSDirectory.open(new File("sift-idx")));
+//        int docID = 700;
+//        // test with plain L1:
+//        SiftLocalFeatureHistogramImageSearcher searcher = new SiftLocalFeatureHistogramImageSearcher(11);
+//        ImageSearchHits searchHits = searcher.search(reader.document(docID), reader);
+//        for (int i = 0; i < searchHits.length(); i++) {
+//            Document document = searchHits.doc(i);
+//            String file = document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
+//            System.out.println(searchHits.score(i) + ": " + file);
+//        }
+//        System.out.println("----");
+//        // test based on the Lucene scoring function:
+//        String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
+//        System.out.println("query = " + query);
+//        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
+//        IndexSearcher isearcher = new IndexSearcher(reader);
+//        isearcher.setSimilarity(new Similarity() {
+//            @Override
+//            public float computeNorm(String s, FieldInvertState fieldInvertState) {
 //                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
-                return (float) (Math.log((double) numdocs / (double) docfreq));  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float coord(int i, int i1) {
-                return 1;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-        StringBuilder sb = new StringBuilder();
-        try {
-            TopDocs docs = isearcher.search(qp.parse(query), 10);
-            sb.append("<html>\n" +
-                    "<body bgcolor=\"#FFFFFF\">\n" +
-                    "<table>");
-            for (int i = 0; i < docs.scoreDocs.length; i++) {
-                sb.append("    <tr>\n" +
-                        "        <td>" + docs.scoreDocs[i].score + "</td>\n" +
-                        "        <td><img src=\"" + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0] + "\"/></td>\n" +
-                        "    </tr>");
-                System.out.println(docs.scoreDocs[i].score + ": " + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]);
-            }
-            sb.append("</table>\n" +
-                    "</body>\n" +
-                    "</html>");
-            writeToFile(sb.toString(), "result.html");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void testSurfSearch() throws IOException {
-        IndexReader reader = IndexReader.open(FSDirectory.open(new File("surf-idx")));
-        int docID = 414;
-
-        String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
-        System.out.println("query = " + query);
-        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
-        IndexSearcher isearcher = new IndexSearcher(reader);
-        isearcher.setSimilarity(new Similarity() {
-            @Override
-            public float computeNorm(String s, FieldInvertState fieldInvertState) {
-                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float queryNorm(float v) {
-                return 1;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float sloppyFreq(int i) {
-                return 0;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float tf(float v) {
-                return (float) Math.sqrt(v);  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float idf(int docfreq, int numdocs) {
-                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
-//                return (float) (Math.log((double) numdocs/(double) docfreq));  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public float coord(int i, int i1) {
-                return 1;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-        StringBuilder sb = new StringBuilder();
-        try {
-            TopDocs docs = isearcher.search(qp.parse(query), 10);
-            sb.append("<html>\n" +
-                    "<body bgcolor=\"#FFFFFF\">\n" +
-                    "<table>");
-            for (int i = 0; i < docs.scoreDocs.length; i++) {
-                sb.append("    <tr>\n" +
-                        "        <td>" + docs.scoreDocs[i].score + ", doc: " + docs.scoreDocs[i].doc + "</td>\n" +
-                        "        <td><img src=\"" + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0] + "\"/></td>\n" +
-                        "    </tr>");
-                System.out.println(docs.scoreDocs[i].score + ": " + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]);
-            }
-            sb.append("</table>\n" +
-                    "</body>\n" +
-                    "</html>");
-            writeToFile(sb.toString(), "result.html");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void testSiftSerialization() throws IOException {
-        String file = new String("./wang-1000/1.jpg");
-        Extractor e = new Extractor();
-        List<Feature> fs = e.computeSiftFeatures(ImageIO.read(new File(file)));
-        for (Iterator<Feature> featureIterator = fs.iterator(); featureIterator.hasNext(); ) {
-            Feature feature = featureIterator.next();
-            byte[] bytes = feature.getByteArrayRepresentation();
-            Feature cp = new Feature();
-            cp.setByteArrayRepresentation(bytes);
-            System.out.println(feature.getStringRepresentation().equals(cp.getStringRepresentation()));
-        }
-    }
-
-    private void writeToFile(String s, String filename) {
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(filename)));
-            bw.write(s);
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+//            }
+//
+//            @Override
+//            public float queryNorm(float v) {
+//                return 1;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public float sloppyFreq(int i) {
+//                return 0;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public float tf(float v) {
+//                return v;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public float idf(int docfreq, int numdocs) {
+////                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
+//                return (float) (Math.log((double) numdocs / (double) docfreq));  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public float coord(int i, int i1) {
+//                return 1;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//        });
+//        StringBuilder sb = new StringBuilder();
+//        try {
+//            TopDocs docs = isearcher.search(qp.parse(query), 10);
+//            sb.append("<html>\n" +
+//                    "<body bgcolor=\"#FFFFFF\">\n" +
+//                    "<table>");
+//            for (int i = 0; i < docs.scoreDocs.length; i++) {
+//                sb.append("    <tr>\n" +
+//                        "        <td>" + docs.scoreDocs[i].score + "</td>\n" +
+//                        "        <td><img src=\"" + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0] + "\"/></td>\n" +
+//                        "    </tr>");
+//                System.out.println(docs.scoreDocs[i].score + ": " + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]);
+//            }
+//            sb.append("</table>\n" +
+//                    "</body>\n" +
+//                    "</html>");
+//            writeToFile(sb.toString(), "result.html");
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public void testSurfSearch() throws IOException {
+//        IndexReader reader = IndexReader.open(FSDirectory.open(new File("surf-idx")));
+//        int docID = 414;
+//
+//        String query = reader.document(docID).getValues(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS)[0];
+//        System.out.println("query = " + query);
+//        QueryParser qp = new QueryParser(Version.LUCENE_30, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
+//        IndexSearcher isearcher = new IndexSearcher(reader);
+//        isearcher.setSimilarity(new Similarity() {
+//            @Override
+//            public float computeNorm(String s, FieldInvertState fieldInvertState) {
+//                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public float queryNorm(float v) {
+//                return 1;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public float sloppyFreq(int i) {
+//                return 0;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public float tf(float v) {
+//                return (float) Math.sqrt(v);  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public float idf(int docfreq, int numdocs) {
+//                return 1f;  //To change body of implemented methods use File | Settings | File Templates.
+////                return (float) (Math.log((double) numdocs/(double) docfreq));  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public float coord(int i, int i1) {
+//                return 1;  //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//        });
+//        StringBuilder sb = new StringBuilder();
+//        try {
+//            TopDocs docs = isearcher.search(qp.parse(query), 10);
+//            sb.append("<html>\n" +
+//                    "<body bgcolor=\"#FFFFFF\">\n" +
+//                    "<table>");
+//            for (int i = 0; i < docs.scoreDocs.length; i++) {
+//                sb.append("    <tr>\n" +
+//                        "        <td>" + docs.scoreDocs[i].score + ", doc: " + docs.scoreDocs[i].doc + "</td>\n" +
+//                        "        <td><img src=\"" + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0] + "\"/></td>\n" +
+//                        "    </tr>");
+//                System.out.println(docs.scoreDocs[i].score + ": " + reader.document(docs.scoreDocs[i].doc).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]);
+//            }
+//            sb.append("</table>\n" +
+//                    "</body>\n" +
+//                    "</html>");
+//            writeToFile(sb.toString(), "result.html");
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
+//    public void testSiftSerialization() throws IOException {
+//        String file = new String("./wang-1000/1.jpg");
+//        Extractor e = new Extractor();
+//        List<Feature> fs = e.computeSiftFeatures(ImageIO.read(new File(file)));
+//        for (Iterator<Feature> featureIterator = fs.iterator(); featureIterator.hasNext(); ) {
+//            Feature feature = featureIterator.next();
+//            byte[] bytes = feature.getByteArrayRepresentation();
+//            Feature cp = new Feature();
+//            cp.setByteArrayRepresentation(bytes);
+//            System.out.println(feature.getStringRepresentation().equals(cp.getStringRepresentation()));
+//        }
+//    }
+//
+//    private void writeToFile(String s, String filename) {
+//        try {
+//            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(filename)));
+//            bw.write(s);
+//            bw.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        }
     }
 }

@@ -33,15 +33,11 @@ package net.semanticmetadata.lire.impl;
 import net.semanticmetadata.lire.AbstractImageSearcher;
 import net.semanticmetadata.lire.ImageDuplicates;
 import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.utils.LuceneUtils;
-import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.FieldInvertState;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
-import org.apache.lucene.util.Version;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -56,7 +52,6 @@ import java.util.StringTokenizer;
  * Mathias Lux, mathias@juggle.at
  */
 public class VisualWordsImageSearcher extends AbstractImageSearcher {
-    private QueryParser qp;
     private int numMaxHits;
     private String fieldName;
     private Similarity similarity = new DefaultSimilarity();
@@ -67,13 +62,11 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
         this.similarity = similarity;
         this.numMaxHits = numMaxHits;
         this.fieldName = fieldName;
-        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
     }
 
     public VisualWordsImageSearcher(int numMaxHits, String fieldName) {
         this.numMaxHits = numMaxHits;
         this.fieldName = fieldName;
-        qp = new QueryParser(Version.LUCENE_30, fieldName, new WhitespaceAnalyzer(LuceneUtils.LUCENE_VERSION));
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {
@@ -85,7 +78,6 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
         IndexSearcher isearcher = new IndexSearcher(reader);
         isearcher.setSimilarity(similarity);
         String queryString = doc.getValues(fieldName)[0];
-        //            Query query = qp.parse(queryString);
         Query tq = createQuery(queryString);
 
         TopDocs docs = isearcher.search(tq, numMaxHits);
@@ -145,8 +137,8 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
 
         @Override
         public float idf(int docfreq, int numdocs) {
-            return 1f;
-//            return (float) (Math.log((double) numdocs / ((double) docfreq)));
+//            return 1f;
+            return (float) (Math.log((double) numdocs / ((double) docfreq)));
         }
 
         @Override

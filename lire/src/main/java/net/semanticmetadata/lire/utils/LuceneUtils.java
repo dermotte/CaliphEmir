@@ -103,6 +103,22 @@ public class LuceneUtils {
         return new IndexWriter(directory, config);
     }
 
+    public static IndexWriter createIndexWriter(Directory directory, boolean create, AnalyzerType analyzer, double RAMBufferSize) throws IOException {
+        // set the analyzer according to the method params
+        Analyzer tmpAnalyzer = null;
+        if (analyzer == AnalyzerType.SimpleAnalyzer) tmpAnalyzer = new SimpleAnalyzer(LUCENE_VERSION);
+        else if (analyzer == AnalyzerType.WhitespaceAnalyzer) tmpAnalyzer = new WhitespaceAnalyzer(LUCENE_VERSION);
+
+        // The config
+        IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, tmpAnalyzer);
+        if (create)
+            config.setOpenMode(IndexWriterConfig.OpenMode.CREATE); // overwrite if it exists.
+        else
+            config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND); // create new if none is there, append otherwise.
+        config.setRAMBufferSizeMB(RAMBufferSize);
+        return new IndexWriter(directory, config);
+    }
+
     /**
      * Creates an IndexWriter for given index path, with a SimpleAnalyzer.
      *
@@ -114,4 +130,8 @@ public class LuceneUtils {
     public static IndexWriter createIndexWriter(String indexPath, boolean create) throws IOException {
         return createIndexWriter(indexPath, create, AnalyzerType.SimpleAnalyzer);
     }
+
+//    public static void moveIndexToMemory(IndexReader ir) {
+//        IndexWriter iw = new IndexWriter(RAMDirectory);
+//    }
 }

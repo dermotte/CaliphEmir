@@ -39,6 +39,7 @@ import com.drew.metadata.iptc.IptcReader;
 import net.semanticmetadata.lire.DocumentBuilderFactory;
 import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
 import net.semanticmetadata.lire.impl.ColorLayoutDocumentBuilder;
+import net.semanticmetadata.lire.impl.SurfDocumentBuilder;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
@@ -70,7 +71,7 @@ public class MetadataBuilder extends ChainedDocumentBuilder {
         addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
         addBuilder(DocumentBuilderFactory.getJpegCoefficientHistogramDocumentBuilder());
 //        addBuilder(new SiftDocumentBuilder());
-//        addBuilder(new SurfDocumentBuilder());
+        addBuilder(new SurfDocumentBuilder());
     }
 
     @Override

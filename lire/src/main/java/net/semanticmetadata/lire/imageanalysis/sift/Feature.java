@@ -202,7 +202,11 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
     }
 
     public double[] getDoubleHistogram() {
-        return new double[0];  //To change body of implemented methods use File | Settings | File Templates.
+        double[] result = new double[descriptor.length];
+        for (int i = 0; i < descriptor.length; i++) {
+            result[i] = descriptor[i];
+        }
+        return result;
     }
 }
 

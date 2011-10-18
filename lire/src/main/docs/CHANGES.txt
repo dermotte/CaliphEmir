@@ -1,6 +1,16 @@
 CHANGES for LIRE
 ================
 
+2011-10-18
+==========
+  - Unified implementation for BoVW in package net.semanticmetadata.lire.imageanalysis.bovw;
+  - Moved SIFT, SURF and MSER implementations there
+  - Removed individual searchers for BoVW search, now all done with VisualWordsImageSearcher
+  - added SURF BoVW to LireDemo
+  - tested and fixed "indexMissing()" for BoVW
+  - Added read only flag to index readers in lire demo to speed up things a little
+  - Added progress indicator and prediction
+
 2011-10-17
 ==========
   - Parallelled histogram creation for SURF BoVWs

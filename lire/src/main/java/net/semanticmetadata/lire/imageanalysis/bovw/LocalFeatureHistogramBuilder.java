@@ -27,13 +27,14 @@
  * (c) 2002-2011 by Mathias Lux (mathias@juggle.at)
  *     http://www.semanticmetadata.net/lire
  */
-package net.semanticmetadata.lire.imageanalysis;
+package net.semanticmetadata.lire.imageanalysis.bovw;
 
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.clustering.Cluster;
 import net.semanticmetadata.lire.clustering.KMeans;
 import net.semanticmetadata.lire.clustering.ParallelKMeans;
-import net.semanticmetadata.lire.imageanalysis.sift.Feature;
+import net.semanticmetadata.lire.imageanalysis.Histogram;
+import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.utils.LuceneUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 import org.apache.lucene.document.Document;
@@ -42,6 +43,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -50,21 +52,28 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * ...
+ * General class creating bag of visual words vocabularies parallel based on k-means. Works with SIFT, SURF and MSER.
  * Date: 24.09.2008
  * Time: 09:38:53
  *
  * @author Mathias Lux, mathias@juggle.at
  */
-public class SurfFeatureHistogramBuilder {
+public abstract class LocalFeatureHistogramBuilder {
     IndexReader reader;
     // number of documents used to build the vocabulary / clusters.
     private int numDocsForVocabulary = 100;
     private int numClusters = 1000;
     private Cluster[] clusters = null;
     DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
+    private ProgressMonitor pm = null;
 
-    public SurfFeatureHistogramBuilder(IndexReader reader) {
+    protected String localFeatureFieldName = DocumentBuilder.FIELD_NAME_SURF;
+    protected String visualWordsFieldName = DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
+    protected String localFeatureHistFieldName = DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM;
+    protected String clusterFile = "./clusters.dat";
+
+
+    public LocalFeatureHistogramBuilder(IndexReader reader) {
         this.reader = reader;
     }
 
@@ -75,12 +84,12 @@ public class SurfFeatureHistogramBuilder {
      * @param reader               the reader used to open the Lucene index,
      * @param numDocsForVocabulary gives the number of documents for building the vocabulary (clusters).
      */
-    public SurfFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary) {
+    public LocalFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary) {
         this.reader = reader;
         this.numDocsForVocabulary = numDocsForVocabulary;
     }
 
-    public SurfFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary, int numClusters) {
+    public LocalFeatureHistogramBuilder(IndexReader reader, int numDocsForVocabulary, int numClusters) {
         this.numDocsForVocabulary = numDocsForVocabulary;
         this.numClusters = numClusters;
         this.reader = reader;
@@ -106,15 +115,19 @@ public class SurfFeatureHistogramBuilder {
             if (!reader.isDeleted(nextDoc)) {
                 Document d = reader.document(nextDoc);
                 features = new LinkedList<Histogram>();
-                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SURF);
+                byte[][] binaryValues = d.getBinaryValues(localFeatureFieldName);
                 String file = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                 for (int j = 0; j < binaryValues.length; j++) {
-                    SurfFeature f = new SurfFeature();
+                    LireFeature f = getFeatureInstance();
                     f.setByteArrayRepresentation(binaryValues[j]);
-                    features.add(f);
+                    features.add((Histogram) f);
                 }
                 k.addImage(file, features);
             }
+        }
+        if (pm !=null) { // set to 5 of 100 before clustering starts.
+            pm.setProgress(5);
+            pm.setNote("Starting clustering");
         }
         // do the clustering:
         System.out.println("k.getFeatureCount() = " + k.getFeatureCount());
@@ -124,35 +137,57 @@ public class SurfFeatureHistogramBuilder {
         double time = System.currentTimeMillis();
         double laststress = k.clusteringStep();
 
-        System.out.println(df.format((System.currentTimeMillis() - time) / (1000 * 60)) + " min. -> Next step.");
+        if (pm !=null) { // set to 8 of 100 after first step.
+            pm.setProgress(8);
+            pm.setNote("Step 1 finished");
+        }
+
+        System.out.println(getDuration(time) + " -> Next step.");
         time = System.currentTimeMillis();
         double newStress = k.clusteringStep();
+
+        if (pm !=null) { // set to 11 of 100 after second step.
+            pm.setProgress(11);
+            pm.setNote("Step 2 finished");
+        }
+
         // critical part: Give the difference in between steps as a constraint for accuracy vs. runtime trade off.
         double threshold = Math.max(20d, (double) k.getFeatureCount() / 1000d);
         System.out.println("Threshold = " + threshold);
+        int cstep = 3;
         while (Math.abs(newStress - laststress) > threshold) {
-            System.out.println(df.format((System.currentTimeMillis() - time) / (1000 * 60)) + " min. -> Next step. Stress difference ~ |" + (int) newStress + " - " + (int) laststress + "| = " + df.format(Math.abs(newStress - laststress)));
+            System.out.println(getDuration(time)+ " -> Next step. Stress difference ~ |" + (int) newStress + " - " + (int) laststress + "| = " + df.format(Math.abs(newStress - laststress)));
             time = System.currentTimeMillis();
             laststress = newStress;
             newStress = k.clusteringStep();
+            if (pm !=null) { // set to XX of 100 after second step.
+                pm.setProgress(cstep * 3 + 5);
+                pm.setNote("Step " + cstep + " finished");
+            }
+            cstep++;
         }
         // Serializing clusters to a file on the disk ...
         clusters = k.getClusters();
-        Cluster.writeClusters(clusters, "./clusters.dat");
+        Cluster.writeClusters(clusters, clusterFile);
         //  create & store histograms:
         System.out.println("Creating histograms ...");
         time = System.currentTimeMillis();
         int[] tmpHist = new int[numClusters];
-        Feature f = new Feature();
-        IndexWriter iw = LuceneUtils.createIndexWriter(reader.directory(), true, LuceneUtils.AnalyzerType.WhitespaceAnalyzer);
+        IndexWriter iw = LuceneUtils.createIndexWriter(reader.directory(), true, LuceneUtils.AnalyzerType.WhitespaceAnalyzer, 256d);
+        if (pm !=null) { // set to 50 of 100 after clustering.
+            pm.setProgress(50);
+            pm.setNote("Clustering finished");
+        }
         // parallelized indexing
         LinkedList<Thread> threads = new LinkedList<Thread>();
         int numThreads = 4;
+        // careful: copy reader to RAM for faster access when reading ...
+//        reader = IndexReader.open(new RAMDirectory(reader.directory()), true);
         int step = reader.maxDoc() / numThreads;
         for (int part = 0; part < numThreads; part++) {
             Indexer indexer = null;
-            if (part < numThreads - 1) indexer = new Indexer(part * step, (part + 1) * step, iw);
-            else indexer = new Indexer(part * step, reader.maxDoc(), iw);
+            if (part < numThreads - 1) indexer = new Indexer(part * step, (part + 1) * step, iw, null);
+            else indexer = new Indexer(part * step, reader.maxDoc(), iw, pm);
             Thread t = new Thread(indexer);
             threads.add(t);
             t.start();
@@ -165,43 +200,30 @@ public class SurfFeatureHistogramBuilder {
                 e.printStackTrace();
             }
         }
-        System.out.println(df.format((System.currentTimeMillis() - time) / (1000 * 60)) + " min. ");
-        /*
-        for (int i = 0; i < reader.maxDoc(); i++) {
-            if (!reader.isDeleted(i)) {
-                for (int j = 0; j < tmpHist.length; j++) {
-                    tmpHist[j] = 0;
-                }
-                Document d = reader.document(i);
-                byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SURF);
-                // remove the fields if they are already there ...
-                d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
-                d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM);
-                // find the appropriate cluster for each feature:
-                for (int j = 0; j < binaryValues.length; j++) {
-                    f.setByteArrayRepresentation(binaryValues[j]);
-                    tmpHist[clusterForFeature(f)]++;
-                }
-                d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
-                d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
-                // now write the new one. we use the identifier to update ;)
-                iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
-            }
+        if (pm !=null) { // set to 50 of 100 after clustering.
+            pm.setProgress(95);
+            pm.setNote("Indexing finished");
         }
-        */
+
+        System.out.println(getDuration(time));
         iw.optimize();
         iw.close();
+        if (pm !=null) { // set to 50 of 100 after clustering.
+            pm.setProgress(100);
+            pm.setNote("Indexing finished");
+            pm.close();
+        }
         System.out.println("Finished.");
     }
 
 
     public void indexMissing() throws IOException {
         // Reading clusters from disk:
-        clusters = Cluster.readClusters("./clusters.dat");
+        clusters = Cluster.readClusters(clusterFile);
         //  create & store histograms:
         System.out.println("Creating histograms ...");
         int[] tmpHist = new int[numClusters];
-        Feature f = new Feature();
+        LireFeature f = getFeatureInstance();
         IndexWriter iw = LuceneUtils.createIndexWriter(reader.directory(), true, LuceneUtils.AnalyzerType.WhitespaceAnalyzer);
         for (int i = 0; i < reader.maxDoc(); i++) {
             if (!reader.isDeleted(i)) {
@@ -210,15 +232,15 @@ public class SurfFeatureHistogramBuilder {
                 }
                 Document d = reader.document(i);
                 // Only if there are no values yet:
-                if (d.getValues(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS) == null) {
-                    byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SURF);
+                if (d.getValues(visualWordsFieldName) == null || d.getValues(visualWordsFieldName).length ==0) {
+                    byte[][] binaryValues = d.getBinaryValues(localFeatureFieldName);
                     // find the appropriate cluster for each feature:
                     for (int j = 0; j < binaryValues.length; j++) {
                         f.setByteArrayRepresentation(binaryValues[j]);
-                        tmpHist[clusterForFeature(f)]++;
+                        tmpHist[clusterForFeature((Histogram) f)]++;
                     }
-                    d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
-                    d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                    d.add(new Field(visualWordsFieldName, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                    d.add(new Field(localFeatureHistFieldName, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
                     // now write the new one. we use the identifier to update ;)
                     iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
                 }
@@ -235,7 +257,7 @@ public class SurfFeatureHistogramBuilder {
      * @param f
      * @return the index of the cluster.
      */
-    private int clusterForFeature(Feature f) {
+    private int clusterForFeature(Histogram f) {
         double d = clusters[0].getDistance(f);
         double tmp;
         int result = 0;
@@ -284,19 +306,23 @@ public class SurfFeatureHistogramBuilder {
         return result;
     }
 
+    protected abstract LireFeature getFeatureInstance();
+
     private class Indexer implements Runnable {
         int start, end;
         IndexWriter iw;
+        ProgressMonitor pm =null;
 
-        private Indexer(int start, int end, IndexWriter iw) {
+        private Indexer(int start, int end, IndexWriter iw, ProgressMonitor pm) {
             this.start = start;
             this.end = end;
             this.iw = iw;
+            this.pm = pm;
         }
 
         public void run() {
             int[] tmpHist = new int[numClusters];
-            Feature f = new Feature();
+            LireFeature f = getFeatureInstance();
             for (int i = start; i < end; i++) {
                 try {
                     if (!reader.isDeleted(i)) {
@@ -304,26 +330,41 @@ public class SurfFeatureHistogramBuilder {
                             tmpHist[j] = 0;
                         }
                         Document d = reader.document(i);
-                        byte[][] binaryValues = d.getBinaryValues(DocumentBuilder.FIELD_NAME_SURF);
+                        byte[][] binaryValues = d.getBinaryValues(localFeatureFieldName);
                         // remove the fields if they are already there ...
-                        d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
-                        d.removeField(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM);
+                        d.removeField(visualWordsFieldName);
+                        d.removeField(localFeatureHistFieldName);
 
                         // find the appropriate cluster for each feature:
                         for (int j = 0; j < binaryValues.length; j++) {
                             f.setByteArrayRepresentation(binaryValues[j]);
-                            tmpHist[clusterForFeature(f)]++;
+                            tmpHist[clusterForFeature((Histogram) f)]++;
                         }
-                        d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
-                        d.add(new Field(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                        d.add(new Field(visualWordsFieldName, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                        d.add(new Field(localFeatureHistFieldName, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
                         // now write the new one. we use the identifier to update ;)
                         iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
-
+                        if (pm!=null) {
+                            double len = (double) (end-start);
+                            double percent = (double) (i-start) / len * 45d + 50;
+                            pm.setProgress((int) percent);
+                            pm.setNote("Using clusters to index documents");
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private String getDuration(double time) {
+        double min = (System.currentTimeMillis() - time) / (1000 * 60);
+        double sec = (min - Math.floor(min))*60;
+        return String.format("%02d:%02d", (int) min, (int) sec);
+    }
+
+    public void setProgressMonitor(ProgressMonitor pm) {
+        this.pm = pm;
     }
 }

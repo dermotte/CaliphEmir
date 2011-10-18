@@ -31,11 +31,10 @@
 package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
-import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.imageanalysis.ColorLayout;
-import net.semanticmetadata.lire.imageanalysis.SurfFeatureHistogramBuilder;
-import net.semanticmetadata.lire.impl.*;
+import net.semanticmetadata.lire.imageanalysis.bovw.SurfFeatureHistogramBuilder;
+import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
+import net.semanticmetadata.lire.impl.ColorLayoutDocumentBuilder;
+import net.semanticmetadata.lire.impl.SurfDocumentBuilder;
 import net.semanticmetadata.lire.utils.FileUtils;
 import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.document.Document;
@@ -47,8 +46,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -98,52 +95,52 @@ public class CombinationTest extends TestCase {
 
     }
 
-    public void testSearch() throws IOException {
-        int numHitsFiltering = 50;
-        IndexReader indexReader = IndexReader.open(FSDirectory.open(new File(indexPath)));
-        float eval = 0f;
-        for (int i = 0; i < sampleQueries.length; i++) {
-            Document query = indexReader.document(sampleQueries[i]);
-            eval += getResults(numHitsFiltering, indexReader, query);
-        }
-        eval = eval / (float) sampleQueries.length;
-        System.out.println("precision @ ten = " + eval);
-    }
-
-    private float getResults(int numHitsFiltering, IndexReader indexReader, Document query) throws IOException {
-        SurfVisualWordsImageSearcher searcher = new SurfVisualWordsImageSearcher(numHitsFiltering);
-
-        ColorLayout clQuery = new ColorLayout();
-        clQuery.setByteArrayRepresentation(query.getBinaryValue(DocumentBuilder.FIELD_NAME_COLORLAYOUT_FAST));
-        ImageSearchHits searchHits = searcher.search(query, indexReader);
-
-        // ---- ranking:
-        ArrayList<SimpleResult> results = new ArrayList<SimpleResult>(numHitsFiltering);
-        for (int i = 0; i < searchHits.length(); i++) {
-//            results.add(new SimpleResult(searchHits.score(i), searchHits.doc(i)));
-            Document d = searchHits.doc(i);
-            ColorLayout cl = new ColorLayout();
-            cl.setByteArrayRepresentation(d.getBinaryValue(DocumentBuilder.FIELD_NAME_COLORLAYOUT_FAST));
-            float distance = clQuery.getDistance(cl);
-            SimpleResult s = new SimpleResult(distance, d);
-            results.add(s);
-        }
-        Collections.sort(results);
-
-        int count = 0;
-        int goodOnes = 0;
-        String queryFile = query.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0].split("\\\\")[5].replace(".jpg", "");
-        int queryClass = Integer.parseInt(queryFile) / 100;
-
-        for (Iterator<SimpleResult> simpleResultIterator = results.iterator(); simpleResultIterator.hasNext(); ) {
-            SimpleResult simpleResult = simpleResultIterator.next();
-            String file = simpleResult.getDocument().getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0].split("\\\\")[5].replace(".jpg", "");
-            int wangClass = Integer.parseInt(file) / 100;
-            if (!(simpleResult.getDistance() <= 0f) && count < 10) {
-                if (wangClass == queryClass) goodOnes++;
-                count++;
-            }
-        }
-        return (float) goodOnes / 10f;
-    }
+//    public void testSearch() throws IOException {
+//        int numHitsFiltering = 50;
+//        IndexReader indexReader = IndexReader.open(FSDirectory.open(new File(indexPath)));
+//        float eval = 0f;
+//        for (int i = 0; i < sampleQueries.length; i++) {
+//            Document query = indexReader.document(sampleQueries[i]);
+//            eval += getResults(numHitsFiltering, indexReader, query);
+//        }
+//        eval = eval / (float) sampleQueries.length;
+//        System.out.println("precision @ ten = " + eval);
+//    }
+//
+//    private float getResults(int numHitsFiltering, IndexReader indexReader, Document query) throws IOException {
+//        SurfVisualWordsImageSearcher searcher = new SurfVisualWordsImageSearcher(numHitsFiltering);
+//
+//        ColorLayout clQuery = new ColorLayout();
+//        clQuery.setByteArrayRepresentation(query.getBinaryValue(DocumentBuilder.FIELD_NAME_COLORLAYOUT_FAST));
+//        ImageSearchHits searchHits = searcher.search(query, indexReader);
+//
+//        // ---- ranking:
+//        ArrayList<SimpleResult> results = new ArrayList<SimpleResult>(numHitsFiltering);
+//        for (int i = 0; i < searchHits.length(); i++) {
+////            results.add(new SimpleResult(searchHits.score(i), searchHits.doc(i)));
+//            Document d = searchHits.doc(i);
+//            ColorLayout cl = new ColorLayout();
+//            cl.setByteArrayRepresentation(d.getBinaryValue(DocumentBuilder.FIELD_NAME_COLORLAYOUT_FAST));
+//            float distance = clQuery.getDistance(cl);
+//            SimpleResult s = new SimpleResult(distance, d);
+//            results.add(s);
+//        }
+//        Collections.sort(results);
+//
+//        int count = 0;
+//        int goodOnes = 0;
+//        String queryFile = query.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0].split("\\\\")[5].replace(".jpg", "");
+//        int queryClass = Integer.parseInt(queryFile) / 100;
+//
+//        for (Iterator<SimpleResult> simpleResultIterator = results.iterator(); simpleResultIterator.hasNext(); ) {
+//            SimpleResult simpleResult = simpleResultIterator.next();
+//            String file = simpleResult.getDocument().getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0].split("\\\\")[5].replace(".jpg", "");
+//            int wangClass = Integer.parseInt(file) / 100;
+//            if (!(simpleResult.getDistance() <= 0f) && count < 10) {
+//                if (wangClass == queryClass) goodOnes++;
+//                count++;
+//            }
+//        }
+//        return (float) goodOnes / 10f;
+//    }
 }
