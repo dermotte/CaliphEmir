@@ -1,6 +1,10 @@
 CHANGES for LIRE
 ================
 
+2011-10-24
+==========
+  - Killed a nasty bug in SimpleResult.java, which had something to do with the hash values in Object comparison.
+
 2011-10-18
 ==========
   - Unified implementation for BoVW in package net.semanticmetadata.lire.imageanalysis.bovw;

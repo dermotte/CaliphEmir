@@ -68,8 +68,8 @@ public class SimpleResult implements Comparable<SimpleResult> {
     public int compareTo(SimpleResult o) {
         int compareValue = (int) Math.signum(distance - ((SimpleResult) o).distance);
         // Bugfix after hint from Kai Jauslin
-        if (compareValue == 0 && !(document.equals(((SimpleResult) o).document)))
-            compareValue = document.hashCode() - ((SimpleResult) o).document.hashCode();
+//        if (compareValue == 0 && !(document.equals(((SimpleResult) o).document)))
+//            compareValue = document.hashCode() - ((SimpleResult) o).document.hashCode();
         return compareValue;
     }
 }
