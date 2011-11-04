@@ -71,6 +71,8 @@ public abstract class LocalFeatureHistogramBuilder {
     protected String visualWordsFieldName = DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
     protected String localFeatureHistFieldName = DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM;
     protected String clusterFile = "./clusters.dat";
+    public static boolean DELETE_LOCAL_FEATURES = false;
+
 
 
     public LocalFeatureHistogramBuilder(IndexReader reader) {
@@ -252,6 +254,26 @@ public abstract class LocalFeatureHistogramBuilder {
     }
 
     /**
+     * Takes one single document and creates the visual words and adds them to the document. The same document is returned.
+     * @param d the document to use for adding the visual words
+     * @return
+     * @throws IOException
+     */
+    public Document getVisualWords(Document d) throws IOException {
+        clusters = Cluster.readClusters(clusterFile);
+        int[] tmpHist = new int[clusters.length];
+        LireFeature f = getFeatureInstance();
+        byte[][] binaryValues = d.getBinaryValues(localFeatureFieldName);
+        // find the appropriate cluster for each feature:
+        for (int j = 0; j < binaryValues.length; j++) {
+            f.setByteArrayRepresentation(binaryValues[j]);
+            tmpHist[clusterForFeature((Histogram) f)]++;
+        }
+        d.add(new Field(visualWordsFieldName, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+        return d;
+    }
+
+    /**
      * Find the appropriate cluster for a given feature.
      *
      * @param f
@@ -342,13 +364,18 @@ public abstract class LocalFeatureHistogramBuilder {
                         }
                         d.add(new Field(visualWordsFieldName, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
                         d.add(new Field(localFeatureHistFieldName, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+
+                        // remove local features to save some space if requested:
+                        if (DELETE_LOCAL_FEATURES) {
+                            d.removeFields(localFeatureFieldName);
+                        }
                         // now write the new one. we use the identifier to update ;)
                         iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
                         if (pm!=null) {
                             double len = (double) (end-start);
                             double percent = (double) (i-start) / len * 45d + 50;
                             pm.setProgress((int) percent);
-                            pm.setNote("Using clusters to index documents");
+                            pm.setNote("Creating visual words, ~" + (int) percent + "% finished");
                         }
                     }
                 } catch (IOException e) {

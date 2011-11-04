@@ -75,7 +75,7 @@ public class MetadataBuilder extends ChainedDocumentBuilder {
     }
 
     @Override
-    public Document createDocument(BufferedImage bufferedImage, String s) {
+    public Document createDocument(BufferedImage bufferedImage, String s) throws FileNotFoundException {
         Document d = super.createDocument(bufferedImage, s);
         // extract available metadata:
         Metadata metadata = new Metadata();

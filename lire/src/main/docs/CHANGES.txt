@@ -1,6 +1,13 @@
 CHANGES for LIRE
 ================
 
+2011-11-04
+==========
+  - Added Method for document creation LocalFeatureHistogramBuilder to allow for queries based on
+    documents not in the index.
+  - Added TestParallelIndexer.java to LireDemo to have a simple class for indexing without GUI
+  - Added VisualWordsTest for testing new functions.
+
 2011-10-24
 ==========
   - Killed a nasty bug in SimpleResult.java, which had something to do with the hash values in Object comparison.

@@ -37,6 +37,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Fieldable;
 
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -61,7 +62,7 @@ public class ChainedDocumentBuilder extends AbstractDocumentBuilder {
         builders.add(builder);
     }
 
-    public Document createDocument(BufferedImage image, String identifier) {
+    public Document createDocument(BufferedImage image, String identifier) throws FileNotFoundException {
         docsCreated = true;
         Document doc = new Document();
         if (identifier != null)

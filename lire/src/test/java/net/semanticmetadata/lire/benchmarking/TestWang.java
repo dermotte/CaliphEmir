@@ -108,11 +108,11 @@ public class TestWang extends TestCase {
         System.out.println("-< Getting files to index >--------------");
         ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
         System.out.println("-< Indexing " + images.size() + " files >--------------");
-        indexFiles(images, builder, indexPath);
+//        indexFiles(images, builder, indexPath);
 //        in case of sift ...
 //        SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
 //        sh1.index();
-        SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath)), true), 200, 8000);
+        SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath)), true), 400, 10000);
         sh.setProgressMonitor(new ProgressMonitor(null, "", "", 0, 100));
         sh.index();
 //        MSERFeatureHistogramBuilder sh2 = new MSERFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);

@@ -32,15 +32,13 @@ package liredemo.indexing;
 
 import com.drew.imaging.jpeg.JpegProcessingException;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.MetadataException;
-import com.drew.metadata.exif.ExifDirectory;
 import com.drew.metadata.exif.ExifReader;
 import net.semanticmetadata.lire.DocumentBuilder;
 import org.apache.lucene.document.Document;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -84,6 +82,14 @@ public class ParallelIndexer implements Runnable {
             pool.submit(runnable);
         }
         started = true;
+//        while (started) {
+//            try {
+//                pool.awaitTermination(15, TimeUnit.MINUTES);
+//                started = false;
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public void addDoc(Document doc, String photofile) {
@@ -131,8 +137,11 @@ public class ParallelIndexer implements Runnable {
         public void run() {
             while ((photo = parent.getNextImage()) != null) {
                 try {
-                    Document doc = parent.builder.createDocument(readFile(photo), photo);
-                    parent.addDoc(doc, photo);
+                    BufferedImage image = readFile(photo);
+                    if (image != null) {
+                        Document doc = parent.builder.createDocument(image, photo);
+                        parent.addDoc(doc, photo);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     parent.addDoc(null, photo);
@@ -148,24 +157,26 @@ public class ParallelIndexer implements Runnable {
                 Metadata metadata = new Metadata();
                 try {
                     new ExifReader(jpegFile).extract(metadata);
-                    byte[] thumb = ((ExifDirectory) metadata.getDirectory(ExifDirectory.class)).getThumbnailData();
-                    if (thumb != null) image = ImageIO.read(new ByteArrayInputStream(thumb));
-                    //            System.out.print("Read from thumbnail data ... ");
-                    //            System.out.println(image.getWidth() + " x " + image.getHeight());
+//                    byte[] thumb = ((ExifDirectory) metadata.getDirectory(ExifDirectory.class)).getThumbnailData();
+//                    if (thumb != null) image = ImageIO.read(new ByteArrayInputStream(thumb));
+//                    System.out.print("Read from thumbnail data ... ");
+//                    System.out.println(image.getWidth() + " x " + image.getHeight());
                 } catch (JpegProcessingException e) {
-                    System.err.println("Could not extract thumbnail");
-                    e.printStackTrace();
-                } catch (MetadataException e) {
-                    System.err.println("Could not extract thumbnail");
-                    e.printStackTrace();
+                    System.err.println("Could not extract EXIF data for " + path);
+                    System.err.println("\t" + e.getMessage());
                 } catch (Exception e) {
-                    System.err.println("Could not extract thumbnail");
-                    e.printStackTrace();
+                    System.err.println("Could not extract EXIF data for " + path);
+                    System.err.println("\t" + e.getMessage());
                 }
                 jpegFile.close();    // patch by Simon Micollier
             }
             // Fallback & PNGs:
-            if (image == null) image = ImageIO.read(new FileInputStream(path));
+            if (image == null)
+                try {
+                    image = ImageIO.read(new File(path));
+                } catch (Exception e) {
+                    System.err.println("Error reading file " + path + "\n\t" + e.getMessage());
+                }
             return image;
         }
     }

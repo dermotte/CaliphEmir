@@ -87,7 +87,7 @@ public class KMeans {
         }
     }
 
-    private Set<Integer> selectInitialMedians(int numClusters) {
+    protected Set<Integer> selectInitialMedians(int numClusters) {
         HashSet<Integer> medians = new HashSet<Integer>();
         while (medians.size() < numClusters && medians.size() < features.size()) {
             medians.add((int) (Math.random() * (double) numClusters));
@@ -110,7 +110,7 @@ public class KMeans {
         return overallStress();
     }
 
-    private boolean hasNaNs(Histogram histogram) {
+    protected boolean hasNaNs(Histogram histogram) {
         boolean hasNaNs = false;
         for (int i = 0; i < histogram.descriptor.length; i++) {
             if (Float.isNaN(histogram.descriptor[i])) {
@@ -162,7 +162,7 @@ public class KMeans {
                     mean[j] += features.get(member).descriptor[j];
                 }
                 if (cluster.members.size() > 1)
-                    mean[j] = mean[j] / cluster.members.size();
+                    mean[j] = mean[j] / (float) cluster.members.size();
             }
         }
     }
@@ -172,17 +172,15 @@ public class KMeans {
      *
      * @return
      */
-    private double overallStress() {
+    protected double overallStress() {
         double v = 0;
         int length = features.get(0).descriptor.length;
-
         for (int i = 0; i < clusters.length; i++) {
             for (Integer member : clusters[i].members) {
                 float tmpStress = 0;
                 for (int j = 0; j < length; j++) {
 //                    if (Float.isNaN(features.get(member).descriptor[j])) System.err.println("Error: there is a NaN in cluster " + i + " at member " + member);
-                    float f = Math.abs(clusters[i].mean[j] - features.get(member).descriptor[j]);
-                    tmpStress += f;
+                    tmpStress += Math.abs(clusters[i].mean[j] - features.get(member).descriptor[j]);
                 }
                 v += tmpStress;
             }

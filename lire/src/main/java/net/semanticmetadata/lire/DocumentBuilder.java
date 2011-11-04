@@ -33,6 +33,7 @@ package net.semanticmetadata.lire;
 import org.apache.lucene.document.Document;
 
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -107,7 +108,7 @@ public interface DocumentBuilder {
      * @param identifier an id for the image, for instance the filename or an URL. Can be NULL.
      * @return a Lucene Document containing the indexed image.
      */
-    public Document createDocument(BufferedImage image, String identifier);
+    public Document createDocument(BufferedImage image, String identifier) throws FileNotFoundException;
 
     /**
      * Creates a new Lucene document from an InputStream. The identifier can be used like an id

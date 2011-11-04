@@ -538,6 +538,11 @@ public class LireDemoFrame extends javax.swing.JFrame {
         cardPanel.add(indexPanel, "card3");
 
         textfieldSearchImage.setEditable(false);
+        textfieldSearchImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textfieldSearchImageActionPerformed(evt);
+            }
+        });
 
         buttonOpenImage.setText(bundle.getString("button.open.searchimage")); // NOI18N
         buttonOpenImage.setActionCommand(bundle.getString("openImageButton")); // NOI18N
@@ -1852,6 +1857,10 @@ public class LireDemoFrame extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_indexMissingActionPerformed
+
+    private void textfieldSearchImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textfieldSearchImageActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textfieldSearchImageActionPerformed
 
     private void searchForImage(String imagePath) throws FileNotFoundException, IOException {
         // setting to search panel:
