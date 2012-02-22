@@ -97,10 +97,14 @@ public class Cluster implements Comparable<Object> {
     }
 
     public double getDistance(Histogram f) {
+        return getDistance(f.descriptor);
+    }
+
+    public double getDistance(float[] f) {
         double d = 0;
         // now using L1 for faster results ...
-        for (int i = 0; i < f.descriptor.length; i++) {
-            d += Math.abs(mean[i] - f.descriptor[i]);
+        for (int i = 0; i < f.length; i++) {
+            d += Math.abs(mean[i] - f[i]);
         }
         return d;
     }

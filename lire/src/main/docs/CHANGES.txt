@@ -1,6 +1,24 @@
 CHANGES for LIRE
 ================
 
+2012-02-22
+==========
+  - Added fix for grey scale only images ready to use in ImageUtils.java
+
+2012-02-21
+==========
+  - Fixed MSER issues by implementing grey scale conversion & inversion myself.
+
+2011-11-09
+==========
+  - Optimized k-means to use float[] instead of Histogram removing unnecessary object
+    overhead and memory usage
+  - Added TopDocsImageSearcher to pre-filter based on lucene searches
+
+2011-11-08
+==========
+  - Updated to Lucene 3.4.0
+
 2011-11-04
 ==========
   - Added Method for document creation LocalFeatureHistogramBuilder to allow for queries based on

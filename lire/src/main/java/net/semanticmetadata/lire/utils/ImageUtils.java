@@ -32,6 +32,7 @@ package net.semanticmetadata.lire.utils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 
 /**
  * Some little helper methods.<br>
@@ -43,7 +44,7 @@ import java.awt.image.BufferedImage;
  */
 public class ImageUtils {
     /**
-     * Scales down an image into a box of maxSideLenght x maxSideLength.
+     * Scales down an image into a box of maxSideLength x maxSideLength.
      *
      * @param image         the image to scale down. It remains untouched.
      * @param maxSideLength the maximum side length of the scaled down instance. Has to be > 0.
@@ -95,4 +96,65 @@ public class ImageUtils {
         g.drawImage(image, fromX, fromY, img.getWidth(), img.getHeight(), null);
         return img;
     }
+
+    /**
+     * Converts an image to grey. Use instead of color conversion op, which yields strange results.
+     * @param image
+     */
+    public static BufferedImage convertImageToGrey(BufferedImage image) {
+        WritableRaster inRaster = image.getRaster();
+        BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        WritableRaster outRaster = result.getRaster();
+        int[] p = new int[3];
+        float v = 0;
+        for (int x = 0; x < inRaster.getWidth(); x++) {
+            for (int y = 0; y< inRaster.getHeight(); y++) {
+                inRaster.getPixel(x, y, p);
+                v = Math.round((p[0] + p[1] + p[2])/3f);
+                for (int i = 0; i < p.length; i++) {
+                    p[i] = (int) v;
+                }
+                outRaster.setPixel(x,y, p);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Inverts a grey scale image.
+     * @param image
+     */
+    public static void invertImage(BufferedImage image) {
+        WritableRaster inRaster = image.getRaster();
+        int[] p = new int[3];
+        float v = 0;
+        for (int x = 0; x < inRaster.getWidth(); x++) {
+            for (int y = 0; y< inRaster.getHeight(); y++) {
+                inRaster.getPixel(x, y, p);
+                p[0] = 255 - p[0];
+                inRaster.setPixel(x,y, p);
+            }
+        }
+    }
+
+    /**
+     * Converts an image to a standard internal representation.
+     * Taken from OpenIMAJ. Thanks to these guys!
+     * http://sourceforge.net/p/openimaj
+     * @param bimg
+     * @return
+     */
+    public static BufferedImage createWorkingCopy(BufferedImage bimg) {
+        BufferedImage image;
+        if (bimg.getType() == BufferedImage.TYPE_INT_ARGB) {
+            image = bimg;
+        } else {
+            image = new BufferedImage(bimg.getWidth(), bimg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = image.createGraphics();
+            g2d.drawImage(bimg, null, 0, 0);
+        }
+        return image;
+    }
+
+
 }

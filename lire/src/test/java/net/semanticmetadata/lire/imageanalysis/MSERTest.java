@@ -50,7 +50,7 @@ import java.io.IOException;
 public class MSERTest extends TestCase {
     public void testMSERExtraction() throws IOException {
         MSERDocumentBuilder db = new MSERDocumentBuilder();
-        String file = "./wang-1000/22.jpg";
+        String file = "./wang-1000/199.jpg";
         Document document = db.createDocument(ImageIO.read(new FileInputStream(file)), file);
         byte[][] binaryValues = document.getBinaryValues(DocumentBuilder.FIELD_NAME_MSER);
         System.out.println("binaryValues.length = " + binaryValues.length);
@@ -60,7 +60,7 @@ public class MSERTest extends TestCase {
             MSERFeature feat = new MSERFeature();
             feat.setByteArrayRepresentation(binaryValues[i]);
             for (int j = 0; j < feat.descriptor.length; j++) {
-                if (Float.isNaN(feat.descriptor[j])) System.out.println("feat " + i + " = " + feat);
+                if (!Float.isNaN(feat.descriptor[j])) System.out.println("feat " + i + " = " + feat);
                 break;
             }
         }

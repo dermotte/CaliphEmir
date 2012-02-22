@@ -1,7 +1,5 @@
 package net.semanticmetadata.lire.clustering;
 
-import net.semanticmetadata.lire.imageanalysis.Histogram;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -77,14 +75,14 @@ public class ParallelKMeans extends KMeans {
     }
 
     private void recomputeMeanOfCluster(int clusterIndex) {
-        int length = features.get(0).descriptor.length;
+        int length = features.get(0).length;
         Cluster cluster = getCluster(clusterIndex);
         float[] mean = cluster.mean;
         for (int j = 0; j < length; j++) {
             mean[j] = 0;
             for (Iterator<Integer> iterator = cluster.members.iterator(); iterator.hasNext(); ) {
                 Integer member = iterator.next();
-                float v = features.get(member).descriptor[j];
+                float v = features.get(member)[j];
                 mean[j] += v;
             }
             if (cluster.members.size() > 1)
@@ -95,7 +93,7 @@ public class ParallelKMeans extends KMeans {
         for (Integer member : cluster.members) {
             float tmpStress = 0;
             for (int k = 0; k < length; k++) {
-                float f = Math.abs(mean[k] - features.get(member).descriptor[k]);
+                float f = Math.abs(mean[k] - features.get(member)[k]);
                 tmpStress += f;
             }
             v += tmpStress;
@@ -115,7 +113,7 @@ public class ParallelKMeans extends KMeans {
 
         public void run() {
             for (int k = start; k < end; k++) {
-                Histogram f = features.get(k);
+                float[] f = features.get(k);
                 int best = 0;
                 double minDistance = clusters[0].getDistance(f);
                 for (int i = 1; i < clusters.length; i++) {

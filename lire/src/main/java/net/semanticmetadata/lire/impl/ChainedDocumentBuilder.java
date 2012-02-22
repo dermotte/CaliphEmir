@@ -42,11 +42,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mlux
  * Date: 20.02.2007
  * Time: 15:11:59
- * To change this template use File | Settings | File Templates.
  */
 public class ChainedDocumentBuilder extends AbstractDocumentBuilder {
     private LinkedList<DocumentBuilder> builders;

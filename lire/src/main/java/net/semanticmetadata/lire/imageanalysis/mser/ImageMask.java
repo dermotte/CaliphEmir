@@ -53,11 +53,12 @@ public class ImageMask {
         int[] pixels = new int[image.getHeight() * image.getWidth()];
 
         Raster ip = image.getRaster();
+        int[] p = new int[3];
         // fill all the pixels into the int-Array
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
                 // get the value of the Pixel
-                pixels[getIndex(x, y)] = image.getRGB(x, y);
+                pixels[getIndex(x, y)] = ip.getPixel(x,y,p)[0];
             }
         }
 

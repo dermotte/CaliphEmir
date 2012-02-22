@@ -33,6 +33,7 @@ import net.semanticmetadata.lire.AbstractDocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.imageanalysis.mser.MSER;
 import net.semanticmetadata.lire.imageanalysis.mser.MSERFeature;
+import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
@@ -73,13 +74,13 @@ public class MSERDocumentBuilder extends AbstractDocumentBuilder {
         Document doc = null;
         try {
             // convert to grey ...
-            ColorConvertOp toGreyscale = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-            BufferedImage image1 = toGreyscale.filter(image, null);
+            BufferedImage image1  = ImageUtils.convertImageToGrey(image);
             // extract features from image:
             List<MSERFeature> features = extractor.computeMSERFeatures(image1);
 
+            ImageUtils.invertImage(image1);
             // invert grey
-            features.addAll(extractor.computeMSERFeatures(rop.filter(image1, null)));
+            features.addAll(extractor.computeMSERFeatures(image1));
 
 
             // create new document:

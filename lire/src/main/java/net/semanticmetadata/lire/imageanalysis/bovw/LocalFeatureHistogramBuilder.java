@@ -111,18 +111,18 @@ public abstract class LocalFeatureHistogramBuilder {
         HashSet<Integer> docIDs = selectVocabularyDocs();
         KMeans k = new ParallelKMeans(numClusters);
         // fill the KMeans object:
-        LinkedList<Histogram> features;
+        LinkedList<float[]> features = new LinkedList<float[]>();
         for (Iterator<Integer> iterator = docIDs.iterator(); iterator.hasNext(); ) {
             int nextDoc = iterator.next();
             if (!reader.isDeleted(nextDoc)) {
                 Document d = reader.document(nextDoc);
-                features = new LinkedList<Histogram>();
+                features.clear();
                 byte[][] binaryValues = d.getBinaryValues(localFeatureFieldName);
                 String file = d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                 for (int j = 0; j < binaryValues.length; j++) {
                     LireFeature f = getFeatureInstance();
                     f.setByteArrayRepresentation(binaryValues[j]);
-                    features.add((Histogram) f);
+                    features.add(((Histogram) f).descriptor);
                 }
                 k.addImage(file, features);
             }
