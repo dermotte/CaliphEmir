@@ -11,7 +11,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/caliph-emir-cbir.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/commons-math-2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -20,7 +20,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/Jama-1.0.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jopensurf.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -29,20 +29,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/lucene-core-3.0.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="file://$MODULE_DIR$/../../JavaLibs/lucene-3.0.1/docs/api" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../../JavaLibs/lucene-3.0.1/src/java" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../JavaLibs/junit4.8.1/junit-4.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/lucene-core-3.4.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -146,10 +146,10 @@ public class ImageUtils {
      */
     public static BufferedImage createWorkingCopy(BufferedImage bimg) {
         BufferedImage image;
-        if (bimg.getType() == BufferedImage.TYPE_INT_ARGB) {
+        if (bimg.getType() == BufferedImage.TYPE_INT_RGB) {
             image = bimg;
         } else {
-            image = new BufferedImage(bimg.getWidth(), bimg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            image = new BufferedImage(bimg.getWidth(), bimg.getHeight(), BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = image.createGraphics();
             g2d.drawImage(bimg, null, 0, 0);
         }
