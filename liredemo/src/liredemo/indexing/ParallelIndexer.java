@@ -57,12 +57,15 @@ import java.util.concurrent.Executors;
 public class ParallelIndexer implements Runnable {
     // Vectors are already synchronized, so that's the cheap solution.
     Vector<String> imageFiles;
-    private int NUMBER_OF_SYNC_THREADS = 10;
+    private int NUMBER_OF_SYNC_THREADS = 4;
     Hashtable<String, Boolean> indexThreads = new Hashtable<String, Boolean>(3);
     DocumentBuilder builder;
     Vector<Document> finished = new Vector<Document>();
     private boolean started = false;
     private final ExecutorService pool;
+    
+    private int countImagesOut = 0;
+    private int countImagesProcesses = 0;
 
 
     public ParallelIndexer(List<String> imageFiles, DocumentBuilder b) {
@@ -119,9 +122,12 @@ public class ParallelIndexer implements Runnable {
 
     private String getNextImage() {
         if (imageFiles.size() > 0) {
+            countImagesOut++;
             return imageFiles.remove(0);
-
-        } else return null;
+        } else {
+            System.out.println("countImagesOut = " + countImagesOut);
+            return null;
+        }
     }
 
     class PhotoIndexer implements Runnable {
@@ -135,6 +141,7 @@ public class ParallelIndexer implements Runnable {
         }
 
         public void run() {
+            parent.indexThreads.put(Thread.currentThread().getName(), false);
             while ((photo = parent.getNextImage()) != null) {
                 try {
                     BufferedImage image = readFile(photo);
@@ -176,6 +183,7 @@ public class ParallelIndexer implements Runnable {
                     image = ImageIO.read(new File(path));
                 } catch (Exception e) {
                     System.err.println("Error reading file " + path + "\n\t" + e.getMessage());
+                    e.printStackTrace();
                 }
             return image;
         }

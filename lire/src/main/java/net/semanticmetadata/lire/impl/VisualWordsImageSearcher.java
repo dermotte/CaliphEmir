@@ -137,8 +137,8 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
 
         @Override
         public float idf(int docfreq, int numdocs) {
-//            return 1f;
-            return (float) (Math.log((double) numdocs / ((double) docfreq)));
+            return 1f;
+//            return (float) (Math.log((double) numdocs / ((double) docfreq)));
         }
 
         @Override

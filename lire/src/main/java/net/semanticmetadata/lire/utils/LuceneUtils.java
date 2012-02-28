@@ -31,6 +31,7 @@
 package net.semanticmetadata.lire.utils;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.index.IndexWriter;
@@ -60,7 +61,7 @@ public class LuceneUtils {
      * Different types of analyzers
      */
     public enum AnalyzerType {
-        SimpleAnalyzer, WhitespaceAnalyzer
+        SimpleAnalyzer, WhitespaceAnalyzer, KeywordAnalyzer
     }
 
     ;
@@ -92,6 +93,7 @@ public class LuceneUtils {
         Analyzer tmpAnalyzer = null;
         if (analyzer == AnalyzerType.SimpleAnalyzer) tmpAnalyzer = new SimpleAnalyzer(LUCENE_VERSION);
         else if (analyzer == AnalyzerType.WhitespaceAnalyzer) tmpAnalyzer = new WhitespaceAnalyzer(LUCENE_VERSION);
+        else if (analyzer == AnalyzerType.KeywordAnalyzer) tmpAnalyzer = new KeywordAnalyzer();
 
         // The config
         IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, tmpAnalyzer);

@@ -28,13 +28,12 @@
  *     http://www.semanticmetadata.net/lire
  */
 
-package src.liredemo.flickr;
+package liredemo.flickr;
 
 import junit.framework.TestCase;
 import liredemo.indexing.MetadataBuilder;
 import liredemo.indexing.ParallelIndexer;
 import net.semanticmetadata.lire.*;
-import net.semanticmetadata.lire.imageanalysis.bovw.LocalFeatureHistogramBuilder;
 import net.semanticmetadata.lire.imageanalysis.bovw.SurfFeatureHistogramBuilder;
 import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
 import net.semanticmetadata.lire.impl.SurfDocumentBuilder;
@@ -60,13 +59,15 @@ import java.util.List;
  * Time: 09:33
  */
 public class TestParallelIndexer extends TestCase {
+//    private String filePath = "./flickr-10000";
     private String filePath = "C:\\Temp\\flickrphotos";
-    private String indexPath = "./index-flickrbig";
+    private String indexPath = "./index-xtra-flickrbig";
 
     public void testIndexing() throws IOException {
         List<String> allImages = FileUtils.getAllImages(new File(filePath), true);
         System.out.println("Found " + allImages.size() + " files.");
         IndexWriter iw = LuceneUtils.createIndexWriter(indexPath, true);
+//        ParallelIndexer pix = new ParallelIndexer(allImages, new MirFlickrDocumentBuilder());
         ParallelIndexer pix = new ParallelIndexer(allImages, new MetadataBuilder());
         new Thread(pix).start();
         Document doc;
@@ -81,8 +82,9 @@ public class TestParallelIndexer extends TestCase {
     }
 
     public void testBovwIndexing() throws IOException {
+//        SurfFeatureHistogramBuilder indexer = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File("./index-mirflickr"))), 8000, 2000);
         SurfFeatureHistogramBuilder indexer = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 8000, 2000);
-        LocalFeatureHistogramBuilder.DELETE_LOCAL_FEATURES = true;
+//        LocalFeatureHistogramBuilder.DELETE_LOCAL_FEATURES = true;
         indexer.setProgressMonitor(new javax.swing.ProgressMonitor(null, "", "", 0, 100));
         indexer.index();
     }
@@ -222,6 +224,8 @@ public class TestParallelIndexer extends TestCase {
         MirFlickrDocumentBuilder() {
             super();
             super.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+            super.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+            super.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
             super.addBuilder(new SurfDocumentBuilder());
         }
 

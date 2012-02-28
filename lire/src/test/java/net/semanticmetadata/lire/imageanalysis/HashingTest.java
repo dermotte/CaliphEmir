@@ -5,10 +5,7 @@ import net.semanticmetadata.lire.utils.ImageUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -22,7 +19,7 @@ import java.util.LinkedList;
 public class HashingTest extends TestCase{
     private float[][] hashPlanes;
     int bits = 16, dimensions = 256;
-    private int numFunctions = 10;
+    private int numFunctionBundles = 10;
 
 
     float[][] hashFunction = new float[][]{
@@ -94,12 +91,12 @@ public class HashingTest extends TestCase{
         return hash;
     }
     
-    public void testHammingDistance() throws IOException {
+    public void testOutputHashFunction() throws IOException {
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("hashFunctions.obj"));
         oos.writeInt(bits);
         oos.writeInt(dimensions);
-        oos.writeInt(numFunctions);
-        for (int c = 0; c < 2; c++) {
+        oos.writeInt(numFunctionBundles);
+        for (int c = 0; c < numFunctionBundles; c++) {
             for (int i = 0; i < bits; i++) {
                 float[] hashPlane = hashPlanes[i];
                 for (int j = 0; j < dimensions; j++) {
@@ -108,5 +105,23 @@ public class HashingTest extends TestCase{
             }
         }
         oos.close();
+    }
+
+    public void testReadHashFunctions() throws IOException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("hashFunctions.obj"));
+        int bits = ois.readInt();
+        int dimensions = ois.readInt();
+        int numFunctionBundles = ois.readInt();
+
+        float[][][] hashFunctions = new float[numFunctionBundles][bits][dimensions];
+        for (int i = 0; i < hashFunctions.length; i++) {
+            float[][] functionBundle = hashFunctions[i];
+            for (int j = 0; j < functionBundle.length; j++) {
+                float[] bitFunctions = functionBundle[j];
+                for (int k = 0; k < bitFunctions.length; k++) {
+                    bitFunctions[k] = ois.readFloat();
+                }
+            }
+        }
     }
 }

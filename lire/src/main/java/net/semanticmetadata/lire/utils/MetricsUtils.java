@@ -150,4 +150,15 @@ public class MetricsUtils {
         return result;
     }
 
+    public static double cosineCoefficient(double[] hist1, double[] hist2) {
+        double distance = 0;
+        double tmp1=0, tmp2=0;
+        for (int i = 0; i < hist1.length; i++) {
+            distance += hist1[i]*hist2[i];
+            tmp1 += hist1[i]*hist1[i];
+            tmp2 += hist2[i]*hist2[i];
+        }
+        return distance/(Math.sqrt(tmp1)*Math.sqrt(tmp2));
+    }
+
 }

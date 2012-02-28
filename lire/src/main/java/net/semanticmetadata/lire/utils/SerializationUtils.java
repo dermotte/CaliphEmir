@@ -31,6 +31,9 @@
 package net.semanticmetadata.lire.utils;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
 
 /**
  * Utility class for serialization issues.
@@ -277,12 +280,37 @@ public class SerializationUtils {
      * @return
      */
     public static String arrayToString(int[] array) {
-        return Arrays.toString(array);
+        return Arrays.toString(array).replace('[', ' ').replace(']', ' ').replace(',', ' ');
+
 //        StringBuilder sb = new StringBuilder(256);
 //        for (int i = 0; i < array.length; i++) {
 //            sb.append(array[i]);
 //            sb.append(' ');
 //        }
 //        return sb.toString().trim();
+    }
+
+    /**
+     * Parses and returns a double array from a Sting with an arbitrary number of doubles.
+     * @param data
+     * @return
+     */
+    public static double[] doubleArrayFromString(String data) {
+        double[] result = null;
+        LinkedList<Double> tmp = new LinkedList<Double>();
+        data = data.replace('[', ' ');
+        data = data.replace(']', ' ');
+        data = data.replace(',', ' ');
+        StringTokenizer st = new StringTokenizer(data);
+        while (st.hasMoreTokens())
+            tmp.add(Double.parseDouble(st.nextToken()));
+        result = new double[tmp.size()];
+        int i=0;
+        for (Iterator<Double> iterator = tmp.iterator(); iterator.hasNext(); ) {
+            Double next = iterator.next();
+            result[i] = next;
+            i++;
+        }
+        return result;
     }
 }

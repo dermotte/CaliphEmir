@@ -52,7 +52,7 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
     public static final int MAX_IMAGE_DIMENSION = 1024;
     Class<? extends LireFeature> descriptorClass;
     String fieldName;
-    final static Mode DEFAULT_MODE = Mode.Slow;
+    final static Mode DEFAULT_MODE = Mode.Fast;
     Mode currentMode = DEFAULT_MODE;
 
     // Decide between byte array version (fast) or string version (slow)

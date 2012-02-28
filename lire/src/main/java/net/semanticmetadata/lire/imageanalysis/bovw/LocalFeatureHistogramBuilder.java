@@ -71,7 +71,7 @@ public abstract class LocalFeatureHistogramBuilder {
     protected String visualWordsFieldName = DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
     protected String localFeatureHistFieldName = DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM;
     protected String clusterFile = "./clusters.dat";
-    public static boolean DELETE_LOCAL_FEATURES = false;
+    public static boolean DELETE_LOCAL_FEATURES = true;
 
 
 
@@ -242,7 +242,7 @@ public abstract class LocalFeatureHistogramBuilder {
                         tmpHist[clusterForFeature((Histogram) f)]++;
                     }
                     d.add(new Field(visualWordsFieldName, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
-                    d.add(new Field(localFeatureHistFieldName, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+                    d.add(new Field(localFeatureHistFieldName, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.NO));
                     // now write the new one. we use the identifier to update ;)
                     iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
                 }
@@ -270,6 +270,8 @@ public abstract class LocalFeatureHistogramBuilder {
             tmpHist[clusterForFeature((Histogram) f)]++;
         }
         d.add(new Field(visualWordsFieldName, arrayToVisualWordString(tmpHist), Field.Store.YES, Field.Index.ANALYZED));
+        d.add(new Field(localFeatureHistFieldName, SerializationUtils.arrayToString(tmpHist), Field.Store.YES, Field.Index.NO));
+        d.removeFields(localFeatureFieldName);
         return d;
     }
 

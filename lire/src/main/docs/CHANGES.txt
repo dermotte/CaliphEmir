@@ -1,6 +1,15 @@
 CHANGES for LIRE
 ================
 
+2012-02-28
+==========
+  - Liredemo: Fixed bug in ParallelIndexer.
+  - LireDemo release 0.9.1
+
+2012-02-24
+==========
+  - Added HashingUtils for simple Hashing
+
 2012-02-22
 ==========
   - Added fix for grey scale only images ready to use in ImageUtils.java
