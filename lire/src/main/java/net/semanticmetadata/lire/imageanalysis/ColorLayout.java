@@ -108,6 +108,7 @@ public class ColorLayout extends ColorLayoutImpl implements LireFeature {
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation
      */
     public void setByteArrayRepresentation(byte[] in) {
+        // todo: make it more efficient ...
         int[] data = SerializationUtils.toIntArray(in);
         numYCoeff = data[0];
         numCCoeff = data[1];

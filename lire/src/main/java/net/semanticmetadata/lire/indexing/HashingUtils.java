@@ -9,10 +9,22 @@ import java.io.*;
  *         Created: 24.02.12, 14:00
  */
 public class HashingUtils {
-    private static int bits = 16, dimensions = 256;
+    private static int bits = 16, dimensions = 512;
     private static int numFunctionBundles = 10;
     private static String name = "hashFunctions.obj";
     private static float[][][] hashes = null;
+
+    /**
+     * Generate new hash functions.
+     * @param args
+     */
+    public static void main(String[] args) {
+        try {
+            generateHashFunctions();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Writes a file to disk to be read for hashing.

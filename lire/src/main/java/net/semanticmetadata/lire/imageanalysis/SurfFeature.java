@@ -36,6 +36,9 @@ import net.semanticmetadata.lire.utils.MetricsUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
 
 /**
  * Mathias Lux, mathias@juggle.at
@@ -69,7 +72,23 @@ public class SurfFeature extends Histogram implements LireFeature {
     }
 
     public void setStringRepresentation(String s) {
-        throw new UnsupportedOperationException("No implemented!");
+        float[] result = null;
+        LinkedList<Float> tmp = new LinkedList<Float>();
+        StringTokenizer st = new StringTokenizer(s);
+        st.nextToken(); // point.x
+        st.nextToken(); // point.y
+        st.nextToken(); // response
+        while (st.hasMoreTokens())
+            tmp.add(Float.parseFloat(st.nextToken()));
+        result = new float[tmp.size()];
+        int i=0;
+        for (Iterator<Float> iterator = tmp.iterator(); iterator.hasNext(); ) {
+            Float next = iterator.next();
+            result[i] = next;
+            i++;
+        }
+        descriptor = result;
+
     }
 
     /**
