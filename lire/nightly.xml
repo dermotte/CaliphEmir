@@ -27,12 +27,17 @@
         <ant antfile="build.xml" dir="${build}/tmp/lire/" target="dist"/>
         <ant antfile="build.xml" dir="${build}/tmp/lire/" target="javadoc"/>
         <!-- package -->
-        <zip destfile="${build}/Lire-nighlty_${build.time}.zip">
+        <zip destfile="${build}/lire.zip">
             <fileset dir="${build}/tmp/lire/dist">
                 <include name="lib/**"/>
                 <include name="lire.jar"/>
             </fileset>
         </zip>
+        <move todir="${build}">
+            <fileset dir="${build}/tmp/lire/dist/docs">
+                <include name="api/**"/>
+            </fileset>
+        </move>
         <!-- clean up -->
         <delete dir="${build}/tmp/"/>
     </target>
