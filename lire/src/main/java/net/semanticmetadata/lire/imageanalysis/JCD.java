@@ -78,11 +78,8 @@ public class JCD implements LireFeature {
         if (!(vd instanceof JCD))
             throw new UnsupportedOperationException("Wrong descriptor.");
 
-        // casting ...
-        JCD ch = (JCD) vd;
-
         // check if parameters are fitting ...
-        if ((ch.data.length != data.length))
+        if ((((JCD) vd).data.length != data.length))
             throw new UnsupportedOperationException("Histogram lengths or color spaces do not match");
 
         // Tanimoto coefficient
@@ -92,8 +89,8 @@ public class JCD implements LireFeature {
 
         double TempCount1 = 0, TempCount2 = 0, TempCount3 = 0;
 
-        for (int i = 0; i < ch.data.length; i++) {
-            Temp1 += ch.data[i];
+        for (int i = 0; i < ((JCD) vd).data.length; i++) {
+            Temp1 += ((JCD) vd).data[i];
             Temp2 += data[i];
         }
 
@@ -101,10 +98,10 @@ public class JCD implements LireFeature {
         if (Temp1 == 0 && Temp2 == 0) Result = 0;
 
         if (Temp1 > 0 && Temp2 > 0) {
-            for (int i = 0; i < ch.data.length; i++) {
-                TempCount1 += (ch.data[i] / Temp1) * (data[i] / Temp2);
+            for (int i = 0; i < ((JCD) vd).data.length; i++) {
+                TempCount1 += (((JCD) vd).data[i] / Temp1) * (data[i] / Temp2);
                 TempCount2 += (data[i] / Temp2) * (data[i] / Temp2);
-                TempCount3 += (ch.data[i] / Temp1) * (ch.data[i] / Temp1);
+                TempCount3 += (((JCD) vd).data[i] / Temp1) * (((JCD) vd).data[i] / Temp1);
 
             }
 

@@ -48,7 +48,7 @@ import java.util.StringTokenizer;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SimpleColorHistogram implements LireFeature {
-    public static final int DEFAULT_NUMBER_OF_BINS = 512;
+    public static int DEFAULT_NUMBER_OF_BINS = 512;
     public static HistogramType DEFAULT_HISTOGRAM_TYPE = HistogramType.RGB;
     public static DistanceFunction DEFAULT_DISTANCE_FUNCTION = DistanceFunction.L1;
 
@@ -58,28 +58,138 @@ public class SimpleColorHistogram implements LireFeature {
             1, 8, 4, 4, 4, 4, 8, 2, 8, 1,            // Hue, Sum - subspace 0,1,2,3,4 for  64 levels
             1, 8, 4, 4, 4, 4, 4, 1, 4, 1};           // Hue, Sum - subspace 0,1,2,3,4 for  32 levels
 
+    public static int[][] rgbPalette64 = new int[][]{
+            new int[]{0, 0, 0},
+            new int[]{0, 0, 85},
+            new int[]{0, 0, 170},
+            new int[]{0, 0, 255},
+            new int[]{0, 85, 0},
+            new int[]{0, 85, 85},
+            new int[]{0, 85, 170},
+            new int[]{0, 85, 255},
+            new int[]{0, 170, 0},
+            new int[]{0, 170, 85},
+            new int[]{0, 170, 170},
+            new int[]{0, 170, 255},
+            new int[]{0, 255, 0},
+            new int[]{0, 255, 85},
+            new int[]{0, 255, 170},
+            new int[]{0, 255, 255},
+            new int[]{85, 0, 0},
+            new int[]{85, 0, 85},
+            new int[]{85, 0, 170},
+            new int[]{85, 0, 255},
+            new int[]{85, 85, 0},
+            new int[]{85, 85, 85},
+            new int[]{85, 85, 170},
+            new int[]{85, 85, 255},
+            new int[]{85, 170, 0},
+            new int[]{85, 170, 85},
+            new int[]{85, 170, 170},
+            new int[]{85, 170, 255},
+            new int[]{85, 255, 0},
+            new int[]{85, 255, 85},
+            new int[]{85, 255, 170},
+            new int[]{85, 255, 255},
+            new int[]{170, 0, 0},
+            new int[]{170, 0, 85},
+            new int[]{170, 0, 170},
+            new int[]{170, 0, 255},
+            new int[]{170, 85, 0},
+            new int[]{170, 85, 85},
+            new int[]{170, 85, 170},
+            new int[]{170, 85, 255},
+            new int[]{170, 170, 0},
+            new int[]{170, 170, 85},
+            new int[]{170, 170, 170},
+            new int[]{170, 170, 255},
+            new int[]{170, 255, 0},
+            new int[]{170, 255, 85},
+            new int[]{170, 255, 170},
+            new int[]{170, 255, 255},
+            new int[]{255, 0, 0},
+            new int[]{255, 0, 85},
+            new int[]{255, 0, 170},
+            new int[]{255, 0, 255},
+            new int[]{255, 85, 0},
+            new int[]{255, 85, 85},
+            new int[]{255, 85, 170},
+            new int[]{255, 85, 255},
+            new int[]{255, 170, 0},
+            new int[]{255, 170, 85},
+            new int[]{255, 170, 170},
+            new int[]{255, 170, 255},
+            new int[]{255, 255, 0},
+            new int[]{255, 255, 85},
+            new int[]{255, 255, 170},
+            new int[]{255, 255, 255}
+    };
 
-    /**
-     * Lists possible types for the histogram class
-     */
-    public enum HistogramType {
-        RGB, HSV, Luminance, HMMD
-    }
+    // upper borders for quantization.
+    public static int[] quant512 = new int[]{18, 55, 91, 128, 165, 201, 238, 256};
 
-    /**
-     * Lists distance functions possible for this histogram class
-     */
-    public enum DistanceFunction {
-        L1, L2, TANIMOTO, JSD
-    }
+//    public static int[][] rgbPalette512 = new int[512][3];
+//
+//    public static int[][][] quantTable512 = new int[256][256][256];
 
-    /**
-     * Temporary pixel field ... re used for speed and memory issues ...
-     */
-    private int[] pixel = new int[3];
-    private int[] histogram;
-    private HistogramType histogramType;
-    private DistanceFunction distFunc;
+//    static {
+//        System.out.println("Creating quantization tables ...");
+//        int count = 0;
+//        for (int i = 0; i < quant512.length; i++) {
+//            for (int j = 0; j < quant512.length; j++) {
+//                for (int k = 0; k < quant512.length; k++) {
+//                    rgbPalette512[count][0] = quant512[i];
+//                    rgbPalette512[count][1] = quant512[j];
+//                    rgbPalette512[count][2] = quant512[k];
+//                    count++;
+//                }
+//            }
+//        }
+//
+//        // Todo: This is a no go  ... check faster method ...
+//        System.out.println("Now the big one ...");
+//        for (int i = 0; i < 256; i++) {
+//            for (int j = 0; j < 256; j++) {
+//                for (int k = 0; k < 256; k++) {
+//                    double minDist = Math.abs((rgbPalette512[0][0] - i) + Math.abs((rgbPalette512[0][1] - j)) + Math.abs(rgbPalette512[0][2] - k));
+//                    int pos = 0;
+//                    for (int l = 1; l < rgbPalette512.length; l++) {
+//                        double tmp = Math.abs((rgbPalette512[l][0] - i) + Math.abs((rgbPalette512[l][1] - j)) + Math.abs(rgbPalette512[l][2] - k));
+//                        if (tmp <= minDist) {
+//                            minDist = tmp;
+//                            pos = l;
+//                        }
+//                        quantTable512[i][j][k] = pos;
+//                    }
+//                }
+//            }
+//            System.out.print('.');
+//        }
+//        System.out.println("static method finished");
+//
+//    }
+
+/**
+ * Lists possible types for the histogram class
+ */
+public enum HistogramType {
+    RGB, HSV, Luminance, HMMD
+}
+
+/**
+ * Lists distance functions possible for this histogram class
+ */
+public enum DistanceFunction {
+    L1, L2, TANIMOTO, JSD
+}
+
+/**
+ * Temporary pixel field ... re used for speed and memory issues ...
+ */
+private int[] pixel = new int[3];
+private int[] histogram;
+private HistogramType histogramType;
+private DistanceFunction distFunc;
 
     /**
      * Default constructor
@@ -142,8 +252,12 @@ public class SimpleColorHistogram implements LireFeature {
     }
 
     private void normalize(int[] histogram, int numPixels) {
+        int max = 0;
         for (int i = 0; i < histogram.length; i++) {
-            histogram[i] = (histogram[i] * 1024) / numPixels;
+            max = Math.max(histogram[i], max);
+        }
+        for (int i = 0; i < histogram.length; i++) {
+            histogram[i] = (histogram[i] * 256) / max;
         }
     }
 
@@ -162,7 +276,28 @@ public class SimpleColorHistogram implements LireFeature {
             return (pixel[0] * histogram.length) / (256);
         } else {
             // just for 512 bins ...
-            return (pixel[0] >> 5) + (pixel[1] >> 5) * 8 + (pixel[2] >> 5) * 8 * 8;
+            int bin = 0;
+            if (histogram.length == 512) {
+                for (int i = 0; i < quant512.length-1; i++) {
+                    if (quant512[i] <= pixel[0] && pixel[0] < quant512[i+1]) bin += (i+1);
+                    if (quant512[i] <= pixel[1] && pixel[1] < quant512[i+1]) bin += (i+1) * 8;
+                    if (quant512[i] <= pixel[2] && pixel[2] < quant512[i+1]) bin += (i+1) * 8 * 8;
+                }
+                return bin;
+            }
+            // and for 64 bins ...
+            else {
+                double minDist = Math.pow((rgbPalette64[0][0] - pixel[0]), 2) + Math.pow((rgbPalette64[0][1] - pixel[1]), 2) + Math.pow((rgbPalette64[0][2] - pixel[2]), 2);
+                int pos = 0;
+                for (int i = 1; i < rgbPalette64.length; i++) {
+                    double tmp = Math.pow((rgbPalette64[i][0] - pixel[0]), 2) + Math.pow((rgbPalette64[i][1] - pixel[1]), 2) + Math.pow((rgbPalette64[i][2] - pixel[2]), 2);
+                    if (tmp <= minDist) {
+                        minDist = tmp;
+                        pos = i;
+                    }
+                }
+                return pos;
+            }
         }
     }
 

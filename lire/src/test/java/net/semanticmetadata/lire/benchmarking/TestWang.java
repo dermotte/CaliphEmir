@@ -31,25 +31,21 @@
 package net.semanticmetadata.lire.benchmarking;
 
 import junit.framework.TestCase;
-import net.semanticmetadata.lire.DocumentBuilder;
-import net.semanticmetadata.lire.ImageSearchHits;
-import net.semanticmetadata.lire.ImageSearcher;
-import net.semanticmetadata.lire.ImageSearcherFactory;
+import net.semanticmetadata.lire.*;
 import net.semanticmetadata.lire.imageanalysis.CEDD;
 import net.semanticmetadata.lire.imageanalysis.FCTH;
 import net.semanticmetadata.lire.imageanalysis.JCD;
-import net.semanticmetadata.lire.imageanalysis.bovw.MSERFeatureHistogramBuilder;
+import net.semanticmetadata.lire.imageanalysis.SimpleColorHistogram;
 import net.semanticmetadata.lire.imageanalysis.bovw.SiftFeatureHistogramBuilder;
 import net.semanticmetadata.lire.imageanalysis.bovw.SurfFeatureHistogramBuilder;
 import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
-import net.semanticmetadata.lire.impl.MSERDocumentBuilder;
 import net.semanticmetadata.lire.impl.ParallelImageSearcher;
-import net.semanticmetadata.lire.impl.VisualWordsImageSearcher;
 import net.semanticmetadata.lire.utils.FileUtils;
 import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
@@ -87,7 +83,7 @@ public class TestWang extends TestCase {
         }
         // Setting up DocumentBuilder:
         builder = new ChainedDocumentBuilder();
-//        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+        builder.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getJCDDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getJpegCoefficientHistogramDocumentBuilder());
@@ -99,7 +95,7 @@ public class TestWang extends TestCase {
 //        builder.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
 //        builder.addBuilder(new SurfDocumentBuilder());
-        builder.addBuilder(new MSERDocumentBuilder());
+//        builder.addBuilder(new MSERDocumentBuilder());
 //        builder.addBuilder(new SiftDocumentBuilder());
     }
 
@@ -115,12 +111,12 @@ public class TestWang extends TestCase {
 //        SurfFeatureHistogramBuilder sh = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath)), true), 400, 10000);
 //        sh.setProgressMonitor(new ProgressMonitor(null, "", "", 0, 100));
 //        sh.index();
-        MSERFeatureHistogramBuilder sh2 = new MSERFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
-        sh2.index();
+//        MSERFeatureHistogramBuilder sh2 = new MSERFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 8000);
+//        sh2.index();
 
         System.out.println("-< Indexing finished >--------------");
 //        System.out.println("SiftFeatureHistogramBuilder sh1 = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(indexPath))), 200, 1000);");
-        testMAP();
+        // testMAP();
     }
 
     public void testProgram() throws IOException {
@@ -172,12 +168,12 @@ public class TestWang extends TestCase {
     }
 
     public void testMAP() throws IOException {
-//        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L1;
-//        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L1");
-//        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L2;
-//        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
-//        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.JSD;
-//        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - JSD");
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L1;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L1");
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.L2;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - L2");
+        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.JSD;
+        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - JSD");
 //        SimpleColorHistogram.DEFAULT_DISTANCE_FUNCTION = SimpleColorHistogram.DistanceFunction.TANIMOTO;
 //        computeMAP(ImageSearcherFactory.createColorHistogramImageSearcher(1000), "Color Histogram - Tanimoto");
 //        computeMAP(ImageSearcherFactory.createTamuraImageSearcher(1000), "Tamura");
@@ -191,7 +187,7 @@ public class TestWang extends TestCase {
 //        computeMAP(ImageSearcherFactory.createFCTHImageSearcher(1000), "FCTH");
 //        computeMAP(ImageSearcherFactory.createJpegCoefficientHistogramImageSearcher(1000), "JPEG Coeffs");
 //        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "SURF BoVW");
-        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "MSER BoVW");
+//        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "MSER BoVW");
 //        computeMAP(new VisualWordsImageSearcher(1000, DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS), "SIFT BoVW");
 
     }
@@ -459,6 +455,17 @@ public class TestWang extends TestCase {
         for (int i = 0; i < 200; i++) {
             System.out.print((int) (Math.random() * 1000) + ", ");
         }
+    }
+
+    public void testDistribution() throws IOException {
+        IndexReader reader = IndexReader.open((FSDirectory.open(new File(indexPath))), true);
+        TermEnum terms = reader.terms();
+        int docFreq = 0;
+        int numDocs = reader.numDocs();
+        do {
+            docFreq = terms.docFreq();
+            if (docFreq > 0) System.out.println(docFreq + ";" + Math.log((double) numDocs / (double) docFreq));
+        } while (terms.next());
     }
 
 }

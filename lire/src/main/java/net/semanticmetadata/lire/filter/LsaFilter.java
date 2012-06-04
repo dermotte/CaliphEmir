@@ -37,9 +37,9 @@ import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.impl.SimpleImageSearchHits;
 import net.semanticmetadata.lire.impl.SimpleResult;
 import net.semanticmetadata.lire.utils.MetricsUtils;
-import org.apache.commons.math.linear.Array2DRowRealMatrix;
-import org.apache.commons.math.linear.RealMatrix;
-import org.apache.commons.math.linear.SingularValueDecompositionImpl;
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.SingularValueDecomposition;
 import org.apache.lucene.document.Document;
 
 import java.util.Iterator;
@@ -103,10 +103,16 @@ public class LsaFilter implements SearchHitsFilter {
             System.arraycopy(next, 0, matrixData[count], 0, next.length);
             count++;
         }
+        for (int i = 0; i < matrixData.length; i++) {
+            double[] doubles = matrixData[i];
+            for (int j = 0; j < doubles.length; j++) {
+                if (Double.isNaN(doubles[j])) System.err.println("Value is NaN");;
+            }
+        }
         // create a matrix object and do the magic
         Array2DRowRealMatrix m = new Array2DRowRealMatrix(matrixData);
         long ms = System.currentTimeMillis();
-        SingularValueDecompositionImpl svd = new SingularValueDecompositionImpl(m);
+        SingularValueDecomposition svd = new SingularValueDecomposition(m);
         ms = System.currentTimeMillis() - ms;
         double[] singularValues = svd.getSingularValues();
         RealMatrix s = svd.getS();

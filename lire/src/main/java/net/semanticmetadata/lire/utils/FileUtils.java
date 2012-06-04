@@ -73,6 +73,34 @@ public class FileUtils {
             return null;
     }
 
+    /**
+     * Returns all jpg images from a directory in an array.
+     *
+     * @param directory                 the directory to start with
+     * @param descendIntoSubDirectories should we include sub directories?
+     * @return an ArrayList<File> containing all the files or nul if none are found..
+     * @throws IOException
+     */
+    public static ArrayList<File> getAllImageFiles(File directory, boolean descendIntoSubDirectories) throws IOException {
+        ArrayList<File> resultList = new ArrayList<File>(256);
+        File[] f = directory.listFiles();
+        for (File file : f) {
+            if (file != null && (file.getName().toLowerCase().endsWith(".jpg") || file.getName().toLowerCase().endsWith(".png")) && !file.getName().startsWith("tn_")) {
+                resultList.add(file);
+            }
+            if (descendIntoSubDirectories && file.isDirectory()) {
+                ArrayList<File> tmp = getAllImageFiles(file, true);
+                if (tmp != null) {
+                    resultList.addAll(tmp);
+                }
+            }
+        }
+        if (resultList.size() > 0)
+            return resultList;
+        else
+            return null;
+    }
+
     public static void saveImageResultsToHtml(String prefix, ImageSearchHits hits, String queryImage) throws IOException {
         long l = System.currentTimeMillis() / 1000;
         BufferedWriter bw = new BufferedWriter(new FileWriter("results-" + prefix + "-" + l + ".html"));

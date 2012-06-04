@@ -3,7 +3,7 @@ package net.semanticmetadata.lire.indexing;
 import java.io.*;
 
 /**
- * Provides a simple way to hashing ...
+ * Provides a simple way to hashing ... based on min-hash.
  *
  * @author Mathias Lux, mathias@juggle.at
  *         Created: 24.02.12, 14:00
