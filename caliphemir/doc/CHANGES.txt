@@ -1,6 +1,13 @@
 CHANGES for Caliph & Emir
 =========================
 
+2015-09-02
+==========
+  - Fixed some small things that prevented Caliph from running on JDK 1.7 and JDK 1.8
+  - Released updated version 0.9.27
+  - Moved to Github
+  - Fixed ant build file
+
 2008-09-23
 ==========
 Descriptors
@@ -38,7 +45,7 @@ Emir:
 2008-02-27
 ==========
 Caliph:
-  - Added gloabl properties of current file and stored time and place there
+  - Added global properties of current file and stored time and place there
     Used for recommendations of time and place in creation of semantic objects (event, time, place)
 
 2007-07-06

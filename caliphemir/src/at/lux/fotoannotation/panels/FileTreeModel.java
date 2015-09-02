@@ -117,7 +117,8 @@ public class FileTreeModel extends DefaultTreeModel {
         } else if (node.getUserObject() instanceof FileNodeObject) {
             File f = ((FileNodeObject) node.getUserObject()).getContent();
             if (f.isDirectory()) {
-                return f.listFiles(filter).length;
+                File[] files = f.listFiles(filter);
+                return files!=null?files.length:0;
             } else {
                 return 0;
             }

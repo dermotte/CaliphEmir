@@ -424,7 +424,7 @@ public class ObjectPalette extends JDialog
         //drawPanel.removeAll();
         currentDisplay = PANEL_COLOR;
         drawComponents();
-        validateTree();
+//        validateTree();
         repaint();
         //System.out.println("comp: " + colorArray[0].getSize());
     }

@@ -52,7 +52,7 @@ import java.util.List;
 public class AnnotationToolkit {
     public static String AGENTS_FILE = "./agents.mp7.xml";
     public static String PROGRAM_NAME = "Caliph";
-    public static String PROGRAM_VERSION = "v0.9.26";
+    public static String PROGRAM_VERSION = "v0.9.27";
     private static final int MAX_THUMBNAIL_EDGE_LENGTH = 120;
 
     public static List xpathQuery(org.jdom.Element document, String xpathQuery1, Namespace xNs) {

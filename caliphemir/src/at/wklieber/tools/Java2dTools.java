@@ -28,8 +28,8 @@ import at.wklieber.gui.dominantcolor.DominantColorFinder;
 import at.wklieber.gui.dominantcolor.DominantColorPlugin;
 import at.wklieber.gui.dominantcolor.RGBColorPercentagePair;
 import at.wklieber.gui.dominantcolor.RGBColorPercentagePairList;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+//import com.sun.image.codec.jpeg.JPEGCodec;
+//import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 
 
@@ -1119,9 +1119,9 @@ public class Java2dTools {
                 case TYPE_SERIALIZE_JPEG:
                     {
                         ByteArrayOutputStream fos = new ByteArrayOutputStream();
-                        JPEGImageEncoder encoder =
-                                JPEGCodec.createJPEGEncoder(fos);
-                        encoder.encode(bImage1);
+//                        JPEGImageEncoder encoder =
+//                                JPEGCodec.createJPEGEncoder(fos);
+//                        encoder.encode(bImage1);
                         fos.flush();
                         returnValue = fos.toByteArray();
                         fos.close();

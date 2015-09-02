@@ -33,7 +33,7 @@
     <property name="src" value="src"/>
     <property name="build" value="classes"/>
     <property name="dist" value="dist"/>
-    <property name="versionstring" value="0.9.25"/>
+    <property name="versionstring" value="0.9.27"/>
     <!-- path to test files -->
     <property name="test" value="test"/>
     <!-- path to documentation like README or CHANGES -->
@@ -76,11 +76,10 @@
         </propertyfile>
         <property file="${src}/at/lux/fotoannotation/dialogs/build.properties"/>
         <echo file="default.mf" append="false">Main-Class: at.lux.fotoannotation.AnnotationFrame
-            Class-Path: lib/lucene-core-2.1.0.jar lib/jdom.jar lib/jaxen-full.jar lib/saxpath.jar
-            lib/metadata-extractor-2.3.1.jar lib/derby.jar lib/looks-2.0.4.jar
-            Build-Date: ${touch.time}
-            Build-Number: ${build-number}
-        </echo>
+Class-Path: lib/lucene-core-2.1.0.jar lib/jdom.jar lib/jaxen-full.jar lib/saxpath.jar lib/metadata-extractor-2.3.1.jar lib/derby.jar lib/looks-2.0.4.jar
+Build-Date: ${touch.time}
+Build-Number: ${build-number}
+</echo>
         <!--        <propertyfile file="${src}/at/lux/fotoretrieval/dialogs/build.properties" comment="Properties of this specific EMIR build">
                     <entry key="build-date" type="date" value="now"/>
                     <entry key="build" type="int" value="1" operation="+"/>
@@ -297,6 +296,7 @@
     </target>
 
     <target name="clean">
+        <echo>${basedir}</echo>
         <description>
             Cleans away all compiled and copied files
         </description>
