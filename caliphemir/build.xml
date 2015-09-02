@@ -76,7 +76,7 @@
         </propertyfile>
         <property file="${src}/at/lux/fotoannotation/dialogs/build.properties"/>
         <echo file="default.mf" append="false">Main-Class: at.lux.fotoannotation.AnnotationFrame
-Class-Path: lib/lucene-core-2.1.0.jar lib/jdom.jar lib/jaxen-full.jar lib/saxpath.jar lib/metadata-extractor-2.3.1.jar lib/derby.jar lib/looks-2.0.4.jar
+Class-Path: lib/lucene-core-2.1.0.jar lib/jdom.jar lib/jaxen-full.jar lib/saxpath.jar lib/metadata-extractor-2.3.1.jar lib/derby.jar lib/looks-2.0.4.jar lib/swing-layout-1.0.jar
 Build-Date: ${touch.time}
 Build-Number: ${build-number}
 </echo>
